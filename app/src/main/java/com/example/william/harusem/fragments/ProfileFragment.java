@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.william.harusem.R;
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.nex3z.notificationbadge.NotificationBadge;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,12 +19,16 @@ import butterknife.Unbinder;
 
 public class ProfileFragment extends Fragment {
 
+
+    Unbinder unbinder;
     @BindView(R.id.profile_circle_iv)
     CircularImageView profileCircleIv;
     @BindView(R.id.name_tv)
     TextView nameTv;
-    @BindView(R.id.friends_count_tv)
-    TextView friendsCountTv;
+    @BindView(R.id.friends_count_key_tv)
+    TextView friendsCountKeyTv;
+    @BindView(R.id.friends_count_value_tv)
+    TextView friendsCountValueTv;
     @BindView(R.id.top_layout)
     RelativeLayout topLayout;
     @BindView(R.id.account_tv)
@@ -38,7 +43,8 @@ public class ProfileFragment extends Fragment {
     TextView logOutTv;
     @BindView(R.id.bottom_layout)
     LinearLayout bottomLayout;
-    Unbinder unbinder;
+    @BindView(R.id.notification_badge)
+    NotificationBadge notificationBadge;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,6 +54,15 @@ public class ProfileFragment extends Fragment {
         unbinder = ButterKnife.bind(this, rootView);
 
         profileCircleIv.setBorderWidth(2f);
+
+        friendsRequestsTv.setOnClickListener(new View.OnClickListener() {
+            int number = 0;
+            @Override
+            public void onClick(View view) {
+                number++;
+                notificationBadge.setNumber(number);
+            }
+        });
 
         return rootView;
     }
