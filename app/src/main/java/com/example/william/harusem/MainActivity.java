@@ -2,13 +2,16 @@ package com.example.william.harusem;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
+import com.example.william.harusem.fragments.ChatsFragment;
+import com.example.william.harusem.fragments.ProfileFragment;
+import com.example.william.harusem.fragments.SearchFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,6 +27,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
+
         AHBottomNavigationItem item1 = new AHBottomNavigationItem("Chats", R.drawable.ic_chat_24dp);
         AHBottomNavigationItem item2 = new AHBottomNavigationItem("Search", R.drawable.ic_search_24dp);
         AHBottomNavigationItem item3 = new AHBottomNavigationItem("Account", R.drawable.ic_account_24dp);
@@ -37,33 +45,43 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigation.setNotificationBackgroundColor(Color.parseColor("#F63D2B"));
 
-        // notification
-//        bottomNavigation.setNotification("3", 2);
         bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
+                Fragment selectedFragment = null;
                 switch (position) {
                     case 0:
-                        Toast.makeText(MainActivity.this, "Chats", Toast.LENGTH_SHORT).show();
+                        //set title
+                        selectedFragment = new ChatsFragment();
                         break;
                     case 1:
-                        Toast.makeText(MainActivity.this, "Search", Toast.LENGTH_SHORT).show();
+                        selectedFragment = new SearchFragment();
                         break;
                     case 2:
-                        Toast.makeText(MainActivity.this, "Account", Toast.LENGTH_SHORT).show();
+                        selectedFragment = new ProfileFragment();
                         break;
-                        default:
-                            Toast.makeText(MainActivity.this, "DEfault", Toast.LENGTH_SHORT).show();
+                    default:
+                        selectedFragment = new ChatsFragment();
                         break;
                 }
 
+                switchFragment(selectedFragment);
                 return true;
             }
         });
 
+        // Default tab
+        ChatsFragment chatsFragment = new ChatsFragment();
+        switchFragment(chatsFragment);
 
     }
 
+    private void switchFragment(Fragment selectedFragment) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.frame_container, selectedFragment);
+        fragmentTransaction.commit();
+
+    }
 
 
 }

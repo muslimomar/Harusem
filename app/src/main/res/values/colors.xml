@@ -4,4 +4,11 @@
     <color name="colorPrimaryDark">#1c7b92</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorSecondary">#3f4676</color>
+    <color name="white" >#ffffff</color>
+    <color name="black" >#000000</color>
+    <color name="dark_red">#D32F2F</color>
+
+    <color name="slide_one_button">#934462</color>
+    <color name="slide_two_button">#1a78c2</color>
+    <color name="slide_three_button">#4d646f</color>
 </resources>

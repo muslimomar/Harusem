@@ -22,11 +22,12 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'com.android.support:support-v4:26.1.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation ('com.android.support.test:runner:1.0.2') {
+    androidTestImplementation('com.android.support.test:runner:1.0.2') {
         exclude module: 'support-annotations'
     }
-    androidTestImplementation ('com.android.support.test.espresso:espresso-core:3.0.2') {
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.2') {
         exclude module: 'support-annotations'
     }
 // bottom navigation
@@ -47,6 +48,12 @@ dependencies {
 
     // Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    // Circular ImageView
+    compile 'com.mikhaellopez:circularimageview:3.0.2'
+
+    // Tango Intro
+    compile 'agency.tango.android:material-intro-screen:0.0.5'
 
 
 }

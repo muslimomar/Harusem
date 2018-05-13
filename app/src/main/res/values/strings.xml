@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Harusem</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="slide_2_string">No one to talk with?\n chat with a bot</string>
 </resources>
