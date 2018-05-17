@@ -1,5 +1,6 @@
 package com.example.william.harusem.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,6 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.william.harusem.R;
+import com.example.william.harusem.RequestFriendActivity;
+import com.example.william.harusem.models.RequestFriends;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.nex3z.notificationbadge.NotificationBadge;
 
@@ -57,10 +60,15 @@ public class ProfileFragment extends Fragment {
 
         friendsRequestsTv.setOnClickListener(new View.OnClickListener() {
             int number = 0;
+
             @Override
             public void onClick(View view) {
                 number++;
                 notificationBadge.setNumber(number);
+                Intent intent = new Intent(getActivity(), RequestFriendActivity.class);
+
+                getActivity().startActivity(intent);
+
             }
         });
 
