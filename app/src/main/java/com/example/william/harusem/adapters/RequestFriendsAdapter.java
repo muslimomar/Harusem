@@ -21,6 +21,7 @@ import java.util.List;
 
 public class RequestFriendsAdapter extends ArrayAdapter<RequestFriends> {
 
+
     public RequestFriendsAdapter(@NonNull Context context, List<RequestFriends> objects) {
         super(context, 0, objects);
     }
