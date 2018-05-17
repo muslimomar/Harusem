@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/chat_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/received_message_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:background="@drawable/shape_bg_incoming_bubble"
+        android:paddingBottom="7.5dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="15dp"
+        android:paddingTop="7.5dp"
+        android:text="Lorem ipsum dolor sit amet"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:layout_marginTop="12dp"
+
+        />
+
+
+    <TextView
+        android:id="@+id/sent_message_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:background="@drawable/shape_bg_outgoing_bubble"
+        android:paddingBottom="7.5dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="30dp"
+        android:paddingTop="7.5dp"
+        android:text="Lorem ipsum dolor sit amet"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:layout_marginTop="12dp"
+        />
+
+</LinearLayout>

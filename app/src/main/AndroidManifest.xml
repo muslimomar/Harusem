@@ -15,13 +15,15 @@
         <activity
             android:name=".slides.MaterialIntroActivity"
             android:theme="@style/NoActionBar">
+        </activity>
+        <activity android:name=".RequestFriendActivity" />
+        <activity android:name=".ChatActivity" android:theme="@style/NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RequestFriendActivity"></activity>
     </application>
 
 </manifest>
