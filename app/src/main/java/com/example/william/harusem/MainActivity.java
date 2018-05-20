@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
+
 
         AHBottomNavigationItem item1 = new AHBottomNavigationItem("Chats", R.drawable.ic_chat_24dp);
         AHBottomNavigationItem item2 = new AHBottomNavigationItem("Search", R.drawable.ic_search_24dp);
