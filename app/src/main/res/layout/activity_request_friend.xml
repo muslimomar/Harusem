@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.william.harusem.RequestFriendActivity">
+
+    <RelativeLayout
+        android:background="#f9f9f9"
+        android:id="@+id/notification_relative_layout"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/request_friend_back_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="7dp"
+            android:src="@drawable/ic_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="7dp"
+            android:layout_toRightOf="@+id/request_friend_back_image_view"
+            android:text="@string/notification"
+            android:textColor="#de000000"
+            android:textSize="22dp" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:background="#fff"
+        android:id="@+id/request_friend_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/notification_relative_layout">
+
+    </ListView>
+
+</RelativeLayout>
