@@ -56,7 +56,7 @@ dependencies {
     // Tango Intro
     compile 'agency.tango.android:material-intro-screen:0.0.5'
 
-     // badge view
+    // badge view
     implementation 'com.nex3z:notification-badge:1.0.2'
 
 }
