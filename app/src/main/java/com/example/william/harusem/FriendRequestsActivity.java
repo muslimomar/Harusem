@@ -1,7 +1,6 @@
 package com.example.william.harusem;
 
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -12,12 +11,12 @@ import com.example.william.harusem.models.RequestFriends;
 
 import java.util.ArrayList;
 
-public class RequestFriendActivity extends AppCompatActivity {
+public class FriendRequestsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_request_friend);
+        setContentView(R.layout.activity_friend_requests);
         ArrayList arrayList = new ArrayList<>();
 
         ActionBar actionBar = getSupportActionBar();  //Geri image için bu satır kullanıldı

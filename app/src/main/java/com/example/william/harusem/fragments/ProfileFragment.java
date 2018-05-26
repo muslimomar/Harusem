@@ -11,8 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.william.harusem.R;
-import com.example.william.harusem.RequestFriendActivity;
-import com.example.william.harusem.models.RequestFriends;
+import com.example.william.harusem.FriendRequestsActivity;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.nex3z.notificationbadge.NotificationBadge;
 
@@ -65,7 +64,7 @@ public class ProfileFragment extends Fragment {
             public void onClick(View view) {
                 number++;
                 notificationBadge.setNumber(number);
-                Intent intent = new Intent(getActivity(), RequestFriendActivity.class);
+                Intent intent = new Intent(getActivity(), FriendRequestsActivity.class);
 
                 getActivity().startActivity(intent);
 
