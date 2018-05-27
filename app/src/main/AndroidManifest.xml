@@ -24,10 +24,10 @@
             android:name=".slides.MaterialIntroActivity"
             android:theme="@style/NoActionBar" />
         <activity android:name=".FriendRequestsActivity" />
+
         <activity
             android:name=".ChatActivity"
             android:theme="@style/NoActionBar" />
-
     </application>
 
 </manifest>
