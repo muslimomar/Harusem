@@ -1,5 +1,7 @@
 package com.example.william.harusem.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.william.harusem.R;
+import com.example.william.harusem.activities.FriendsActivity;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.nex3z.notificationbadge.NotificationBadge;
 
@@ -60,7 +63,22 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 number++;
+
                 notificationBadge.setNumber(number);
+            }
+        });
+
+
+
+        friendsTv.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                Intent i = new Intent(getActivity(), FriendsActivity.class);
+                startActivity(i);
+                ((Activity) getActivity()).overridePendingTransition(0,0);
+
             }
         });
 
