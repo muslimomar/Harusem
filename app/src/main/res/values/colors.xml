@@ -11,4 +11,7 @@
     <color name="slide_one_button">#934462</color>
     <color name="slide_two_button">#1a78c2</color>
     <color name="slide_three_button">#4d646f</color>
+    <color name="grey_500">#ebebeb</color>
+    <color name="light_black">#585858</color>
+
 </resources>

@@ -1,0 +1,56 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.william.harusem.fragments.ChatsFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <ImageView
+        android:id="@+id/ic_profile_chat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:src="@drawable/ic_chat_profile_photo" />
+
+    <TextView
+        android:id="@+id/chat_id_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/ic_profile_chat"
+        android:layout_toEndOf="@+id/ic_profile_chat"
+        android:layout_toRightOf="@+id/ic_profile_chat"
+        android:lineSpacingExtra="8sp"
+        android:textColor="#de3823b6"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        tools:text="HARÜSEM Bot">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/chat_time_stamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/ic_profile_chat"
+        android:layout_toEndOf="@+id/ic_profile_chat"
+        android:layout_toRightOf="@+id/ic_profile_chat"
+        android:text="14:00" />
+
+    <TextView
+        android:id="@+id/chat_text_preview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chat_time_stamp"
+        android:layout_toEndOf="@+id/ic_profile_chat"
+        android:layout_toRightOf="@+id/ic_profile_chat"
+        android:fontFamily="sans-serif"
+        android:letterSpacing="0.01"
+        android:textColor="#8a000000"
+        android:textSize="14sp"
+        android:textStyle="normal"
+        tools:text="Hi! I’m here to help you!" />
+
+
+</RelativeLayout>

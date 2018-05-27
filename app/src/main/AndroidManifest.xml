@@ -8,20 +8,42 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".MainActivity" />
         <activity
             android:name=".slides.MaterialIntroActivity"
             android:theme="@style/NoActionBar">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.FriendsActivity"></activity>
+
+
+        <activity
+            android:name=".slides.MaterialIntroActivity"
+            android:theme="@style/NoActionBar">
+
+        </activity>
+        <activity android:name=".RequestFriendActivity" />
+        <activity
+            android:name=".ChatActivity"
+            android:theme="@style/NoActionBar">
+
+        </activity>
+        <activity android:name=".activities.FriendsActivity"/>
+    
+        <activity
+            android:name=".slides.MaterialIntroActivity"
+            android:theme="@style/NoActionBar" />
+        <activity android:name=".FriendRequestsActivity" />
+        <activity
+            android:name=".ChatActivity"
+            android:theme="@style/NoActionBar"/>
+
     </application>
 
 </manifest>
