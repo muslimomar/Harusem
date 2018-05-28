@@ -10,24 +10,24 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
+        <activity android:name=".activities.MainActivity"></activity>
         <activity android:name=".activities.FriendsActivity" />
-
         <activity
             android:name=".slides.MaterialIntroActivity"
             android:theme="@style/NoActionBar" />
-        <activity android:name=".FriendRequestsActivity" />
-
+        <activity android:name=".activities.FriendRequestsActivity" />
         <activity
-            android:name=".ChatActivity"
+            android:name=".activities.ChatActivity"
             android:theme="@style/NoActionBar" />
+        <activity android:name=".activities.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activities.SignupActivity">
+        </activity>
     </application>
 
 </manifest>

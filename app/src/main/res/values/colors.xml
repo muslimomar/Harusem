@@ -13,5 +13,6 @@
     <color name="slide_three_button">#4d646f</color>
     <color name="grey_500">#ebebeb</color>
     <color name="light_black">#585858</color>
+    <color name="gray">#f9f9f9</color>
 
 </resources>

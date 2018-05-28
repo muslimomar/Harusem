@@ -1,4 +1,4 @@
-package com.example.william.harusem;
+package com.example.william.harusem.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.example.william.harusem.R;
 import com.example.william.harusem.adapters.RequestFriendsAdapter;
 import com.example.william.harusem.models.RequestFriends;
 

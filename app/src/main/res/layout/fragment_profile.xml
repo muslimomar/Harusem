@@ -159,22 +159,42 @@
 
                 />
 
-            <TextView
-                android:id="@+id/log_out_tv"
+            <RelativeLayout
+                android:id="@+id/log_out_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_between_options_profile"
                 android:clickable="true"
-                android:drawableLeft="@drawable/ic_log_out_profile"
-                android:drawablePadding="@dimen/profile_drawable_padding"
-                android:drawableTint="@color/dark_red"
                 android:focusable="true"
-                android:foreground="?attr/selectableItemBackgroundBorderless"
-                android:padding="8dp"
-                android:text="Logout"
-                android:textColor="@color/dark_red"
-                android:textSize="15sp"
-                android:textStyle="bold" />
+
+                >
+
+                <TextView
+                    android:id="@+id/log_out_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_log_out_profile"
+                    android:drawablePadding="@dimen/profile_drawable_padding"
+                    android:drawableTint="@color/dark_red"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:padding="8dp"
+                    android:text="Logout"
+                    android:textColor="@color/dark_red"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <ProgressBar
+                    android:id="@+id/log_out_pb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="8dp"
+                    android:visibility="gone"
+                    />
+
+            </RelativeLayout>
 
 
         </LinearLayout>

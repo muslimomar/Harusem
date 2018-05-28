@@ -4,22 +4,33 @@ package com.example.william.harusem.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.example.william.harusem.activities.FriendsActivity;
+
 import com.example.william.harusem.R;
-import com.example.william.harusem.FriendRequestsActivity;
+import com.example.william.harusem.activities.FriendRequestsActivity;
+import com.example.william.harusem.activities.FriendsActivity;
+import com.example.william.harusem.activities.LoginActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.nex3z.notificationbadge.NotificationBadge;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
+
+import static com.example.william.harusem.util.Helper.OFFLINE;
 
 public class ProfileFragment extends Fragment {
 
@@ -49,14 +60,22 @@ public class ProfileFragment extends Fragment {
     LinearLayout bottomLayout;
     @BindView(R.id.notification_badge)
     NotificationBadge notificationBadge;
+    @BindView(R.id.log_out_pb)
+    ProgressBar logOutPb;
+    @BindView(R.id.log_out_layout)
+    RelativeLayout logOutLayout;
+
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference mUsersRefDatabase;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         unbinder = ButterKnife.bind(this, rootView);
 
+        configFireBase();
         profileCircleIv.setBorderWidth(2f);
 
         friendsRequestsTv.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +94,6 @@ public class ProfileFragment extends Fragment {
         });
 
 
-
         friendsTv.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -83,7 +101,7 @@ public class ProfileFragment extends Fragment {
 
                 Intent i = new Intent(getActivity(), FriendsActivity.class);
                 startActivity(i);
-                ((Activity) getActivity()).overridePendingTransition(0,0);
+                ((Activity) getActivity()).overridePendingTransition(0, 0);
 
             }
         });
@@ -91,9 +109,72 @@ public class ProfileFragment extends Fragment {
         return rootView;
     }
 
+    private void configFireBase() {
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                hideProgressBar();
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user == null) {
+                    redirectToLogin();
+                }
+            }
+        };
+
+        mAuth = FirebaseAuth.getInstance();
+        mUsersRefDatabase = FirebaseDatabase.getInstance().getReference().child("users");
+    }
+
+    private void redirectToLogin() {
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // LoginActivity is a New Task
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); // The old task when coming back to this activity should be cleared so we cannot come back to it.
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.log_out_layout)
+    public void setLogOutTv(View view) {
+
+        showProgressBar();
+        setUserOffline();
+        mAuth.signOut();
+    }
+
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+
+    private void setUserOffline() {
+        if (mAuth.getCurrentUser() != null) {
+            String userId = mAuth.getCurrentUser().getUid();
+            mUsersRefDatabase.child(userId).child("connection").setValue(OFFLINE);
+        }
+    }
+
+    private void showProgressBar() {
+        logOutPb.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgressBar() {
+        if (logOutPb.getVisibility() == View.VISIBLE) {
+            logOutPb.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mAuth.removeAuthStateListener(mAuthListener);
     }
 }
