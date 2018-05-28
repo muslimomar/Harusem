@@ -100,7 +100,7 @@
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_bar"
         android:layout_below="@id/toolbar_layout"
-        >
+        android:paddingBottom="8dp">
 
 
     </android.support.v7.widget.RecyclerView>
@@ -128,8 +128,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:hint="Write a chatMessage"
-            android:textSize="21.6sp" />
+            android:hint="Write a Message"
+            android:textSize="20sp" />
 
         <ImageButton
             android:id="@+id/send_img_btn"
@@ -138,8 +138,7 @@
             android:layout_marginLeft="5dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_send_blue"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
     </LinearLayout>
 

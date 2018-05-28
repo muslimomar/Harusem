@@ -6,8 +6,6 @@
     android:orientation="vertical"
     tools:context="com.example.william.harusem.fragments.ChatsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
 
     <RelativeLayout
         android:id="@+id/top_layout"

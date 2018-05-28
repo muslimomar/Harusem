@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.william.harusem.R;
+import com.example.william.harusem.util.Extras;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -26,6 +27,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.example.william.harusem.util.Extras.CONNECTION_STATUS;
+import static com.example.william.harusem.util.Extras.USERS_REF;
 import static com.example.william.harusem.util.Helper.ONLINE;
 import static com.example.william.harusem.util.Helper.buildAlertDialog;
 import static com.example.william.harusem.util.Helper.buildProgressDialog;
@@ -93,9 +96,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 dismissDialog(loadingPb);
-
                 if (task.isSuccessful()) {
-
                     setUserOnline();
                     redirectToMainActivity();
                 } else {
@@ -112,9 +113,9 @@ public class LoginActivity extends AppCompatActivity {
             String userId = mAuth.getCurrentUser().getUid();
             FirebaseDatabase.getInstance()
                     .getReference()
-                    .child("users")
+                    .child(USERS_REF)
                     .child(userId)
-                    .child("connection_status")
+                    .child(CONNECTION_STATUS)
                     .setValue(ONLINE);
         }
 
@@ -164,6 +165,8 @@ public class LoginActivity extends AppCompatActivity {
             pb.dismiss();
         }
     }
+
+
 
 }
 

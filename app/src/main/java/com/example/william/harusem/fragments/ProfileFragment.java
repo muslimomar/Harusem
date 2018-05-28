@@ -18,6 +18,7 @@ import com.example.william.harusem.R;
 import com.example.william.harusem.activities.FriendRequestsActivity;
 import com.example.william.harusem.activities.FriendsActivity;
 import com.example.william.harusem.activities.LoginActivity;
+import com.example.william.harusem.util.Extras;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +31,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static com.example.william.harusem.util.Extras.CONNECTION_STATUS;
+import static com.example.william.harusem.util.Extras.USERS_REF;
 import static com.example.william.harusem.util.Helper.OFFLINE;
 
 public class ProfileFragment extends Fragment {
@@ -123,7 +126,7 @@ public class ProfileFragment extends Fragment {
         };
 
         mAuth = FirebaseAuth.getInstance();
-        mUsersRefDatabase = FirebaseDatabase.getInstance().getReference().child("users");
+        mUsersRefDatabase = FirebaseDatabase.getInstance().getReference().child(USERS_REF);
     }
 
     private void redirectToLogin() {
@@ -152,7 +155,7 @@ public class ProfileFragment extends Fragment {
     private void setUserOffline() {
         if (mAuth.getCurrentUser() != null) {
             String userId = mAuth.getCurrentUser().getUid();
-            mUsersRefDatabase.child(userId).child("connection").setValue(OFFLINE);
+            mUsersRefDatabase.child(userId).child(CONNECTION_STATUS).setValue(OFFLINE);
         }
     }
 

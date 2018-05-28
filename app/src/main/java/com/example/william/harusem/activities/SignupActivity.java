@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.models.User;
+import com.example.william.harusem.util.Extras;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -34,6 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.example.william.harusem.util.Extras.USERS_REF;
 import static com.example.william.harusem.util.Helper.ONLINE;
 import static com.example.william.harusem.util.Helper.buildAlertDialog;
 import static com.example.william.harusem.util.Helper.buildProgressDialog;
@@ -150,7 +152,7 @@ public class SignupActivity extends AppCompatActivity {
                 countryTv.getText().toString().trim()
         );
 
-        mDatabase.child("users").child(userId).setValue(user);
+        mDatabase.child(USERS_REF).child(userId).setValue(user);
     }
 
     private void redirectToMainActivity() {

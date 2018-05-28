@@ -3,7 +3,6 @@ package com.example.william.harusem.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +13,7 @@ import android.widget.ProgressBar;
 import com.example.william.harusem.R;
 import com.example.william.harusem.adapters.UsersAdapter;
 import com.example.william.harusem.models.User;
+import com.example.william.harusem.util.Extras;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -26,6 +26,8 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.example.william.harusem.util.Extras.USERS_REF;
 
 
 public class FriendsActivity extends AppCompatActivity {
@@ -41,7 +43,6 @@ public class FriendsActivity extends AppCompatActivity {
     private ArrayList<String> mUsersIdList = new ArrayList<>();
 
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mUsersRefDatabase;
     private ChildEventListener mChildEventListener;
     private UsersAdapter mUsersAdapter;
@@ -52,27 +53,17 @@ public class FriendsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_friends);
         ButterKnife.bind(this);
 
+        showProgressBar();
+
         mAuth = FirebaseAuth.getInstance();
-        mUsersRefDatabase = FirebaseDatabase.getInstance().getReference().child("users");
+        mUsersRefDatabase = FirebaseDatabase.getInstance().getReference().child(USERS_REF);
 
         swipeLayoutRefresh();
         configRecyclerView();
 
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-
-                if (user != null) {
-                    mCurrentUserUid = user.getUid();
-                    queryAllUsers();
-
-                } else {
-                    redirectToLogin();
-
-                }
-            }
-        };
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        mCurrentUserUid = firebaseUser.getUid();
+        queryAllUsers();
 
 
     }
@@ -99,13 +90,6 @@ public class FriendsActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mUsersAdapter);
     }
 
-    private void redirectToLogin() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // LoginActivity is a New Task
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); // The old task when coming back to this activity should be cleared so we cannot come back to it.
-        startActivity(intent);
-    }
-
     private void queryAllUsers() {
         hideProgressBar();
 
@@ -121,7 +105,7 @@ public class FriendsActivity extends AppCompatActivity {
                         mUsersAdapter.setCurrentUserInfo(userId, currentUser.getEmail(), currentUser.getCreationDate());
                     } else {
                         User recipient = dataSnapshot.getValue(User.class);
-                        recipient.setId(mCurrentUserUid);
+                        recipient.setId(userId);
                         mUsersIdList.add(userId);
                         mUsersAdapter.addUser(recipient);
                     }
@@ -173,14 +157,11 @@ public class FriendsActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        showProgressBar();
-        mAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-
         mUsersAdapter.clear();
         mUsersIdList.clear();
 
@@ -188,12 +169,7 @@ public class FriendsActivity extends AppCompatActivity {
             mUsersRefDatabase.removeEventListener(mChildEventListener);
         }
 
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
-
     }
-
 
     private void showProgressBar() {
         progressBar.setVisibility(View.VISIBLE);

@@ -42,14 +42,6 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
         holder.userDisplayNameTv.setText(fireBaseUser.getName());
 
-
-        //TODO: get and set connectionStatus*
-
-//        if (fireBaseUser.getConnectionStatus() == Helper.ONLINE) {
-//        } else {
-//        }
-
-
     }
 
 
@@ -91,16 +83,21 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         @Override
         public void onClick(View view) {
 
-            User user = mUsers.get(getLayoutPosition());
+            try {
+                User user = mUsers.get(getLayoutPosition());
 
-            String chatRef = user.createUniqueChatRef(mCurrentUserCreationDate,mCurrentUserEmail);
+                String chatRef = user.createUniqueChatRef(mCurrentUserCreationDate, mCurrentUserEmail);
 
-            Intent chattingIntent = new Intent(context, ChatActivity.class);
-            chattingIntent.putExtra("CURRENT_USER_ID", mCurrentUserId);
-            chattingIntent.putExtra("RECIPIENT_ID", user.getId());
-            chattingIntent.putExtra("GENERATED_CHAT_REF", chatRef);
+                Intent chattingIntent = new Intent(context, ChatActivity.class);
+                chattingIntent.putExtra("CURRENT_USER_ID", mCurrentUserId);
+                chattingIntent.putExtra("RECIPIENT_ID", user.getId());
+                chattingIntent.putExtra("GENERATED_CHAT_REF", chatRef);
+                chattingIntent.putExtra("RECIPIENT_NAME", user.getName());
 
-            context.startActivity(chattingIntent);
+                context.startActivity(chattingIntent);
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

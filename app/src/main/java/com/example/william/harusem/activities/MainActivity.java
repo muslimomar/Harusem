@@ -1,7 +1,9 @@
 package com.example.william.harusem.activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -14,6 +16,8 @@ import com.example.william.harusem.R;
 import com.example.william.harusem.fragments.ChatsFragment;
 import com.example.william.harusem.fragments.ProfileFragment;
 import com.example.william.harusem.fragments.SearchFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.bottom_navigation)
     AHBottomNavigation bottomNavigation;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +39,19 @@ public class MainActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
+        mAuth = FirebaseAuth.getInstance();
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                if(user == null) {
+                    redirectToLogin();
+                }
+
+            }
+        };
 
 
         AHBottomNavigationItem item1 = new AHBottomNavigationItem("Chats", R.drawable.ic_chat_24dp);
@@ -85,6 +104,26 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
 
     }
+    private void redirectToLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // LoginActivity is a New Task
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); // The old task when coming back to this activity should be cleared so we cannot come back to it.
+        startActivity(intent);
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(mAuthListener!=null) {
+            mAuth.addAuthStateListener(mAuthListener);
+        }
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(mAuthListener!=null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
 }

@@ -5,8 +5,6 @@
     android:orientation="vertical"
     tools:context="com.example.william.harusem.fragments.ChatsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <ImageView
         android:id="@+id/ic_profile_chat"
         android:layout_width="wrap_content"

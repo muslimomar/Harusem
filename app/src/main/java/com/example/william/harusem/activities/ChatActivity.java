@@ -1,5 +1,6 @@
 package com.example.william.harusem.activities;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,22 +12,34 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.adapters.MessagesAdapter;
 import com.example.william.harusem.models.ChatMessage;
+import com.example.william.harusem.util.Extras;
+import com.example.william.harusem.util.Helper;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.example.william.harusem.util.Extras.CHATS_REF;
+import static com.example.william.harusem.util.Extras.CONNECTION_STATUS;
+import static com.example.william.harusem.util.Extras.USERS_REF;
+import static com.example.william.harusem.util.Helper.OFFLINE;
+import static com.example.william.harusem.util.Helper.ONLINE;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -40,16 +53,22 @@ public class ChatActivity extends AppCompatActivity {
     RecyclerView chatRecyclerView;
     @BindView(R.id.message_input_et)
     EditText messageInputEt;
-
+    @BindView(R.id.status_sign_iv)
+    ImageView statusSignIv;
     @BindView(R.id.send_img_btn)
     ImageButton sendImgBtn;
+    @BindView(R.id.friend_name_tv)
+    TextView friendNameTv;
 
     private String chatRef = "";
     private String recipientId = "";
+    private String recipientName = "";
     private String currentUserId = "";
     private MessagesAdapter messagesAdapter;
     private DatabaseReference messagesDbReference;
+    private DatabaseReference userOnlineStatusDbRef;
     private ChildEventListener messagesChildListener;
+    private ValueEventListener onlineStatusListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +83,13 @@ public class ChatActivity extends AppCompatActivity {
             chatRef = bundle.getString("GENERATED_CHAT_REF");
             recipientId = bundle.getString("RECIPIENT_ID");
             currentUserId = bundle.getString("CURRENT_USER_ID");
+            recipientName = bundle.getString("RECIPIENT_NAME");
         }
 
         configFireBase();
         configRecyclerView();
+
+        friendNameTv.setText(recipientName);
 
         messageInputEt.addTextChangedListener(new TextWatcher() {
             @Override
@@ -102,7 +124,10 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void configFireBase() {
-        messagesDbReference = FirebaseDatabase.getInstance().getReference().child(chatRef);
+        messagesDbReference = FirebaseDatabase.getInstance().getReference()
+                .child(CHATS_REF).child(chatRef);
+        userOnlineStatusDbRef = FirebaseDatabase.getInstance().getReference()
+                .child(USERS_REF).child(recipientId).child(CONNECTION_STATUS);
     }
 
     private void hideKeyboard() {
@@ -113,20 +138,40 @@ public class ChatActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        onlineStatusListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+
+                    if(dataSnapshot.getValue().toString().equals(String.valueOf(ONLINE))) {
+                        statusSignIv.setColorFilter(Color.parseColor("#10e910"));
+                    }else if (dataSnapshot.getValue().toString().equals(String.valueOf(OFFLINE))) {
+                        statusSignIv.setColorFilter(Color.RED);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
         messagesChildListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if(dataSnapshot.exists()) {
+                if (dataSnapshot.exists()) {
                     ChatMessage chatMessage = dataSnapshot.getValue(ChatMessage.class);
 
-                    if(chatMessage.getSender().equals(currentUserId)) {
+                    if (chatMessage.getSender().equals(currentUserId)) {
                         chatMessage.setIsSenderOrRecipient(MessagesAdapter.MESSAGE_TYPE_SENDER);
-                    }else{
+                    } else {
                         chatMessage.setIsSenderOrRecipient(MessagesAdapter.MESSAGE_TYPE_RECEIVER);
                     }
 
                     messagesAdapter.addMessage(chatMessage);
-                    chatRecyclerView.scrollToPosition(messagesAdapter.getItemCount() -1);
+                    chatRecyclerView.scrollToPosition(messagesAdapter.getItemCount() - 1);
 
                 }
             }
@@ -152,23 +197,28 @@ public class ChatActivity extends AppCompatActivity {
             }
         };
 
+        userOnlineStatusDbRef.addValueEventListener(onlineStatusListener);
         messagesDbReference.limitToFirst(50).addChildEventListener(messagesChildListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if(messagesChildListener!=null) {
+        if (messagesChildListener != null) {
             messagesDbReference.removeEventListener(messagesChildListener);
+        }
+        if(onlineStatusListener != null) {
+            userOnlineStatusDbRef.removeEventListener(onlineStatusListener);
         }
         messagesAdapter.cleanAdapter();
     }
 
-    @OnClick(R.id.send_img_btn) public void sendImgBtn(View view ){
+    @OnClick(R.id.send_img_btn)
+    public void sendImgBtn(View view) {
         String message = messageInputEt.getText().toString().trim();
 
-        if(!message.isEmpty()){
-            ChatMessage chatMessage = new ChatMessage(message,currentUserId,recipientId);
+        if (!message.isEmpty()) {
+            ChatMessage chatMessage = new ChatMessage(message, currentUserId, recipientId);
             messagesDbReference.push().setValue(chatMessage);
 
             messageInputEt.setText("");
