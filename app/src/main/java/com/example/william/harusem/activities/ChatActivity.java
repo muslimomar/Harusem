@@ -15,13 +15,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.adapters.MessagesAdapter;
 import com.example.william.harusem.models.ChatMessage;
 import com.example.william.harusem.util.Extras;
-import com.example.william.harusem.util.Helper;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,8 +36,6 @@ import butterknife.OnClick;
 import static com.example.william.harusem.util.Extras.CHATS_REF;
 import static com.example.william.harusem.util.Extras.CONNECTION_STATUS;
 import static com.example.william.harusem.util.Extras.USERS_REF;
-import static com.example.william.harusem.util.Helper.OFFLINE;
-import static com.example.william.harusem.util.Helper.ONLINE;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -141,11 +137,11 @@ public class ChatActivity extends AppCompatActivity {
         onlineStatusListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
+                if (dataSnapshot.exists()) {
 
-                    if(dataSnapshot.getValue().toString().equals(String.valueOf(ONLINE))) {
+                    if (dataSnapshot.getValue().toString().equals(Extras.ONLINE)) {
                         statusSignIv.setColorFilter(Color.parseColor("#10e910"));
-                    }else if (dataSnapshot.getValue().toString().equals(String.valueOf(OFFLINE))) {
+                    } else {
                         statusSignIv.setColorFilter(Color.RED);
                     }
 
@@ -207,7 +203,7 @@ public class ChatActivity extends AppCompatActivity {
         if (messagesChildListener != null) {
             messagesDbReference.removeEventListener(messagesChildListener);
         }
-        if(onlineStatusListener != null) {
+        if (onlineStatusListener != null) {
             userOnlineStatusDbRef.removeEventListener(onlineStatusListener);
         }
         messagesAdapter.cleanAdapter();

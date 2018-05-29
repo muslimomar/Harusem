@@ -32,7 +32,7 @@ public class Helper {
         ProgressDialog progress = new ProgressDialog(context);
         progress.setTitle(title);
         progress.setMessage(message);
-        progress.setCancelable(isCancellable); // disable dismiss by tapping outside of the dialog
+        progress.setCanceledOnTouchOutside(isCancellable);
         return progress;
     }
 

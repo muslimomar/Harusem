@@ -108,7 +108,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private void createAccount(String email, String pass) {
 
-        final ProgressDialog loadingPb = buildProgressDialog(this, "Please Wait..", "Loading........", true);
+        final ProgressDialog loadingPb = buildProgressDialog(this, "Please Wait..", "Loading........", false);
         loadingPb.show();
 
         mAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -147,7 +147,7 @@ public class SignupActivity extends AppCompatActivity {
         User user = new User(
                 getEditTextString(nameEt),
                 getEditTextString(emailEt),
-                ONLINE,
+                Extras.ONLINE,
                 new Date().getTime(),
                 countryTv.getText().toString().trim()
         );

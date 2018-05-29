@@ -3,6 +3,7 @@ package com.example.william.harusem.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -15,32 +16,36 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.william.harusem.R;
+import com.example.william.harusem.activities.AllUsersActivity;
 import com.example.william.harusem.activities.FriendRequestsActivity;
-import com.example.william.harusem.activities.FriendsActivity;
 import com.example.william.harusem.activities.LoginActivity;
-import com.example.william.harusem.util.Extras;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.mikhaellopez.circularimageview.CircularImageView;
 import com.nex3z.notificationbadge.NotificationBadge;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import de.hdodenhof.circleimageview.CircleImageView;
 
+import static android.app.Activity.RESULT_OK;
 import static com.example.william.harusem.util.Extras.CONNECTION_STATUS;
 import static com.example.william.harusem.util.Extras.USERS_REF;
 import static com.example.william.harusem.util.Helper.OFFLINE;
 
 public class ProfileFragment extends Fragment {
 
+    int requestCode = 65;
+    private static final String TAG = "Profile Fragment";
 
     Unbinder unbinder;
     @BindView(R.id.profile_circle_iv)
-    CircularImageView profileCircleIv;
+    CircleImageView profileCircleIv;
     @BindView(R.id.name_tv)
     TextView nameTv;
     @BindView(R.id.friends_count_key_tv)
@@ -79,7 +84,6 @@ public class ProfileFragment extends Fragment {
         unbinder = ButterKnife.bind(this, rootView);
 
         configFireBase();
-        profileCircleIv.setBorderWidth(2f);
 
         friendsRequestsTv.setOnClickListener(new View.OnClickListener() {
             int number = 0;
@@ -102,7 +106,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Intent i = new Intent(getActivity(), FriendsActivity.class);
+                Intent i = new Intent(getActivity(), AllUsersActivity.class);
                 startActivity(i);
                 ((Activity) getActivity()).overridePendingTransition(0, 0);
 
@@ -179,5 +183,40 @@ public class ProfileFragment extends Fragment {
     public void onStop() {
         super.onStop();
         mAuth.removeAuthStateListener(mAuthListener);
+    }
+
+    @OnClick(R.id.profile_circle_iv)
+    public void onProfileImgClick(View view) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+
+        startActivityForResult(intent, requestCode);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == requestCode && resultCode == RESULT_OK) {
+
+            Uri imagePath = data.getData();
+            CropImage.activity(imagePath).setGuidelines(CropImageView.Guidelines.ON)
+                    .setAspectRatio(1, 1)
+                    .start(getContext(), this);
+        }
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri imageUri = result.getUri();
+
+                profileCircleIv.setImageURI(imageUri);
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
+        }
+
     }
 }

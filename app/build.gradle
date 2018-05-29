@@ -9,6 +9,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -55,14 +56,16 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
 
     // Circular ImageView
-    compile 'com.mikhaellopez:circularimageview:3.0.2'
-
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
     // Tango Intro
     compile 'agency.tango.android:material-intro-screen:0.0.5'
 
     // badge view
     implementation 'com.nex3z:notification-badge:1.0.2'
     compile 'com.github.mukeshsolanki:country-picker-android:1.2.4'
+
+    // Image Cropper
+    compile 'com.theartofdev.edmodo:android-image-cropper:2.5.1'
 
 }
 

@@ -8,7 +8,7 @@ public class User {
 
     String name;
     String email;
-    int connectionStatus;
+    String connectionStatus;
     private long creationDate;
 
     private String id;
@@ -17,7 +17,7 @@ public class User {
     public User() {
     }
 
-    public User(String name, String email, int connectionStatus, long creationDate, String country) {
+    public User(String name, String email, String connectionStatus, long creationDate, String country) {
         this.name = name;
         this.email = email;
         this.connectionStatus = connectionStatus;
@@ -41,11 +41,11 @@ public class User {
         this.email = email;
     }
 
-    public int getConnectionStatus() {
+    public String getConnectionStatus() {
         return connectionStatus;
     }
 
-    public void setConnectionStatus(int connectionStatus) {
+    public void setConnectionStatus(String connectionStatus) {
         this.connectionStatus = connectionStatus;
     }
 

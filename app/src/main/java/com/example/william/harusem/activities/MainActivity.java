@@ -16,11 +16,17 @@ import com.example.william.harusem.R;
 import com.example.william.harusem.fragments.ChatsFragment;
 import com.example.william.harusem.fragments.ProfileFragment;
 import com.example.william.harusem.fragments.SearchFragment;
+import com.example.william.harusem.util.Extras;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.example.william.harusem.util.Extras.LAST_SEEN;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     AHBottomNavigation bottomNavigation;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference mUserRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +48,10 @@ public class MainActivity extends AppCompatActivity {
         }
         mAuth = FirebaseAuth.getInstance();
 
+        if (mAuth.getCurrentUser() != null) {
+            mUserRef = FirebaseDatabase.getInstance().getReference().child("users").child(mAuth.getCurrentUser().getUid());
+        }
+
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -48,10 +59,14 @@ public class MainActivity extends AppCompatActivity {
 
                 if(user == null) {
                     redirectToLogin();
+                }else{
+                    mUserRef.child(LAST_SEEN).setValue(ServerValue.TIMESTAMP);
                 }
 
             }
         };
+
+
 
 
         AHBottomNavigationItem item1 = new AHBottomNavigationItem("Chats", R.drawable.ic_chat_24dp);
@@ -114,9 +129,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
         if(mAuthListener!=null) {
             mAuth.addAuthStateListener(mAuthListener);
         }
+
     }
 
     @Override
@@ -126,4 +143,8 @@ public class MainActivity extends AppCompatActivity {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
+
+
+
 }

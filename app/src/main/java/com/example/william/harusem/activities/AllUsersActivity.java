@@ -1,7 +1,6 @@
 package com.example.william.harusem.activities;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -11,9 +10,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.example.william.harusem.R;
-import com.example.william.harusem.adapters.UsersAdapter;
+import com.example.william.harusem.adapters.AllUsersAdapter;
 import com.example.william.harusem.models.User;
-import com.example.william.harusem.util.Extras;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -30,7 +28,7 @@ import butterknife.ButterKnife;
 import static com.example.william.harusem.util.Extras.USERS_REF;
 
 
-public class FriendsActivity extends AppCompatActivity {
+public class AllUsersActivity extends AppCompatActivity {
 
     @BindView(R.id.friends_list)
     RecyclerView mRecyclerView;
@@ -45,7 +43,7 @@ public class FriendsActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference mUsersRefDatabase;
     private ChildEventListener mChildEventListener;
-    private UsersAdapter mUsersAdapter;
+    private AllUsersAdapter mAllUsersAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,10 +82,10 @@ public class FriendsActivity extends AppCompatActivity {
 
     private void configRecyclerView() {
 
-        mUsersAdapter = new UsersAdapter(this, new ArrayList<User>());
+        mAllUsersAdapter = new AllUsersAdapter(this, new ArrayList<User>());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(mUsersAdapter);
+        mRecyclerView.setAdapter(mAllUsersAdapter);
     }
 
     private void queryAllUsers() {
@@ -102,12 +100,12 @@ public class FriendsActivity extends AppCompatActivity {
 
                     if (dataSnapshot.getKey().equals(mCurrentUserUid)) {
                         User currentUser = dataSnapshot.getValue(User.class);
-                        mUsersAdapter.setCurrentUserInfo(userId, currentUser.getEmail(), currentUser.getCreationDate());
+                        mAllUsersAdapter.setCurrentUserInfo(userId, currentUser.getEmail(), currentUser.getCreationDate());
                     } else {
                         User recipient = dataSnapshot.getValue(User.class);
                         recipient.setId(userId);
                         mUsersIdList.add(userId);
-                        mUsersAdapter.addUser(recipient);
+                        mAllUsersAdapter.addUser(recipient);
                     }
 
                 }
@@ -125,7 +123,7 @@ public class FriendsActivity extends AppCompatActivity {
 
                         int index = mUsersIdList.indexOf(userId);
                         if (index > -1) {
-                            mUsersAdapter.changeUser(index, user);
+                            mAllUsersAdapter.changeUser(index, user);
                         }
 
                     }
@@ -162,7 +160,7 @@ public class FriendsActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        mUsersAdapter.clear();
+        mAllUsersAdapter.clear();
         mUsersIdList.clear();
 
         if (mChildEventListener != null) {

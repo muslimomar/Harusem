@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.william.harusem.R;
@@ -14,7 +15,7 @@ import com.example.william.harusem.models.User;
 
 import java.util.List;
 
-public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> {
+public class AllUsersAdapter extends RecyclerView.Adapter<AllUsersAdapter.ViewHolder> {
 
     private List<User> mUsers;
     private Context context;
@@ -23,7 +24,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
     private long mCurrentUserCreationDate;
 
 
-    public UsersAdapter(Context context, List<User> mUsers) {
+    public AllUsersAdapter(Context context, List<User> mUsers) {
         this.mUsers = mUsers;
         this.context = context;
     }
@@ -72,12 +73,13 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView userDisplayNameTv;
+        Button sendMessageBtn;
 
         ViewHolder(View itemView) {
             super(itemView);
             userDisplayNameTv = itemView.findViewById(R.id.user_display_name_tv);
-
-            itemView.setOnClickListener(this);
+            sendMessageBtn = itemView.findViewById(R.id.message_btn);
+            sendMessageBtn.setOnClickListener(this);
         }
 
         @Override

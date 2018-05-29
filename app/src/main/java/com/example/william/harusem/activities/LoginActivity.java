@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void login(String email, String pass) {
 
-        final ProgressDialog loadingPb = buildProgressDialog(this, "Please Wait..", "Loading........", true);
+        final ProgressDialog loadingPb = buildProgressDialog(this, "Please Wait..", "Loading........", false);
         loadingPb.show();
 
         mAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                     .child(USERS_REF)
                     .child(userId)
                     .child(CONNECTION_STATUS)
-                    .setValue(ONLINE);
+                    .setValue(Extras.ONLINE);
         }
 
     }
