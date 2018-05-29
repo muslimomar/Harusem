@@ -17,19 +17,12 @@ import com.example.william.harusem.R;
 import com.example.william.harusem.models.Friend;
 import com.example.william.harusem.models.User;
 import com.example.william.harusem.util.Extras;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static com.example.william.harusem.util.Extras.FRIENDS_REF;
-import static com.example.william.harusem.util.Extras.ONLINE;
-import static com.example.william.harusem.util.Extras.USERS_REF;
 
 
 public class FriendsActivity extends AppCompatActivity {

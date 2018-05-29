@@ -17,11 +17,6 @@ import com.example.william.harusem.fragments.ChatsFragment;
 import com.example.william.harusem.fragments.ProfileFragment;
 import com.example.william.harusem.fragments.SearchFragment;
 import com.example.william.harusem.util.Extras;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.bottom_navigation)
     AHBottomNavigation bottomNavigation;
-    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +36,6 @@ public class MainActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
-
-        mAuth = FirebaseAuth.getInstance();
 
 
         AHBottomNavigationItem item1 = new AHBottomNavigationItem("Chats", R.drawable.ic_chat_24dp);
@@ -102,20 +94,6 @@ public class MainActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); // The old task when coming back to this activity should be cleared so we cannot come back to it.
         startActivity(intent);
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
-        if(currentUser == null){
-            redirectToLogin();
-        }
-
-    }
-
-
 
 
 }

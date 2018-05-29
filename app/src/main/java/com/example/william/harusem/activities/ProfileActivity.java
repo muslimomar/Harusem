@@ -11,14 +11,7 @@ import android.widget.Toast;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.util.Helper;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
@@ -30,9 +23,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.example.william.harusem.util.Extras.FRIENDS_REF;
-import static com.example.william.harusem.util.Extras.FRIENDS_REQUESTS_REF;
-import static com.example.william.harusem.util.Extras.USERS_REF;
 
 public class ProfileActivity extends AppCompatActivity {
 

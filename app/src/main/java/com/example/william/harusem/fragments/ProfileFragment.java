@@ -19,11 +19,6 @@ import com.example.william.harusem.R;
 import com.example.william.harusem.activities.AllUsersActivity;
 import com.example.william.harusem.activities.FriendRequestsActivity;
 import com.example.william.harusem.activities.LoginActivity;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 import com.nex3z.notificationbadge.NotificationBadge;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -35,8 +30,6 @@ import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
-import static com.example.william.harusem.util.Extras.CONNECTION_STATUS;
-import static com.example.william.harusem.util.Extras.USERS_REF;
 import static com.example.william.harusem.util.Helper.OFFLINE;
 
 public class ProfileFragment extends Fragment {
@@ -74,17 +67,11 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.log_out_layout)
     RelativeLayout logOutLayout;
 
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-    private DatabaseReference mUsersRefDatabase;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-
-        configFireBase();
 
         friendsRequestsTv.setOnClickListener(new View.OnClickListener() {
             int number = 0;
@@ -117,22 +104,6 @@ public class ProfileFragment extends Fragment {
         return rootView;
     }
 
-    private void configFireBase() {
-
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                hideProgressBar();
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user == null) {
-                    redirectToLogin();
-                }
-            }
-        };
-
-        mAuth = FirebaseAuth.getInstance();
-    }
-
     private void redirectToLogin() {
         Intent intent = new Intent(getActivity(), LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // LoginActivity is a New Task
@@ -142,8 +113,6 @@ public class ProfileFragment extends Fragment {
 
     @OnClick(R.id.log_out_layout)
     public void setLogOutTv(View view) {
-        showProgressBar();
-        mAuth.signOut();
     }
 
 
@@ -167,13 +136,11 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mAuth.removeAuthStateListener(mAuthListener);
     }
 
     @OnClick(R.id.profile_circle_iv)

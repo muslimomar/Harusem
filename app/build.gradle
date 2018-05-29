@@ -22,8 +22,6 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.google.firebase:firebase-auth:11.0.4'
-    implementation 'com.google.firebase:firebase-database:11.0.4'
     compile 'com.miguelcatalan:materialsearchview:1.4.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     implementation 'com.android.support:support-v4:26.1.0'
@@ -52,9 +50,6 @@ dependencies {
     // Support Design
     compile 'com.android.support:design:26.1.0'
 
-    // Picasso
-    implementation 'com.squareup.picasso:picasso:2.71828'
-
     // Circular ImageView
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     // Tango Intro
@@ -67,18 +62,17 @@ dependencies {
     // Image Cropper
     compile 'com.theartofdev.edmodo:android-image-cropper:2.5.1'
 
-    // firebase ui
-    implementation 'com.firebaseui:firebase-ui-database:1.2.0'
-
-    // ok http
-    compile 'com.squareup.okhttp:okhttp:2.5.0'
 
     // Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
 
+    // CHAT SDK
+    compile "com.quickblox:quickblox-android-sdk-core:3.8.1"
+    compile "com.quickblox:quickblox-android-sdk-chat:3.8.1"
+
+    // Text as Drawable
+    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+
+
 }
 
-
-
-
-apply plugin: 'com.google.gms.google-services'

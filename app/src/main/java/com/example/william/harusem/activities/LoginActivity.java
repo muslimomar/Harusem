@@ -3,9 +3,9 @@ package com.example.william.harusem.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -14,23 +14,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.william.harusem.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.iid.FirebaseInstanceId;
+import com.quickblox.auth.session.QBSettings;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.users.QBUsers;
+import com.quickblox.users.model.QBUser;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.example.william.harusem.util.Extras.*;
 
+import static com.example.william.harusem.util.Extras.ACCOUNT_KEY;
+import static com.example.william.harusem.util.Extras.APP_ID;
+import static com.example.william.harusem.util.Extras.AUTH_KEY;
+import static com.example.william.harusem.util.Extras.AUTH_SECRET;
 import static com.example.william.harusem.util.Helper.buildAlertDialog;
 import static com.example.william.harusem.util.Helper.buildProgressDialog;
 
 public class LoginActivity extends AppCompatActivity {
+    ProgressDialog loadingPb;
 
     @BindView(R.id.email_et)
     EditText emailEt;
@@ -42,9 +45,7 @@ public class LoginActivity extends AppCompatActivity {
     Button signupBtn;
     @BindView(R.id.forgot_pass_tv)
     TextView forgotPassTv;
-    private DatabaseReference mUsersRef;
 
-    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +53,18 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        mAuth = FirebaseAuth.getInstance();
-        mUsersRef = FirebaseDatabase.getInstance().getReference().child("users");
 
+        initializeFramework();
 
         hideActionBar();
 
         hideSoftKeyboard();
 
+    }
+
+    private void initializeFramework() {
+        QBSettings.getInstance().init(getApplicationContext(),APP_ID,AUTH_KEY,AUTH_SECRET);
+        QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
     }
 
     private void hideSoftKeyboard() {
@@ -88,24 +93,23 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login(String email, String pass) {
-
-        final ProgressDialog loadingPb = buildProgressDialog(this, "Please Wait..", "Loading........", false);
+        loadingPb = buildProgressDialog(this, "Please Wait..", "Loading........", false);
         loadingPb.show();
 
-        mAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+
+        QBUser qbUser = new QBUser(email,pass);
+
+        QBUsers.signIn(qbUser).performAsync(new QBEntityCallback<QBUser>() {
             @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
+            public void onSuccess(QBUser qbUser, Bundle bundle) {
+                dismissDialog(loadingPb);
+                redirectToMainActivity();
+            }
 
-                if (task.isSuccessful()) {
-
-                    dismissDialog(loadingPb);
-
-                    redirectToMainActivity();
-                } else {
-                    loadingPb.hide();
-
-                    buildAlertDialog("Login Failed", "Wrong email or password entered!", true, LoginActivity.this);
-                }
+            @Override
+            public void onError(QBResponseException e) {
+                dismissDialog(loadingPb);
+                buildAlertDialog("Login Failed", e.getMessage(), true, LoginActivity.this);
             }
         });
 
@@ -136,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     boolean isEmailValid(CharSequence email) {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        return (Patterns.EMAIL_ADDRESS.matcher(email).matches());
     }
 
 

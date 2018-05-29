@@ -6,12 +6,10 @@ package com.example.william.harusem.util;
 
 public final class Extras {
 
-    public static final String USERS_REF = "users";
-    public static final String CHATS_REF = "chats";
-    public static final String CONNECTION_STATUS = "connection_status";
-    public static final String ONLINE = "online";
-    public static final String FRIENDS_REF = "friends";
-    public static final String FRIENDS_REQUESTS_REF = "friend_reqs";
+    public static final String APP_ID = "71368";
+    public static final String AUTH_KEY = "bs9P3xwuvAubPYe";
+    public static final String AUTH_SECRET = "DuRamVbTa8SwgG9";
+    public static final String ACCOUNT_KEY = "TD-D-HZ_zX2vZuhqZu3k";
 
 
 }

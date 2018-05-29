@@ -3,8 +3,8 @@ package com.example.william.harusem.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,30 +15,25 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.william.harusem.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.mukesh.countrypicker.Country;
 import com.mukesh.countrypicker.CountryPicker;
 import com.mukesh.countrypicker.OnCountryPickerListener;
-
-import java.util.HashMap;
+import com.quickblox.auth.QBAuth;
+import com.quickblox.auth.session.QBSession;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.users.QBUsers;
+import com.quickblox.users.model.QBUser;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.example.william.harusem.util.Extras.USERS_REF;
 import static com.example.william.harusem.util.Helper.buildAlertDialog;
 import static com.example.william.harusem.util.Helper.buildProgressDialog;
 
 public class SignupActivity extends AppCompatActivity {
+    public static final String TAG = SignupActivity.class.getSimpleName();
     ProgressDialog loadingPb;
     @BindView(R.id.email_et)
     EditText emailEt;
@@ -51,9 +46,6 @@ public class SignupActivity extends AppCompatActivity {
     @BindView(R.id.name_et)
     EditText nameEt;
 
-    private FirebaseAuth mAuth;
-    private DatabaseReference mUsersRef;
-
     public static String getEditTextString(EditText editText) {
         return editText.getText().toString().trim();
     }
@@ -64,11 +56,24 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
 
-        mAuth = FirebaseAuth.getInstance();
+        registerSession();
 
         hideSoftKeyboard();
 
+    }
 
+    private void registerSession() {
+        QBAuth.createSession().performAsync(new QBEntityCallback<QBSession>() {
+            @Override
+            public void onSuccess(QBSession qbSession, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Log.e(TAG, "onError: ", e);
+            }
+        });
     }
 
     private void onSignup() {
@@ -86,9 +91,14 @@ public class SignupActivity extends AppCompatActivity {
             return;
         }
 
-        if (getEditTextString(passwordEt).isEmpty() ||
-                (getEditTextString(passwordEt).length() < 6)) {
+        if (getEditTextString(passwordEt).isEmpty()) {
             passwordEt.setError("Please enter a valid password!");
+            passwordEt.requestFocus();
+            return;
+        }
+
+        if ((getEditTextString(passwordEt).length() < 8)) {
+            passwordEt.setError("Password is too short! (minimum is 8 characters)");
             passwordEt.requestFocus();
             return;
         }
@@ -99,38 +109,35 @@ public class SignupActivity extends AppCompatActivity {
             return;
         }
 
-        createAccount(getEditTextString(emailEt), getEditTextString(passwordEt));
+        createAccount(getEditTextString(emailEt), getEditTextString(passwordEt), getEditTextString(nameEt));
 
 
     }
 
-    private void createAccount(String email, String pass) {
-
+    private void createAccount(String email, String pass, String name) {
         loadingPb = buildProgressDialog(this, "Please Wait..", "Loading........", false);
         loadingPb.show();
 
-        mAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        QBUser qbUser = new QBUser(email, pass);
+        qbUser.setFullName(name);
+        qbUser.setEmail(email);
+        qbUser.setCustomData(countryTv.getText().toString().trim());
+
+        QBUsers.signUp(qbUser).performAsync(new QBEntityCallback<QBUser>() {
+
             @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
+            public void onSuccess(QBUser qbUser, Bundle bundle) {
+                dismissDialog(loadingPb);
+                redirectToMainActivity();
+            }
 
-                    RegisterUser();
-                    redirectToMainActivity();
-
-                } else {
-                    loadingPb.hide();
-
-                    if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-                        buildAlertDialog("Signup Failed", "The email is already used by another user!", true, SignupActivity.this);
-                    } else {
-
-                        buildAlertDialog("Signup Failed", "Wrong email or password entered!", true, SignupActivity.this);
-                    }
-                }
+            @Override
+            public void onError(QBResponseException e) {
+                dismissDialog(loadingPb);
+                buildAlertDialog("Signup Failed", e.getMessage(), true, SignupActivity.this);
 
             }
         });
-
 
     }
 
@@ -138,37 +145,6 @@ public class SignupActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         );
-    }
-
-    private void RegisterUser() {
-
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        String uid = firebaseUser.getUid();
-
-        mUsersRef = FirebaseDatabase.getInstance().getReference().child(USERS_REF).child(uid);
-
-        String deviceToken = FirebaseInstanceId.getInstance().getToken();
-
-        HashMap<String, String> userMap = new HashMap<>();
-        userMap.put("name", getEditTextString(nameEt));
-        userMap.put("email", getEditTextString(emailEt));
-        userMap.put("country", countryTv.getText().toString().trim());
-        userMap.put("image", "default");
-        userMap.put("thumb_image", "default");
-        userMap.put("device_token", deviceToken);
-
-        mUsersRef.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                dismissDialog(loadingPb);
-                if (task.isSuccessful()) {
-                    redirectToMainActivity();
-
-                }
-            }
-        });
-
-
     }
 
     private void redirectToMainActivity() {
@@ -223,5 +199,4 @@ public class SignupActivity extends AppCompatActivity {
     boolean isEmailValid(CharSequence email) {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
-
 }

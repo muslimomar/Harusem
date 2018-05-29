@@ -16,16 +16,12 @@ import android.widget.Toast;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.models.User;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.example.william.harusem.util.Extras.USERS_REF;
 
 
 public class AllUsersActivity extends AppCompatActivity {
