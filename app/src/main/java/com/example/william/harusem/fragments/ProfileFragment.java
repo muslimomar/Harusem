@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.nex3z.notificationbadge.NotificationBadge;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -130,7 +131,6 @@ public class ProfileFragment extends Fragment {
         };
 
         mAuth = FirebaseAuth.getInstance();
-        mUsersRefDatabase = FirebaseDatabase.getInstance().getReference().child(USERS_REF);
     }
 
     private void redirectToLogin() {
@@ -142,9 +142,7 @@ public class ProfileFragment extends Fragment {
 
     @OnClick(R.id.log_out_layout)
     public void setLogOutTv(View view) {
-
         showProgressBar();
-        setUserOffline();
         mAuth.signOut();
     }
 
@@ -155,13 +153,6 @@ public class ProfileFragment extends Fragment {
         unbinder.unbind();
     }
 
-
-    private void setUserOffline() {
-        if (mAuth.getCurrentUser() != null) {
-            String userId = mAuth.getCurrentUser().getUid();
-            mUsersRefDatabase.child(userId).child(CONNECTION_STATUS).setValue(OFFLINE);
-        }
-    }
 
     private void showProgressBar() {
         logOutPb.setVisibility(View.VISIBLE);

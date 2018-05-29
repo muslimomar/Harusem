@@ -1,6 +1,5 @@
 package com.example.william.harusem.activities;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,32 +15,31 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.william.harusem.R;
-import com.example.william.harusem.models.User;
-import com.example.william.harusem.util.Extras;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.mukesh.countrypicker.Country;
 import com.mukesh.countrypicker.CountryPicker;
 import com.mukesh.countrypicker.OnCountryPickerListener;
 
-import java.util.Date;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.example.william.harusem.util.Extras.USERS_REF;
-import static com.example.william.harusem.util.Helper.ONLINE;
 import static com.example.william.harusem.util.Helper.buildAlertDialog;
 import static com.example.william.harusem.util.Helper.buildProgressDialog;
 
 public class SignupActivity extends AppCompatActivity {
-
+    ProgressDialog loadingPb;
     @BindView(R.id.email_et)
     EditText emailEt;
     @BindView(R.id.password_et)
@@ -54,7 +52,7 @@ public class SignupActivity extends AppCompatActivity {
     EditText nameEt;
 
     private FirebaseAuth mAuth;
-    private DatabaseReference mDatabase;
+    private DatabaseReference mUsersRef;
 
     public static String getEditTextString(EditText editText) {
         return editText.getText().toString().trim();
@@ -68,9 +66,9 @@ public class SignupActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
         hideSoftKeyboard();
+
+
     }
 
     private void onSignup() {
@@ -108,24 +106,23 @@ public class SignupActivity extends AppCompatActivity {
 
     private void createAccount(String email, String pass) {
 
-        final ProgressDialog loadingPb = buildProgressDialog(this, "Please Wait..", "Loading........", false);
+        loadingPb = buildProgressDialog(this, "Please Wait..", "Loading........", false);
         loadingPb.show();
 
         mAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                dismissDialog(loadingPb);
                 if (task.isSuccessful()) {
 
-                    RegisterUser(task.getResult().getUser().getUid());
-
+                    RegisterUser();
                     redirectToMainActivity();
 
                 } else {
+                    loadingPb.hide();
 
-                    if(task.getException() instanceof FirebaseAuthUserCollisionException) {
+                    if (task.getException() instanceof FirebaseAuthUserCollisionException) {
                         buildAlertDialog("Signup Failed", "The email is already used by another user!", true, SignupActivity.this);
-                    }else {
+                    } else {
 
                         buildAlertDialog("Signup Failed", "Wrong email or password entered!", true, SignupActivity.this);
                     }
@@ -143,16 +140,35 @@ public class SignupActivity extends AppCompatActivity {
         );
     }
 
-    private void RegisterUser(String userId) {
-        User user = new User(
-                getEditTextString(nameEt),
-                getEditTextString(emailEt),
-                Extras.ONLINE,
-                new Date().getTime(),
-                countryTv.getText().toString().trim()
-        );
+    private void RegisterUser() {
 
-        mDatabase.child(USERS_REF).child(userId).setValue(user);
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = firebaseUser.getUid();
+
+        mUsersRef = FirebaseDatabase.getInstance().getReference().child(USERS_REF).child(uid);
+
+        String deviceToken = FirebaseInstanceId.getInstance().getToken();
+
+        HashMap<String, String> userMap = new HashMap<>();
+        userMap.put("name", getEditTextString(nameEt));
+        userMap.put("email", getEditTextString(emailEt));
+        userMap.put("country", countryTv.getText().toString().trim());
+        userMap.put("image", "default");
+        userMap.put("thumb_image", "default");
+        userMap.put("device_token", deviceToken);
+
+        mUsersRef.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                dismissDialog(loadingPb);
+                if (task.isSuccessful()) {
+                    redirectToMainActivity();
+
+                }
+            }
+        });
+
+
     }
 
     private void redirectToMainActivity() {

@@ -26,15 +26,11 @@ import com.google.firebase.database.ServerValue;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.example.william.harusem.util.Extras.LAST_SEEN;
-
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.bottom_navigation)
     AHBottomNavigation bottomNavigation;
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-    private DatabaseReference mUserRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,27 +42,8 @@ public class MainActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
+
         mAuth = FirebaseAuth.getInstance();
-
-        if (mAuth.getCurrentUser() != null) {
-            mUserRef = FirebaseDatabase.getInstance().getReference().child("users").child(mAuth.getCurrentUser().getUid());
-        }
-
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-
-                if(user == null) {
-                    redirectToLogin();
-                }else{
-                    mUserRef.child(LAST_SEEN).setValue(ServerValue.TIMESTAMP);
-                }
-
-            }
-        };
-
-
 
 
         AHBottomNavigationItem item1 = new AHBottomNavigationItem("Chats", R.drawable.ic_chat_24dp);
@@ -130,18 +107,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        if(mAuthListener!=null) {
-            mAuth.addAuthStateListener(mAuthListener);
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if(currentUser == null){
+            redirectToLogin();
         }
 
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if(mAuthListener!=null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
     }
 
 

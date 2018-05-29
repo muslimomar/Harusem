@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginBottom="1dp"
@@ -14,36 +14,77 @@
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingTop="25dp"
+        android:paddingBottom="25dp"
 
-        <ImageView
-            android:id="@+id/user_ImageView"
+        >
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/user_thumb_circle"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginBottom="25.3dp"
-            android:layout_marginLeft="14.7dp"
-            android:layout_marginRight="13.3dp"
-            android:layout_marginTop="25.7dp"
-            android:src="@drawable/mauser" />
+            android:layout_marginLeft="16dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/mauser"
+            />
+
+        <LinearLayout
+            android:id="@+id/name_status_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_toRightOf="@+id/user_thumb_circle"
+            android:layout_marginLeft="16dp"
+            android:layout_centerVertical="true"
+            >
 
         <TextView
             android:id="@+id/user_display_name_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/user_ImageView"
-            tools:text="Jamal" />
+            android:textColor="@color/black"
+            tools:text="Jamal"
+            />
 
+        <TextView
+            android:id="@+id/status_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Status"
+            android:textSize="12.5sp"
+            android:layout_marginTop="6dp"
+            />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/online_image_view"
+            android:layout_width="8dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/online_icon"
+            android:layout_toRightOf="@id/name_status_layout"
+            android:layout_marginLeft="8dp"
+            android:visibility="gone"
+            />
+
+        <LinearLayout
+            android:id="@+id/buttons_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentRight="true"
+            >
         <Button
             android:id="@+id/message_btn"
             android:layout_width="wrap_content"
             android:layout_height="31dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="12dp"
-            android:layout_toLeftOf="@id/unfriend_btn"
             android:background="@color/colorPrimary"
             android:text="Message"
             android:textAllCaps="false"
+            android:visibility="visible"
             android:elevation="0dp"
             android:textColor="@color/white" />
 
@@ -56,11 +97,13 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="16dp"
             android:background="#d14f4f"
+            android:visibility="visible"
             android:text="Unfriend"
             android:textAllCaps="false"
             android:textColor="@color/white"
-
             />
+
+        </LinearLayout>
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>

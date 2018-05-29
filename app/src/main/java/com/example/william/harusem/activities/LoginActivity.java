@@ -1,7 +1,6 @@
 package com.example.william.harusem.activities;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,27 +8,25 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.william.harusem.R;
-import com.example.william.harusem.util.Extras;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.example.william.harusem.util.Extras.CONNECTION_STATUS;
-import static com.example.william.harusem.util.Extras.USERS_REF;
-import static com.example.william.harusem.util.Helper.ONLINE;
 import static com.example.william.harusem.util.Helper.buildAlertDialog;
 import static com.example.william.harusem.util.Helper.buildProgressDialog;
 
@@ -45,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     Button signupBtn;
     @BindView(R.id.forgot_pass_tv)
     TextView forgotPassTv;
+    private DatabaseReference mUsersRef;
 
     private FirebaseAuth mAuth;
 
@@ -55,6 +53,8 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mAuth = FirebaseAuth.getInstance();
+        mUsersRef = FirebaseDatabase.getInstance().getReference().child("users");
+
 
         hideActionBar();
 
@@ -95,11 +95,14 @@ public class LoginActivity extends AppCompatActivity {
         mAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                dismissDialog(loadingPb);
+
                 if (task.isSuccessful()) {
-                    setUserOnline();
+
+                    dismissDialog(loadingPb);
+
                     redirectToMainActivity();
                 } else {
+                    loadingPb.hide();
 
                     buildAlertDialog("Login Failed", "Wrong email or password entered!", true, LoginActivity.this);
                 }
@@ -108,18 +111,6 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void setUserOnline() {
-        if (mAuth.getCurrentUser() != null) {
-            String userId = mAuth.getCurrentUser().getUid();
-            FirebaseDatabase.getInstance()
-                    .getReference()
-                    .child(USERS_REF)
-                    .child(userId)
-                    .child(CONNECTION_STATUS)
-                    .setValue(Extras.ONLINE);
-        }
-
-    }
 
     private void hideActionBar() {
 
@@ -165,7 +156,6 @@ public class LoginActivity extends AppCompatActivity {
             pb.dismiss();
         }
     }
-
 
 
 }

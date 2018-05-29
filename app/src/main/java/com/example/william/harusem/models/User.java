@@ -6,23 +6,14 @@ package com.example.william.harusem.models;
 
 public class User {
 
-    String name;
-    String email;
-    String connectionStatus;
-    private long creationDate;
+    public String name;
+    public String image;
+    public String thumb_image;
 
-    private String id;
-    private String country;
-
-    public User() {
-    }
-
-    public User(String name, String email, String connectionStatus, long creationDate, String country) {
+    public User(String name, String image, String thumb_image) {
         this.name = name;
-        this.email = email;
-        this.connectionStatus = connectionStatus;
-        this.creationDate = creationDate;
-        this.country = country;
+        this.image = image;
+        this.thumb_image = thumb_image;
     }
 
     public String getName() {
@@ -33,62 +24,23 @@ public class User {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
+    public String getImage() {
+        return image;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    public String getConnectionStatus() {
-        return connectionStatus;
+    public String getThumb_image() {
+        return thumb_image;
     }
 
-    public void setConnectionStatus(String connectionStatus) {
-        this.connectionStatus = connectionStatus;
+    public void setThumb_image(String thumb_image) {
+        this.thumb_image = thumb_image;
     }
 
-    public long getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(long creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    private String reformatEmailAddress(String email) {
-        return email.replace(".", "-");
-    }
-
-    public String createUniqueChatRef(long currentUserCreationDate, String currentUserEmail) {
-
-        String uniqueChatRef = "";
-
-        if (currentUserCreationDate > getCreationDate()) {
-            uniqueChatRef = reformatEmailAddress(currentUserEmail) + "_" + reformatEmailAddress(getEmail());
-        } else {
-            uniqueChatRef = reformatEmailAddress(getEmail()) + "_" + reformatEmailAddress(currentUserEmail);
-        }
-        return uniqueChatRef;
+    public User() {
 
     }
-
-
 }

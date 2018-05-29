@@ -8,9 +8,10 @@ public final class Extras {
 
     public static final String USERS_REF = "users";
     public static final String CHATS_REF = "chats";
-    public static final String CONNECTION_STATUS = "connectionStatus";
-    public static final String LAST_SEEN = "last_seen";
+    public static final String CONNECTION_STATUS = "connection_status";
     public static final String ONLINE = "online";
+    public static final String FRIENDS_REF = "friends";
+    public static final String FRIENDS_REQUESTS_REF = "friend_reqs";
 
 
 }

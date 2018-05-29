@@ -67,7 +67,17 @@ dependencies {
     // Image Cropper
     compile 'com.theartofdev.edmodo:android-image-cropper:2.5.1'
 
+    // firebase ui
+    implementation 'com.firebaseui:firebase-ui-database:1.2.0'
+
+    // ok http
+    compile 'com.squareup.okhttp:okhttp:2.5.0'
+
+    // Picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
 }
+
 
 
 

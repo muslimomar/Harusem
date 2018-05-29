@@ -10,10 +10,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Picasso;
 
 import static com.example.william.harusem.util.Extras.CONNECTION_STATUS;
-import static com.example.william.harusem.util.Extras.LAST_SEEN;
-import static com.example.william.harusem.util.Helper.OFFLINE;
 
 /**
  * Created by william on 5/29/2018.
@@ -27,6 +27,14 @@ public class Harusem extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Picasso.Builder builder = new Picasso.Builder(this);
+        builder.downloader(new OkHttp3Downloader(this, Integer.MAX_VALUE));
+        Picasso built = builder.build();
+        built.setIndicatorsEnabled(true);
+        built.setLoggingEnabled(true);
+        Picasso.setSingletonInstance(built);
+
 
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
