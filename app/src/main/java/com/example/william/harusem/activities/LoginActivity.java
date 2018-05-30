@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
@@ -92,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void login(String email, String pass) {
+    private void login(final String email, final String pass) {
         loadingPb = buildProgressDialog(this, "Please Wait..", "Loading........", false);
         loadingPb.show();
 
@@ -103,7 +104,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(QBUser qbUser, Bundle bundle) {
                 dismissDialog(loadingPb);
-                redirectToMainActivity();
+//                redirectToMainActivity();
+
+                Intent intent = new Intent(LoginActivity.this, ChatDialogsActivity.class);
+                intent.putExtra("user", email);
+                intent.putExtra("password", pass);
+                startActivity(intent);
+
             }
 
             @Override
@@ -162,5 +169,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
 }
 

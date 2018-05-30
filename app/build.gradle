@@ -62,7 +62,6 @@ dependencies {
     // Image Cropper
     compile 'com.theartofdev.edmodo:android-image-cropper:2.5.1'
 
-
     // Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
 
@@ -73,6 +72,8 @@ dependencies {
     // Text as Drawable
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 
-
+    // Bubble View
+    compile 'com.github.lguipeng:BubbleView:1.0.1'
 }
+
 

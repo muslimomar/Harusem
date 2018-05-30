@@ -50,7 +50,7 @@
             android:drawableLeft="@drawable/ic_lock_black_24dp"
             android:drawablePadding="12dp"
             android:hint="******"
-            android:text="123456"
+            android:text="12345678"
             android:inputType="textWebPassword"
             android:paddingLeft="9dp"
             android:paddingRight="9dp"

@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +19,9 @@ import com.example.william.harusem.activities.AllUsersActivity;
 import com.example.william.harusem.activities.FriendRequestsActivity;
 import com.example.william.harusem.activities.LoginActivity;
 import com.nex3z.notificationbadge.NotificationBadge;
+import com.quickblox.chat.QBChatService;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -30,13 +32,11 @@ import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
-import static com.example.william.harusem.util.Helper.OFFLINE;
 
 public class ProfileFragment extends Fragment {
 
-    int requestCode = 65;
     private static final String TAG = "Profile Fragment";
-
+    int requestCode = 65;
     Unbinder unbinder;
     @BindView(R.id.profile_circle_iv)
     CircleImageView profileCircleIv;
@@ -67,11 +67,15 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.log_out_layout)
     RelativeLayout logOutLayout;
 
+    QBChatService qbChatService;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         unbinder = ButterKnife.bind(this, rootView);
+
+        qbChatService = QBChatService.getInstance();
 
         friendsRequestsTv.setOnClickListener(new View.OnClickListener() {
             int number = 0;
@@ -113,6 +117,21 @@ public class ProfileFragment extends Fragment {
 
     @OnClick(R.id.log_out_layout)
     public void setLogOutTv(View view) {
+
+        if(qbChatService.isLoggedIn()) {
+            qbChatService.logout(new QBEntityCallback<Void>() {
+                @Override
+                public void onSuccess(Void aVoid, Bundle bundle) {
+                    qbChatService.destroy();
+                }
+
+                @Override
+                public void onError(QBResponseException e) {
+
+                }
+            });
+        }
+
     }
 
 
@@ -177,4 +196,6 @@ public class ProfileFragment extends Fragment {
         }
 
     }
+
+
 }

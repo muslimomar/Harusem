@@ -114,7 +114,7 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
-    private void createAccount(String email, String pass, String name) {
+    private void createAccount(final String email, final String pass, String name) {
         loadingPb = buildProgressDialog(this, "Please Wait..", "Loading........", false);
         loadingPb.show();
 
@@ -128,7 +128,12 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onSuccess(QBUser qbUser, Bundle bundle) {
                 dismissDialog(loadingPb);
-                redirectToMainActivity();
+//                redirectToMainActivity();
+            Intent intent = new Intent(SignupActivity.this, ChatDialogsActivity.class);
+            intent.putExtra("user", email);
+            intent.putExtra("password", pass);
+            startActivity(intent);
+
             }
 
             @Override
