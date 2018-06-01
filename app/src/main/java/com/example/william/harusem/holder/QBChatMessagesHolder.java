@@ -1,4 +1,4 @@
-package com.example.william.harusem.models;
+package com.example.william.harusem.holder;
 
 import com.quickblox.chat.model.QBChatMessage;
 

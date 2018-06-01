@@ -128,12 +128,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onSuccess(QBUser qbUser, Bundle bundle) {
                 dismissDialog(loadingPb);
-//                redirectToMainActivity();
-            Intent intent = new Intent(SignupActivity.this, ChatDialogsActivity.class);
-            intent.putExtra("user", email);
-            intent.putExtra("password", pass);
-            startActivity(intent);
-
+                redirectToMainActivity(email, pass);
             }
 
             @Override
@@ -152,8 +147,10 @@ public class SignupActivity extends AppCompatActivity {
         );
     }
 
-    private void redirectToMainActivity() {
+    private void redirectToMainActivity(String email, String pass) {
         Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+        intent.putExtra("user", email);
+        intent.putExtra("password", pass);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

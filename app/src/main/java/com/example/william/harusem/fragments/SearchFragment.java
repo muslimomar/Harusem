@@ -39,8 +39,6 @@ public class SearchFragment extends Fragment {
     }
 
     @OnClick(R.id.all_users_btn) public void setAllUsersBtn(View view) {
-        Intent intent = new Intent(getActivity(), AllUsersActivity.class);
-        startActivity(intent);
     }
 
 }

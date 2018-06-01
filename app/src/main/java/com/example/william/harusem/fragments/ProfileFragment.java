@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.william.harusem.AccountActivity;
+import com.example.william.harusem.PasswordActivity;
 import com.example.william.harusem.R;
 import com.example.william.harusem.activities.AllUsersActivity;
 import com.example.william.harusem.activities.FriendRequestsActivity;
@@ -22,6 +26,7 @@ import com.nex3z.notificationbadge.NotificationBadge;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.users.QBUsers;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -67,15 +72,12 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.log_out_layout)
     RelativeLayout logOutLayout;
 
-    QBChatService qbChatService;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         unbinder = ButterKnife.bind(this, rootView);
 
-        qbChatService = QBChatService.getInstance();
 
         friendsRequestsTv.setOnClickListener(new View.OnClickListener() {
             int number = 0;
@@ -117,21 +119,33 @@ public class ProfileFragment extends Fragment {
 
     @OnClick(R.id.log_out_layout)
     public void setLogOutTv(View view) {
+        showProgressBar();
 
-        if(qbChatService.isLoggedIn()) {
-            qbChatService.logout(new QBEntityCallback<Void>() {
-                @Override
-                public void onSuccess(Void aVoid, Bundle bundle) {
-                    qbChatService.destroy();
-                }
+        QBUsers.signOut().performAsync(new QBEntityCallback<Void>() {
+            @Override
+            public void onSuccess(Void aVoid, Bundle bundle) {
+                QBChatService.getInstance().logout(new QBEntityCallback<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid, Bundle bundle) {
+                        hideProgressBar();
+                        Log.d(TAG, "onSuccess: logout success!");
+                        redirectToLogin();
+                    }
 
-                @Override
-                public void onError(QBResponseException e) {
+                    @Override
+                    public void onError(QBResponseException e) {
+                        hideProgressBar();
+                        Toast.makeText(getActivity(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
 
-                }
-            });
-        }
-
+            @Override
+            public void onError(QBResponseException e) {
+                hideProgressBar();
+                Toast.makeText(getActivity(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
@@ -197,5 +211,14 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    @OnClick(R.id.account_tv)
+    public void setAccountTv(View view) {
+        startActivity(new Intent(getActivity(), AccountActivity.class));
+    }
+
+    @OnClick(R.id.password_tv)
+    public void setPasswordTv(View view) {
+        startActivity(new Intent(getActivity(), PasswordActivity.class));
+    }
 
 }

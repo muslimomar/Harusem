@@ -7,20 +7,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.william.harusem.R;
-import com.example.william.harusem.models.ChatMessage;
+import com.quickblox.chat.QBChatService;
+import com.quickblox.chat.model.QBChatMessage;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static final int MESSAGE_TYPE_SENDER = 1;
     public static final int MESSAGE_TYPE_RECEIVER = 2;
 
-    private List<ChatMessage> mChatList = new ArrayList<>();
+    private ArrayList<QBChatMessage> qbChatMessages;
 
-    public MessagesAdapter(List<ChatMessage> FireBaseChatsList) {
-        this.mChatList = FireBaseChatsList;
+    public MessagesAdapter(ArrayList<QBChatMessage> qbChatMessages) {
+        this.qbChatMessages = qbChatMessages;
     }
 
     @Override
@@ -45,35 +45,34 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 break;
         }
 
-
         return holder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ChatMessage chatMessage = mChatList.get(position);
+        QBChatMessage chatMessage = qbChatMessages.get(position);
 
         switch (holder.getItemViewType()) {
             case MESSAGE_TYPE_SENDER:
                 SenderViewHolder senderViewHolder = (SenderViewHolder) holder;
-                senderViewHolder.senderMessageTv.setText(chatMessage.getMessage());
+                senderViewHolder.senderMessageTv.setText(chatMessage.getBody());
                 break;
             case MESSAGE_TYPE_RECEIVER:
                 RecipientViewHolder recipientViewHolder = (RecipientViewHolder) holder;
-                recipientViewHolder.recipientMessageTv.setText(chatMessage.getMessage());
+                recipientViewHolder.recipientMessageTv.setText(chatMessage.getBody());
                 break;
         }
     }
 
     @Override
     public int getItemCount() {
-        return mChatList.size();
+        return qbChatMessages.size();
     }
 
     @Override
     public int getItemViewType(int position) {
 
-        if (mChatList.get(position).getIsSenderOrRecipient() == MESSAGE_TYPE_SENDER) {
+        if (qbChatMessages.get(position).getSenderId().equals(QBChatService.getInstance().getUser().getId())) {
             return MESSAGE_TYPE_SENDER;
         } else {
             return MESSAGE_TYPE_RECEIVER;
@@ -81,34 +80,22 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public class SenderViewHolder extends RecyclerView.ViewHolder {
-
         public TextView senderMessageTv;
 
         public SenderViewHolder(View itemView) {
             super(itemView);
-
             senderMessageTv = itemView.findViewById(R.id.sent_message_tv);
         }
     }
 
     public class RecipientViewHolder extends RecyclerView.ViewHolder {
-
         public TextView recipientMessageTv;
 
         public RecipientViewHolder(View itemView) {
             super(itemView);
-
             recipientMessageTv = itemView.findViewById(R.id.received_message_tv);
         }
     }
 
-    public void addMessage(ChatMessage chatMessage) {
-        mChatList.add(chatMessage);
-        notifyItemInserted(mChatList.indexOf(chatMessage));
-    }
-
-    public void cleanAdapter() {
-        mChatList.clear();
-    }
 
 }

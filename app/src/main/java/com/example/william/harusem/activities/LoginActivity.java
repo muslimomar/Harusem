@@ -24,7 +24,6 @@ import com.quickblox.users.model.QBUser;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.example.william.harusem.util.Extras.*;
 
 import static com.example.william.harusem.util.Extras.ACCOUNT_KEY;
 import static com.example.william.harusem.util.Extras.APP_ID;
@@ -64,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initializeFramework() {
-        QBSettings.getInstance().init(getApplicationContext(),APP_ID,AUTH_KEY,AUTH_SECRET);
+        QBSettings.getInstance().init(getApplicationContext(), APP_ID, AUTH_KEY, AUTH_SECRET);
         QBSettings.getInstance().setAccountKey(ACCOUNT_KEY);
     }
 
@@ -98,19 +97,13 @@ public class LoginActivity extends AppCompatActivity {
         loadingPb.show();
 
 
-        QBUser qbUser = new QBUser(email,pass);
+        QBUser qbUser = new QBUser(email, pass);
 
         QBUsers.signIn(qbUser).performAsync(new QBEntityCallback<QBUser>() {
             @Override
             public void onSuccess(QBUser qbUser, Bundle bundle) {
                 dismissDialog(loadingPb);
-//                redirectToMainActivity();
-
-                Intent intent = new Intent(LoginActivity.this, ChatDialogsActivity.class);
-                intent.putExtra("user", email);
-                intent.putExtra("password", pass);
-                startActivity(intent);
-
+                redirectToMainActivity(email, pass);
             }
 
             @Override
@@ -155,8 +148,11 @@ public class LoginActivity extends AppCompatActivity {
         return editText.getText().toString().trim();
     }
 
-    private void redirectToMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
+
+    private void redirectToMainActivity(String email, String pass) {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        intent.putExtra("user", email);
+        intent.putExtra("password", pass);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

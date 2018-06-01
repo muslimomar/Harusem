@@ -3,20 +3,18 @@ package com.example.william.harusem.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.example.william.harusem.R;
-import com.example.william.harusem.fragments.ChatsFragment;
+import com.example.william.harusem.fragments.ChatDialogsFragment;
 import com.example.william.harusem.fragments.ProfileFragment;
 import com.example.william.harusem.fragments.SearchFragment;
-import com.example.william.harusem.util.Extras;
+import com.quickblox.auth.session.QBSessionManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -58,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         //set title
-                        selectedFragment = new ChatsFragment();
+                        selectedFragment = new ChatDialogsFragment();
                         break;
                     case 1:
                         selectedFragment = new SearchFragment();
@@ -67,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                         selectedFragment = new ProfileFragment();
                         break;
                     default:
-                        selectedFragment = new ChatsFragment();
+                        selectedFragment = new ChatDialogsFragment();
                         break;
                 }
 
@@ -77,8 +76,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Default tab
-        ChatsFragment chatsFragment = new ChatsFragment();
-        switchFragment(chatsFragment);
+        ChatDialogsFragment chatDialogsFragment = new ChatDialogsFragment();
+        switchFragment(chatDialogsFragment);
 
     }
 
@@ -95,5 +94,17 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        if (!isSignedIn()) {
+//            redirectToLogin();
+//        }
+    }
+
+    private boolean isSignedIn() {
+        return QBSessionManager.getInstance().getSessionParameters()!=null;
+    }
 
 }

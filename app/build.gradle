@@ -74,6 +74,9 @@ dependencies {
 
     // Bubble View
     compile 'com.github.lguipeng:BubbleView:1.0.1'
+
 }
+
+
 
 
