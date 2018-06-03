@@ -16,6 +16,15 @@ public class QBUsersHolder {
     private static QBUsersHolder instance;
 
     private SparseArray<QBUser> qbUserSparseArray;
+    private QBUser signInQbUser;
+
+    public QBUser getSignInQbUser() {
+        return signInQbUser;
+    }
+
+    public void setSignInQbUser(QBUser signInQbUser) {
+        this.signInQbUser = signInQbUser;
+    }
 
     public static synchronized QBUsersHolder getInstance() {
         if (instance == null)
@@ -33,7 +42,7 @@ public class QBUsersHolder {
         }
     }
 
-    private void putUser(QBUser user) {
+    public void putUser(QBUser user) {
         qbUserSparseArray.put(user.getId(), user);
     }
 

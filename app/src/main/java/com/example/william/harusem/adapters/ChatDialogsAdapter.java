@@ -2,6 +2,8 @@ package com.example.william.harusem.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +12,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
-import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.example.william.harusem.R;
 import com.example.william.harusem.holder.QBUnreadMessageHolder;
 import com.quickblox.chat.model.QBChatDialog;
+import com.quickblox.content.QBContent;
+import com.quickblox.content.model.QBFile;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.example.william.harusem.activities.ChatActivity.TAG;
 
 /**
  * Created by william on 5/29/2018.
@@ -54,7 +64,8 @@ public class ChatDialogsAdapter extends BaseAdapter {
             view1 = inflater.inflate(R.layout.list_chat_dialog, null);
 
             TextView txtTitle, txtMessage;
-            ImageView imageView, imageUnread;
+            final ImageView imageUnread;
+            final CircleImageView imageView;
 
             txtTitle = view1.findViewById(R.id.list_chat_dialog_title);
             txtMessage = view1.findViewById(R.id.list_chat_dialog_message);
@@ -64,16 +75,39 @@ public class ChatDialogsAdapter extends BaseAdapter {
             txtTitle.setText(qbChatDialogs.get(i).getName());
             txtMessage.setText(qbChatDialogs.get(i).getLastMessage());
 
-            ColorGenerator generator = ColorGenerator.MATERIAL;
-            int randomColor = generator.getRandomColor();
+            if (qbChatDialogs.get(i).getPhoto() == null) {
 
-            TextDrawable.IBuilder builder = TextDrawable.builder()
-                    .beginConfig()
-                    .endConfig()
-                    .round();
+                TextDrawable.IBuilder builder = TextDrawable.builder()
+                        .beginConfig()
+                        .height(60)
+                        .width(60)
+                        .endConfig()
+                        .round();
 
-            TextDrawable drawable = builder.build(txtTitle.getText().toString().trim().substring(0, 1).toUpperCase(), getColor(i));
-            imageView.setImageDrawable(drawable);
+                TextDrawable drawable = builder.build(txtTitle.getText().toString().trim().substring(0, 1).toUpperCase(), getColor(i));
+                imageView.setImageDrawable(drawable);
+
+            } else {
+                // Download from server
+                QBContent.getFile(Integer.parseInt(qbChatDialogs.get(i).getPhoto()))
+                        .performAsync(new QBEntityCallback<QBFile>() {
+                            @Override
+                            public void onSuccess(QBFile qbFile, Bundle bundle) {
+                                String fileUrl = qbFile.getPublicUrl();
+                                Picasso.get()
+                                        .load(fileUrl)
+                                        .resize(50, 50)
+                                        .centerCrop()
+                                        .into(imageView);
+
+                            }
+
+                            @Override
+                            public void onError(QBResponseException e) {
+                                Log.e(TAG, "onError: ", e);
+                            }
+                        });
+            }
 
             // set message unread count
             TextDrawable.IBuilder unreadBuilder = TextDrawable.builder()
@@ -111,10 +145,10 @@ public class ChatDialogsAdapter extends BaseAdapter {
         } else if (switcher == 4) {
             color = Color.parseColor("#9C27B0");
             switcher = 5;
-        }else if (switcher == 5) {
+        } else if (switcher == 5) {
             color = Color.parseColor("#607D8B");
             switcher = 0;
-        }else{
+        } else {
             color = Color.parseColor("#000000");
             switcher = 0;
         }

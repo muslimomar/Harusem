@@ -1,4 +1,4 @@
-package com.example.william.harusem;
+package com.example.william.harusem.activities;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.william.harusem.R;
 import com.example.william.harusem.util.Helper;
 import com.mukesh.countrypicker.Country;
 import com.mukesh.countrypicker.CountryPicker;

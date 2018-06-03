@@ -14,6 +14,7 @@ import com.example.william.harusem.R;
 import com.example.william.harusem.fragments.ChatDialogsFragment;
 import com.example.william.harusem.fragments.ProfileFragment;
 import com.example.william.harusem.fragments.SearchFragment;
+import com.quickblox.auth.QBAuth;
 import com.quickblox.auth.session.QBSessionManager;
 
 import butterknife.BindView;
@@ -30,12 +31,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        if (!isSignedIn()) {
+            redirectToLogin();
+        }else{
+            setupActionbar();
+            setupBottomNavigation();
+        }
 
+
+    }
+
+    private void setupActionbar() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
         }
+    }
 
+    private void setupBottomNavigation() {
 
         AHBottomNavigationItem item1 = new AHBottomNavigationItem("Chats", R.drawable.ic_chat_24dp);
         AHBottomNavigationItem item2 = new AHBottomNavigationItem("Search", R.drawable.ic_search_24dp);
@@ -78,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
         // Default tab
         ChatDialogsFragment chatDialogsFragment = new ChatDialogsFragment();
         switchFragment(chatDialogsFragment);
-
     }
 
     private void switchFragment(Fragment selectedFragment) {
@@ -87,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
 
     }
+
     private void redirectToLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // LoginActivity is a New Task
@@ -98,13 +111,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        if (!isSignedIn()) {
-//            redirectToLogin();
-//        }
+        if (!isSignedIn()) {
+            redirectToLogin();
+        }
     }
 
     private boolean isSignedIn() {
-        return QBSessionManager.getInstance().getSessionParameters()!=null;
+        return QBSessionManager.getInstance().getSessionParameters() != null;
     }
 
 }

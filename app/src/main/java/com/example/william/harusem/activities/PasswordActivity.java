@@ -1,4 +1,4 @@
-package com.example.william.harusem;
+package com.example.william.harusem.activities;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.william.harusem.R;
 import com.example.william.harusem.util.Helper;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;

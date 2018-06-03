@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.william.harusem.R;
+import com.example.william.harusem.holder.QBUsersHolder;
 import com.mukesh.countrypicker.Country;
 import com.mukesh.countrypicker.CountryPicker;
 import com.mukesh.countrypicker.OnCountryPickerListener;
@@ -128,6 +129,10 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onSuccess(QBUser qbUser, Bundle bundle) {
                 dismissDialog(loadingPb);
+
+                QBUsersHolder.getInstance().putUser(qbUser);
+                QBUsersHolder.getInstance().setSignInQbUser(qbUser);
+
                 redirectToMainActivity(email, pass);
             }
 

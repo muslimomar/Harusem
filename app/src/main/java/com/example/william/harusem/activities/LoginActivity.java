@@ -1,8 +1,11 @@
 package com.example.william.harusem.activities;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,7 +18,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.william.harusem.R;
+import com.example.william.harusem.holder.QBUsersHolder;
 import com.quickblox.auth.session.QBSettings;
+import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.QBUsers;
@@ -33,6 +38,8 @@ import static com.example.william.harusem.util.Helper.buildAlertDialog;
 import static com.example.william.harusem.util.Helper.buildProgressDialog;
 
 public class LoginActivity extends AppCompatActivity {
+    private static final int REQUEST_CODE = 90;
+    private static final String TAG = LoginActivity.class.getSimpleName();
     ProgressDialog loadingPb;
 
     @BindView(R.id.email_et)
@@ -54,11 +61,36 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
 
-        initializeFramework();
+        requestPerms();
+//        initializeFramework();
 
         hideActionBar();
 
         hideSoftKeyboard();
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == REQUEST_CODE) {
+
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                Log.d(TAG, "onRequestPermissionsResult:Permission Granted ");
+            else {
+                Log.d(TAG, "onRequestPermissionsResult: Permissions denied " );
+            }
+        }
+
+    }
+
+    private void requestPerms() {
+        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[] {
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+            },  REQUEST_CODE);
+        }
 
     }
 
@@ -96,14 +128,26 @@ public class LoginActivity extends AppCompatActivity {
         loadingPb = buildProgressDialog(this, "Please Wait..", "Loading........", false);
         loadingPb.show();
 
+        final QBUser user = new QBUser(email, pass);
 
-        QBUser qbUser = new QBUser(email, pass);
-
-        QBUsers.signIn(qbUser).performAsync(new QBEntityCallback<QBUser>() {
+        QBUsers.signIn(user).performAsync(new QBEntityCallback<QBUser>() {
             @Override
             public void onSuccess(QBUser qbUser, Bundle bundle) {
-                dismissDialog(loadingPb);
-                redirectToMainActivity(email, pass);
+
+                QBChatService.getInstance().login(user, new QBEntityCallback() {
+                    @Override
+                    public void onSuccess(Object o, Bundle bundle) {
+                        dismissDialog(loadingPb);
+                        QBUsersHolder.getInstance().setSignInQbUser(user);
+                        redirectToMainActivity(email, pass);
+                    }
+
+                    @Override
+                    public void onError(QBResponseException e) {
+                        dismissDialog(loadingPb);
+                        buildAlertDialog("Login Failed", e.getMessage(), true, LoginActivity.this);
+                    }
+                });
             }
 
             @Override
@@ -111,7 +155,9 @@ public class LoginActivity extends AppCompatActivity {
                 dismissDialog(loadingPb);
                 buildAlertDialog("Login Failed", e.getMessage(), true, LoginActivity.this);
             }
+
         });
+
 
     }
 

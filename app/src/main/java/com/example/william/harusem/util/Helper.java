@@ -33,6 +33,7 @@ public class Helper {
         progress.setTitle(title);
         progress.setMessage(message);
         progress.setCanceledOnTouchOutside(isCancellable);
+        progress.setCancelable(isCancellable);
         return progress;
     }
 

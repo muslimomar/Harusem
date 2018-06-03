@@ -2,9 +2,13 @@ package com.example.william.harusem.fragments;
 
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,19 +20,32 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.william.harusem.AccountActivity;
-import com.example.william.harusem.PasswordActivity;
 import com.example.william.harusem.R;
+import com.example.william.harusem.activities.AccountActivity;
 import com.example.william.harusem.activities.AllUsersActivity;
 import com.example.william.harusem.activities.FriendRequestsActivity;
 import com.example.william.harusem.activities.LoginActivity;
+import com.example.william.harusem.activities.PasswordActivity;
+import com.example.william.harusem.holder.QBUsersHolder;
+import com.example.william.harusem.util.Helper;
 import com.nex3z.notificationbadge.NotificationBadge;
 import com.quickblox.chat.QBChatService;
+import com.quickblox.content.QBContent;
+import com.quickblox.content.model.QBFile;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.QBUsers;
+import com.quickblox.users.model.QBUser;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -78,14 +95,12 @@ public class ProfileFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         unbinder = ButterKnife.bind(this, rootView);
 
-
         friendsRequestsTv.setOnClickListener(new View.OnClickListener() {
             int number = 0;
 
             @Override
             public void onClick(View view) {
                 number++;
-
                 notificationBadge.setNumber(number);
                 Intent intent = new Intent(getActivity(), FriendRequestsActivity.class);
 
@@ -99,7 +114,6 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onClick(View view) {
-
                 Intent i = new Intent(getActivity(), AllUsersActivity.class);
                 startActivity(i);
                 ((Activity) getActivity()).overridePendingTransition(0, 0);
@@ -107,7 +121,51 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        loadUserImage();
+
         return rootView;
+    }
+
+    private void loadUserImage() {
+
+        QBUsers.getUser(QBChatService.getInstance().getUser().getId())
+                .performAsync(new QBEntityCallback<QBUser>() {
+                    @Override
+                    public void onSuccess(QBUser user, Bundle bundle) {
+                        // save to cache
+                        QBUsersHolder.getInstance().putUser(user);
+
+                        if (user.getFileId() != null) {
+
+                            int profilePicId = user.getFileId();
+
+                            QBContent.getFile(profilePicId)
+                                    .performAsync(new QBEntityCallback<QBFile>() {
+                                        @Override
+                                        public void onSuccess(QBFile qbFile, Bundle bundle) {
+                                            String fileUrl = qbFile.getPublicUrl();
+                                            Picasso.get().load(fileUrl)
+                                                    .into(profileCircleIv);
+
+                                        }
+
+                                        @Override
+                                        public void onError(QBResponseException e) {
+
+                                        }
+                                    });
+                        }else{
+                            profileCircleIv.setImageResource(R.drawable.profile_placeholder);
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(QBResponseException e) {
+
+                    }
+                });
+
     }
 
     private void redirectToLogin() {
@@ -182,7 +240,7 @@ public class ProfileFragment extends Fragment {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
 
-        startActivityForResult(intent, requestCode);
+        startActivityForResult(Intent.createChooser(intent, "Select a Picture"), requestCode);
     }
 
     @Override
@@ -200,12 +258,69 @@ public class ProfileFragment extends Fragment {
 
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
+                final ProgressDialog progressDialog = Helper.buildProgressDialog(getActivity(), "", "Please Wait...", false);
+                progressDialog.show();
+
                 Uri imageUri = result.getUri();
+
+                try {
+                    InputStream inputStream = getActivity().getContentResolver().openInputStream(imageUri);
+                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+                    File file = new File(Environment.getExternalStorageDirectory() + "/myimage.png");
+                    FileOutputStream fos = new FileOutputStream(file);
+                    fos.write(bos.toByteArray());
+                    fos.flush();
+                    fos.close();
+
+                    // Get file size
+                    int imageSizeKB = (int) (file.length() / 1024);
+                    if (imageSizeKB >= (1024 * 100)) {
+                        Toast.makeText(getActivity(), "Error, selected image is too large", Toast.LENGTH_SHORT).show();
+                    }
+
+                    QBContent.uploadFileTask(file, true, null).performAsync(new QBEntityCallback<QBFile>() {
+                        @Override
+                        public void onSuccess(QBFile qbFile, Bundle bundle) {
+                            QBUser user = new QBUser();
+                            user.setId(QBChatService.getInstance().getUser().getId());
+                            user.setFileId(Integer.parseInt(qbFile.getId().toString()));
+
+                            QBUsers.updateUser(user)
+                                    .performAsync(new QBEntityCallback<QBUser>() {
+                                        @Override
+                                        public void onSuccess(QBUser user, Bundle bundle) {
+                                            progressDialog.dismiss();
+                                        }
+
+                                        @Override
+                                        public void onError(QBResponseException e) {
+                                            Log.e(TAG, "onError:updateuser ", e);
+                                        }
+                                    });
+
+                        }
+
+                        @Override
+                        public void onError(QBResponseException e) {
+
+                        }
+                    });
+
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
 
                 profileCircleIv.setImageURI(imageUri);
 
+
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Exception error = result.getError();
+                Log.e(TAG, "onActivityResult: ", result.getError());
             }
         }
 
