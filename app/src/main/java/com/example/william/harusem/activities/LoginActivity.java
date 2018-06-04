@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.holder.QBUsersHolder;
+import com.example.william.harusem.util.SharedPrefsHelper;
 import com.quickblox.auth.session.QBSettings;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
@@ -60,7 +61,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-
         requestPerms();
 //        initializeFramework();
 
@@ -72,12 +72,12 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == REQUEST_CODE) {
+        if (requestCode == REQUEST_CODE) {
 
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 Log.d(TAG, "onRequestPermissionsResult:Permission Granted ");
             else {
-                Log.d(TAG, "onRequestPermissionsResult: Permissions denied " );
+                Log.d(TAG, "onRequestPermissionsResult: Permissions denied ");
             }
         }
 
@@ -86,10 +86,10 @@ public class LoginActivity extends AppCompatActivity {
     private void requestPerms() {
         if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
                 checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[] {
+            requestPermissions(new String[]{
                     Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
-            },  REQUEST_CODE);
+            }, REQUEST_CODE);
         }
 
     }
@@ -138,6 +138,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Object o, Bundle bundle) {
                         dismissDialog(loadingPb);
+                        SharedPrefsHelper.getInstance(LoginActivity.this).saveQbUser(user);
                         QBUsersHolder.getInstance().setSignInQbUser(user);
                         redirectToMainActivity(email, pass);
                     }
@@ -158,9 +159,7 @@ public class LoginActivity extends AppCompatActivity {
 
         });
 
-
     }
-
 
     private void hideActionBar() {
 

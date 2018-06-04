@@ -113,8 +113,12 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void onSuccess(QBUser user, Bundle bundle) {
                         // save to cache
+
                         QBUsersHolder.getInstance().putUser(user);
-                        nameTv.setText(user.getFullName());
+
+                        if (getActivity() != null && isAdded()) {
+                            nameTv.setText(user.getFullName());
+                        }
 
                         if (user.getFileId() != null) {
 
@@ -124,21 +128,26 @@ public class ProfileFragment extends Fragment {
                                     .performAsync(new QBEntityCallback<QBFile>() {
                                         @Override
                                         public void onSuccess(QBFile qbFile, Bundle bundle) {
-                                            String fileUrl = qbFile.getPublicUrl();
-                                            Picasso.get().load(fileUrl)
-                                                    .into(profileCircleIv, new Callback() {
-                                                        @Override
-                                                        public void onSuccess() {
-                                                            hideProgressBar(profileLoadingPb);
-                                                            showLayout();
-                                                        }
 
-                                                        @Override
-                                                        public void onError(Exception e) {
-                                                            Log.e(TAG, "onError: picasso :",e );
+                                            if (getActivity() != null && isAdded()) {
+                                                String fileUrl = qbFile.getPublicUrl();
+                                                Picasso.get().load(fileUrl)
+                                                        .into(profileCircleIv, new Callback() {
+                                                            @Override
+                                                            public void onSuccess() {
+                                                                if (getActivity() != null && isAdded()) {
+                                                                    hideProgressBar(profileLoadingPb);
+                                                                    showLayout();
+                                                                }
+                                                            }
 
-                                                        }
-                                                    });
+                                                            @Override
+                                                            public void onError(Exception e) {
+                                                                Log.e(TAG, "onError: picasso :", e);
+
+                                                            }
+                                                        });
+                                            }
                                         }
 
                                         @Override
@@ -147,11 +156,13 @@ public class ProfileFragment extends Fragment {
                                         }
                                     });
                         } else {
-                            hideProgressBar(profileLoadingPb);
-                            showLayout();
-                            profileCircleIv.setImageResource(R.drawable.profile_placeholder);
-                        }
 
+                            if (getActivity()!=null && isAdded()) {
+                                hideProgressBar(profileLoadingPb);
+                                showLayout();
+                                profileCircleIv.setImageResource(R.drawable.profile_placeholder);
+                            }
+                        }
                     }
 
                     @Override
@@ -159,7 +170,6 @@ public class ProfileFragment extends Fragment {
                         Log.e(TAG, "onError: qbusers get user", e);
                     }
                 });
-
     }
 
     private void redirectToLogin() {
@@ -348,11 +358,11 @@ public class ProfileFragment extends Fragment {
         topLayout.setVisibility(View.GONE);
         bottomLayout.setVisibility(View.GONE);
     }
+
     public void showLayout() {
         topLayout.setVisibility(View.VISIBLE);
         bottomLayout.setVisibility(View.VISIBLE);
     }
-
 
 
 }

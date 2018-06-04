@@ -14,7 +14,6 @@ import com.example.william.harusem.R;
 import com.example.william.harusem.fragments.ChatDialogsFragment;
 import com.example.william.harusem.fragments.ProfileFragment;
 import com.example.william.harusem.fragments.SearchFragment;
-import com.quickblox.auth.QBAuth;
 import com.quickblox.auth.session.QBSessionManager;
 
 import butterknife.BindView;
@@ -31,13 +30,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        if (!isSignedIn()) {
-            redirectToLogin();
-        }else{
             setupActionbar();
             setupBottomNavigation();
-        }
-
 
     }
 
@@ -98,26 +92,6 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frame_container, selectedFragment);
         fragmentTransaction.commit();
 
-    }
-
-    private void redirectToLogin() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // LoginActivity is a New Task
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); // The old task when coming back to this activity should be cleared so we cannot come back to it.
-        startActivity(intent);
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (!isSignedIn()) {
-            redirectToLogin();
-        }
-    }
-
-    private boolean isSignedIn() {
-        return QBSessionManager.getInstance().getSessionParameters() != null;
     }
 
 }

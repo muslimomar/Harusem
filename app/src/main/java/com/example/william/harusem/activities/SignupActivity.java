@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,11 +17,10 @@ import android.widget.TextView;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.holder.QBUsersHolder;
+import com.example.william.harusem.util.SharedPrefsHelper;
 import com.mukesh.countrypicker.Country;
 import com.mukesh.countrypicker.CountryPicker;
 import com.mukesh.countrypicker.OnCountryPickerListener;
-import com.quickblox.auth.QBAuth;
-import com.quickblox.auth.session.QBSession;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
@@ -60,24 +58,8 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
 
-//        registerSession();
-
         hideSoftKeyboard();
 
-    }
-
-    private void registerSession() {
-        QBAuth.createSession().performAsync(new QBEntityCallback<QBSession>() {
-            @Override
-            public void onSuccess(QBSession qbSession, Bundle bundle) {
-
-            }
-
-            @Override
-            public void onError(QBResponseException e) {
-                Log.e(TAG, "onError: ", e);
-            }
-        });
     }
 
     private void onSignup() {
@@ -126,17 +108,17 @@ public class SignupActivity extends AppCompatActivity {
         qbUser.setEmail(email);
         qbUser.setCustomData(countryTv.getText().toString().trim());
 
-        QBUsers.signUp(qbUser).performAsync(new QBEntityCallback<QBUser>() {
+        QBUsers.signUpSignInTask(qbUser).performAsync(new QBEntityCallback<QBUser>() {
 
             @Override
             public void onSuccess(QBUser user, Bundle bundle) {
-
                 QBChatService.getInstance().login(qbUser, new QBEntityCallback() {
                     @Override
                     public void onSuccess(Object o, Bundle bundle) {
                         dismissDialog(loadingPb);
                         QBUsersHolder.getInstance().putUser(qbUser);
                         QBUsersHolder.getInstance().setSignInQbUser(qbUser);
+                        SharedPrefsHelper.getInstance(SignupActivity.this).saveQbUser(qbUser);
                         redirectToMainActivity();
                     }
 

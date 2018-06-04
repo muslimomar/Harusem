@@ -175,9 +175,12 @@ public class ChatDialogsFragment extends Fragment implements QBSystemMessageList
     }
 
     private void refreshAdapter(ArrayList<QBChatDialog> allChatDialogs) {
+
         ChatDialogsAdapter mAdapter = new ChatDialogsAdapter(getContext(), allChatDialogs);
-        listChatDialogs.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
+        if (getActivity()!=null && isAdded()) {
+            listChatDialogs.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
 
