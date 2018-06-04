@@ -36,6 +36,7 @@ import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -58,7 +59,7 @@ import static android.app.Activity.RESULT_OK;
 public class ProfileFragment extends Fragment {
 
     private static final String TAG = "Profile Fragment";
-    int requestCode = 65;
+    int REQUEST_CODE = 65;
     Unbinder unbinder;
     @BindView(R.id.profile_circle_iv)
     CircleImageView profileCircleIv;
@@ -88,6 +89,8 @@ public class ProfileFragment extends Fragment {
     ProgressBar logOutPb;
     @BindView(R.id.log_out_layout)
     RelativeLayout logOutLayout;
+    @BindView(R.id.profile_loading_pb)
+    ProgressBar profileLoadingPb;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,38 +98,15 @@ public class ProfileFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         unbinder = ButterKnife.bind(this, rootView);
 
-        friendsRequestsTv.setOnClickListener(new View.OnClickListener() {
-            int number = 0;
+        showProgressBar(profileLoadingPb);
+        hideLayout();
 
-            @Override
-            public void onClick(View view) {
-                number++;
-                notificationBadge.setNumber(number);
-                Intent intent = new Intent(getActivity(), FriendRequestsActivity.class);
-
-                getActivity().startActivity(intent);
-
-            }
-        });
-
-
-        friendsTv.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getActivity(), AllUsersActivity.class);
-                startActivity(i);
-                ((Activity) getActivity()).overridePendingTransition(0, 0);
-
-            }
-        });
-
-        loadUserImage();
+        loadUserData();
 
         return rootView;
     }
 
-    private void loadUserImage() {
+    private void loadUserData() {
 
         QBUsers.getUser(QBChatService.getInstance().getUser().getId())
                 .performAsync(new QBEntityCallback<QBUser>() {
@@ -134,6 +114,7 @@ public class ProfileFragment extends Fragment {
                     public void onSuccess(QBUser user, Bundle bundle) {
                         // save to cache
                         QBUsersHolder.getInstance().putUser(user);
+                        nameTv.setText(user.getFullName());
 
                         if (user.getFileId() != null) {
 
@@ -145,16 +126,29 @@ public class ProfileFragment extends Fragment {
                                         public void onSuccess(QBFile qbFile, Bundle bundle) {
                                             String fileUrl = qbFile.getPublicUrl();
                                             Picasso.get().load(fileUrl)
-                                                    .into(profileCircleIv);
+                                                    .into(profileCircleIv, new Callback() {
+                                                        @Override
+                                                        public void onSuccess() {
+                                                            hideProgressBar(profileLoadingPb);
+                                                            showLayout();
+                                                        }
 
+                                                        @Override
+                                                        public void onError(Exception e) {
+                                                            Log.e(TAG, "onError: picasso :",e );
+
+                                                        }
+                                                    });
                                         }
 
                                         @Override
                                         public void onError(QBResponseException e) {
-
+                                            Log.e(TAG, "onError: qbcontent getfile", e);
                                         }
                                     });
-                        }else{
+                        } else {
+                            hideProgressBar(profileLoadingPb);
+                            showLayout();
                             profileCircleIv.setImageResource(R.drawable.profile_placeholder);
                         }
 
@@ -162,7 +156,7 @@ public class ProfileFragment extends Fragment {
 
                     @Override
                     public void onError(QBResponseException e) {
-
+                        Log.e(TAG, "onError: qbusers get user", e);
                     }
                 });
 
@@ -177,7 +171,7 @@ public class ProfileFragment extends Fragment {
 
     @OnClick(R.id.log_out_layout)
     public void setLogOutTv(View view) {
-        showProgressBar();
+        showProgressBar(logOutPb);
 
         QBUsers.signOut().performAsync(new QBEntityCallback<Void>() {
             @Override
@@ -185,14 +179,14 @@ public class ProfileFragment extends Fragment {
                 QBChatService.getInstance().logout(new QBEntityCallback<Void>() {
                     @Override
                     public void onSuccess(Void aVoid, Bundle bundle) {
-                        hideProgressBar();
+                        hideProgressBar(logOutPb);
                         Log.d(TAG, "onSuccess: logout success!");
                         redirectToLogin();
                     }
 
                     @Override
                     public void onError(QBResponseException e) {
-                        hideProgressBar();
+                        hideProgressBar(logOutPb);
                         Toast.makeText(getActivity(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -200,7 +194,7 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onError(QBResponseException e) {
-                hideProgressBar();
+                hideProgressBar(logOutPb);
                 Toast.makeText(getActivity(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -213,14 +207,13 @@ public class ProfileFragment extends Fragment {
         unbinder.unbind();
     }
 
-
-    private void showProgressBar() {
-        logOutPb.setVisibility(View.VISIBLE);
+    private void showProgressBar(ProgressBar progressBar) {
+        progressBar.setVisibility(View.VISIBLE);
     }
 
-    private void hideProgressBar() {
-        if (logOutPb.getVisibility() == View.VISIBLE) {
-            logOutPb.setVisibility(View.GONE);
+    private void hideProgressBar(ProgressBar progressBar) {
+        if (progressBar.getVisibility() == View.VISIBLE) {
+            progressBar.setVisibility(View.GONE);
         }
     }
 
@@ -240,14 +233,14 @@ public class ProfileFragment extends Fragment {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
 
-        startActivityForResult(Intent.createChooser(intent, "Select a Picture"), requestCode);
+        startActivityForResult(Intent.createChooser(intent, "Select a Picture"), REQUEST_CODE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == requestCode && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
 
             Uri imagePath = data.getData();
             CropImage.activity(imagePath).setGuidelines(CropImageView.Guidelines.ON)
@@ -281,6 +274,7 @@ public class ProfileFragment extends Fragment {
                     }
 
                     QBContent.uploadFileTask(file, true, null).performAsync(new QBEntityCallback<QBFile>() {
+
                         @Override
                         public void onSuccess(QBFile qbFile, Bundle bundle) {
                             QBUser user = new QBUser();
@@ -304,7 +298,7 @@ public class ProfileFragment extends Fragment {
 
                         @Override
                         public void onError(QBResponseException e) {
-
+                            Log.e(TAG, "onError: uploadfiletask", e);
                         }
                     });
 
@@ -335,5 +329,30 @@ public class ProfileFragment extends Fragment {
     public void setPasswordTv(View view) {
         startActivity(new Intent(getActivity(), PasswordActivity.class));
     }
+
+    @OnClick(R.id.friends_tv)
+    public void setFriendsTv(View view) {
+        Intent i = new Intent(getActivity(), AllUsersActivity.class);
+        startActivity(i);
+        ((Activity) getActivity()).overridePendingTransition(0, 0);
+    }
+
+    @OnClick(R.id.friends_requests_tv)
+    public void setFriendsRequestsTv(View view) {
+        notificationBadge.setNumber(26);
+        Intent intent = new Intent(getActivity(), FriendRequestsActivity.class);
+        getActivity().startActivity(intent);
+    }
+
+    public void hideLayout() {
+        topLayout.setVisibility(View.GONE);
+        bottomLayout.setVisibility(View.GONE);
+    }
+    public void showLayout() {
+        topLayout.setVisibility(View.VISIBLE);
+        bottomLayout.setVisibility(View.VISIBLE);
+    }
+
+
 
 }

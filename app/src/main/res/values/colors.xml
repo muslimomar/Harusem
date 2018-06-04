@@ -5,8 +5,8 @@
     <color name="colorAccent_2">#FF4081</color>
     <color name="colorAccent">#03A9F4</color>
     <color name="colorSecondary">#3f4676</color>
-    <color name="white" >#ffffff</color>
-    <color name="black" >#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
     <color name="dark_red">#D32F2F</color>
 
     <color name="slide_one_button">#934462</color>
@@ -15,5 +15,11 @@
     <color name="grey_500">#ebebeb</color>
     <color name="light_black">#585858</color>
     <color name="gray">#f9f9f9</color>
+
+    <array name="dot_colors">
+        <item>#03a9f4</item>
+        <item>#e65100</item>
+        <item>#ffbb00</item>
+    </array>
 
 </resources>

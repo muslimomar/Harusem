@@ -13,7 +13,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.MainActivity"></activity>
+        <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.AllUsersActivity" />
         <activity
             android:name=".slides.MaterialIntroActivity"
@@ -52,6 +52,11 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.william.harusem.activities.MainActivity" />
+        </activity>
+        <activity android:name=".SplashActivity"
+            android:theme="@style/NoActionBar"
+            >
+
         </activity>
     </application>
 

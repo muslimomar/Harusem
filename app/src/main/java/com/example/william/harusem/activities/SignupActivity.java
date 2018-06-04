@@ -1,3 +1,5 @@
+// signup
+
 package com.example.william.harusem.activities;
 
 import android.app.ProgressDialog;
@@ -21,6 +23,7 @@ import com.mukesh.countrypicker.CountryPicker;
 import com.mukesh.countrypicker.OnCountryPickerListener;
 import com.quickblox.auth.QBAuth;
 import com.quickblox.auth.session.QBSession;
+import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.QBUsers;
@@ -57,7 +60,7 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
 
-        registerSession();
+//        registerSession();
 
         hideSoftKeyboard();
 
@@ -111,15 +114,14 @@ public class SignupActivity extends AppCompatActivity {
         }
 
         createAccount(getEditTextString(emailEt), getEditTextString(passwordEt), getEditTextString(nameEt));
-
-
     }
 
     private void createAccount(final String email, final String pass, String name) {
+
         loadingPb = buildProgressDialog(this, "Please Wait..", "Loading........", false);
         loadingPb.show();
 
-        QBUser qbUser = new QBUser(email, pass);
+        final QBUser qbUser = new QBUser(email, pass);
         qbUser.setFullName(name);
         qbUser.setEmail(email);
         qbUser.setCustomData(countryTv.getText().toString().trim());
@@ -127,13 +129,24 @@ public class SignupActivity extends AppCompatActivity {
         QBUsers.signUp(qbUser).performAsync(new QBEntityCallback<QBUser>() {
 
             @Override
-            public void onSuccess(QBUser qbUser, Bundle bundle) {
-                dismissDialog(loadingPb);
+            public void onSuccess(QBUser user, Bundle bundle) {
 
-                QBUsersHolder.getInstance().putUser(qbUser);
-                QBUsersHolder.getInstance().setSignInQbUser(qbUser);
+                QBChatService.getInstance().login(qbUser, new QBEntityCallback() {
+                    @Override
+                    public void onSuccess(Object o, Bundle bundle) {
+                        dismissDialog(loadingPb);
+                        QBUsersHolder.getInstance().putUser(qbUser);
+                        QBUsersHolder.getInstance().setSignInQbUser(qbUser);
+                        redirectToMainActivity();
+                    }
 
-                redirectToMainActivity(email, pass);
+                    @Override
+                    public void onError(QBResponseException e) {
+                        dismissDialog(loadingPb);
+                        buildAlertDialog("Signup Failed", e.getMessage(), true, SignupActivity.this);
+                    }
+                });
+
             }
 
             @Override
@@ -152,10 +165,8 @@ public class SignupActivity extends AppCompatActivity {
         );
     }
 
-    private void redirectToMainActivity(String email, String pass) {
+    private void redirectToMainActivity() {
         Intent intent = new Intent(SignupActivity.this, MainActivity.class);
-        intent.putExtra("user", email);
-        intent.putExtra("password", pass);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

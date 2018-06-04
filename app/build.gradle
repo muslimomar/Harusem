@@ -64,7 +64,6 @@ dependencies {
     // Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
 
-
     // QuickBlox :
     compile "com.quickblox:quickblox-android-sdk-core:3.8.1"
     compile "com.quickblox:quickblox-android-sdk-chat:3.8.1"
@@ -76,7 +75,12 @@ dependencies {
     // Bubble View
     compile 'com.github.lguipeng:BubbleView:1.0.1'
 
+    // Dots loader
+    compile 'com.github.bhargavms:DotLoader:1.1.1'
+
+
 }
+
 
 
 

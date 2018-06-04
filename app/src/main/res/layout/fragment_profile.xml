@@ -6,10 +6,9 @@
     android:fillViewport="true"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         tools:context="com.example.william.harusem.fragments.ProfileFragment">
 
         <RelativeLayout
@@ -18,7 +17,9 @@
             android:layout_height="200dp"
             android:layout_gravity="center"
             android:background="@color/colorPrimary"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone"
+            >
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_circle_iv"
@@ -28,7 +29,9 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="@drawable/circle_ripple"
-                app:civ_border_width="0dp" />
+                app:civ_border_width="0dp"
+
+                />
 
             <TextView
                 android:id="@+id/name_tv"
@@ -37,10 +40,10 @@
                 android:layout_below="@id/profile_circle_iv"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="8dp"
-                android:text="John Doe"
                 android:textColor="@color/white"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="John Doe" />
 
 
             <LinearLayout
@@ -78,8 +81,11 @@
             android:id="@+id/bottom_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@id/top_layout"
             android:layout_margin="@dimen/space_between_options_profile"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone"
+            >
 
             <TextView
                 android:id="@+id/account_tv"
@@ -193,12 +199,22 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="8dp"
                     android:indeterminateTint="@color/dark_red"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+
+                    />
 
             </RelativeLayout>
 
-
         </LinearLayout>
 
-    </LinearLayout>
+        <ProgressBar
+            android:id="@+id/profile_loading_pb"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="visible" />
+
+    </RelativeLayout>
+
 </ScrollView>
