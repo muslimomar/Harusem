@@ -18,8 +18,7 @@
             android:layout_gravity="center"
             android:background="@color/colorPrimary"
             android:orientation="vertical"
-            android:visibility="gone"
-            >
+            android:visibility="gone">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_circle_iv"
@@ -84,8 +83,7 @@
             android:layout_below="@id/top_layout"
             android:layout_margin="@dimen/space_between_options_profile"
             android:orientation="vertical"
-            android:visibility="gone"
-            >
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/account_tv"
@@ -172,9 +170,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_between_options_profile"
                 android:clickable="true"
-                android:focusable="true"
-
-                >
+                android:focusable="true">
 
                 <TextView
                     android:id="@+id/log_out_tv"

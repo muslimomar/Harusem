@@ -160,6 +160,7 @@ public class ChatDialogsFragment extends Fragment implements QBSystemMessageList
 
                             @Override
                             public void onError(QBResponseException e) {
+                                dismissDialog(loadingPd);
                                 Log.e(TAG, "onError: ", e);
                             }
                         });

@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -118,6 +119,7 @@ public class ProfileFragment extends Fragment {
 
                         if (getActivity() != null && isAdded()) {
                             nameTv.setText(user.getFullName());
+
                         }
 
                         if (user.getFileId() != null) {
@@ -157,7 +159,7 @@ public class ProfileFragment extends Fragment {
                                     });
                         } else {
 
-                            if (getActivity()!=null && isAdded()) {
+                            if (getActivity() != null && isAdded()) {
                                 hideProgressBar(profileLoadingPb);
                                 showLayout();
                                 profileCircleIv.setImageResource(R.drawable.profile_placeholder);
@@ -181,8 +183,9 @@ public class ProfileFragment extends Fragment {
 
     @OnClick(R.id.log_out_layout)
     public void setLogOutTv(View view) {
-        showProgressBar(logOutPb);
+        disableUserInteraction();
 
+        showProgressBar(logOutPb);
         QBUsers.signOut().performAsync(new QBEntityCallback<Void>() {
             @Override
             public void onSuccess(Void aVoid, Bundle bundle) {
@@ -197,6 +200,7 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void onError(QBResponseException e) {
                         hideProgressBar(logOutPb);
+                        enableUserInteraction();
                         Toast.makeText(getActivity(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -205,6 +209,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onError(QBResponseException e) {
                 hideProgressBar(logOutPb);
+                enableUserInteraction();
                 Toast.makeText(getActivity(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -218,13 +223,18 @@ public class ProfileFragment extends Fragment {
     }
 
     private void showProgressBar(ProgressBar progressBar) {
-        progressBar.setVisibility(View.VISIBLE);
+        if (getActivity() != null && isAdded()) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
     }
 
     private void hideProgressBar(ProgressBar progressBar) {
-        if (progressBar.getVisibility() == View.VISIBLE) {
-            progressBar.setVisibility(View.GONE);
+        if (getActivity() != null && isAdded()) {
+            if (progressBar.getVisibility() == View.VISIBLE) {
+                progressBar.setVisibility(View.GONE);
+            }
         }
+
     }
 
     @Override
@@ -364,5 +374,13 @@ public class ProfileFragment extends Fragment {
         bottomLayout.setVisibility(View.VISIBLE);
     }
 
+    public void disableUserInteraction() {
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    public void enableUserInteraction() {
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
 
 }

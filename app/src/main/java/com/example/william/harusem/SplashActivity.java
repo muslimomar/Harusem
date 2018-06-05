@@ -38,7 +38,6 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
 
-
         startSplash();
     }
 
@@ -127,7 +126,6 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private QBUser getUserFromSession() {
-        // TODO: try to use it without setId
         QBUser user = SharedPrefsHelper.getInstance(this).getQbUser();
         user.setId(QBSessionManager.getInstance().getSessionParameters().getUserId());
         return user;

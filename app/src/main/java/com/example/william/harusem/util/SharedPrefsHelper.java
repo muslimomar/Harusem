@@ -13,6 +13,8 @@ public class SharedPrefsHelper {
     private static final String QB_USER_PASSWORD = "qb_user_password";
     private static final String QB_USER_FULL_NAME = "qb_user_full_name";
     private static final String QB_USER_TAGS = "qb_user_tags";
+    private static final String QB_USER_CUSTOM_DATA = "qb_user_custom_data";
+    private static final String QB_USER_EMAIL = "qb_user_email";
     private static SharedPrefsHelper instance;
 
     private Context cx;
@@ -80,6 +82,8 @@ public class SharedPrefsHelper {
         save(QB_USER_PASSWORD, qbUser.getPassword());
         save(QB_USER_FULL_NAME, qbUser.getFullName());
         save(QB_USER_TAGS, qbUser.getTags().getItemsAsString());
+        save(QB_USER_CUSTOM_DATA, qbUser.getCustomData());
+        save(QB_USER_EMAIL, qbUser.getEmail());
     }
 
     public void removeQbUser() {
@@ -88,16 +92,19 @@ public class SharedPrefsHelper {
         delete(QB_USER_PASSWORD);
         delete(QB_USER_FULL_NAME);
         delete(QB_USER_TAGS);
+        delete(QB_USER_CUSTOM_DATA);
+        delete(QB_USER_EMAIL);
     }
 
     public QBUser getQbUser() {
         if (hasQbUser()) {
-
             Integer id = get(QB_USER_ID);
             String login = get(QB_USER_LOGIN);
             String password = get(QB_USER_PASSWORD);
             String fullName = get(QB_USER_FULL_NAME);
             String tagsInString = get(QB_USER_TAGS);
+            String customData = get(QB_USER_CUSTOM_DATA);
+            String email = get(QB_USER_EMAIL);
 
             StringifyArrayList<String> tags = null;
 
@@ -110,6 +117,8 @@ public class SharedPrefsHelper {
             user.setId(id);
             user.setFullName(fullName);
             user.setTags(tags);
+            user.setCustomData(customData);
+            user.setEmail(email);
             return user;
         } else {
             return null;
