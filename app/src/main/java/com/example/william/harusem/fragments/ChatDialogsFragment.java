@@ -14,7 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.activities.AllUsersActivity;
@@ -35,6 +37,7 @@ import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.core.request.QBRequestGetBuilder;
+import com.yarolegovich.lovelydialog.LovelyChoiceDialog;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -56,11 +59,14 @@ public class ChatDialogsFragment extends Fragment implements QBSystemMessageList
     @BindView(R.id.fab)
     FloatingActionButton fab;
 
+
     Unbinder unbinder;
     ProgressDialog loadingPd;
 
     QBSystemMessagesManager systemMessagesManager;
     QBIncomingMessagesManager incomingMessagesManager;
+    @BindView(R.id.filter_iv)
+    ImageView filterIv;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -178,7 +184,7 @@ public class ChatDialogsFragment extends Fragment implements QBSystemMessageList
     private void refreshAdapter(ArrayList<QBChatDialog> allChatDialogs) {
 
         ChatDialogsAdapter mAdapter = new ChatDialogsAdapter(getContext(), allChatDialogs);
-        if (getActivity()!=null && isAdded()) {
+        if (getActivity() != null && isAdded()) {
             listChatDialogs.setAdapter(mAdapter);
             mAdapter.notifyDataSetChanged();
         }
@@ -259,7 +265,6 @@ public class ChatDialogsFragment extends Fragment implements QBSystemMessageList
         }
 
         return true;
-
     }
 
     private void deleteDialog(int index) {
@@ -280,6 +285,44 @@ public class ChatDialogsFragment extends Fragment implements QBSystemMessageList
                 });
     }
 
+    @OnClick(R.id.filter_iv)
+    public void setFilterIv(View view) {
+
+        String[] strings = new String[]{"name", "Latest Message", "A-Z", "Z-A"};
+
+        new LovelyChoiceDialog(getActivity())
+                .setTopColor(getResources().getColor(R.color.colorSecondary))
+                .setTitle("Sort Chats By:")
+                .setIcon(R.drawable.ic_filter_list_black_48dp)
+                .setItems(strings, new LovelyChoiceDialog.OnItemSelectedListener<String>() {
+                    @Override
+                    public void onItemSelected(int position, String item) {
+                        switch (item) {
+                            case "Latest Message":
+                                Toast.makeText(getActivity(), "last message", Toast.LENGTH_SHORT).show();
+                                filterDialogs();
+                                break;
+                            case "A-Z":
+                                Toast.makeText(getActivity(), "A-Z", Toast.LENGTH_SHORT).show();
+                                break;
+                            case "Z-A":
+                                Toast.makeText(getActivity(), "Z-A", Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+                    }
+                })
+                .show();
+
+
+    }
+
+    private void filterDialogs() {
+        // TODO: to be finished
+        QBRequestGetBuilder requestBuilder = new QBRequestGetBuilder();
+        requestBuilder.setLimit(100);
+//        requestBuilder.sor
+
+    }
 
 }
 

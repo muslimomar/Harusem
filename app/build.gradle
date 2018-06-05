@@ -78,6 +78,11 @@ dependencies {
     // Dots loader
     compile 'com.github.bhargavms:DotLoader:1.1.1'
 
+    // dialog
+    compile 'com.yarolegovich:lovely-dialog:1.1.0'
+
+    // adapter
+    compile 'com.quickblox:chat-message-adapter:2.0'
 
 }
 

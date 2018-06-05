@@ -13,7 +13,8 @@
         android:paddingBottom="8dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="8dp">
+        android:paddingTop="8dp"
+        >
 
         <TextView
             android:id="@+id/recent_chats_txt"
@@ -27,10 +28,15 @@
             android:textStyle="normal" />
 
         <ImageView
+            android:id="@+id/filter_iv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="3dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_chat_menu_item" />
 
     </RelativeLayout>
