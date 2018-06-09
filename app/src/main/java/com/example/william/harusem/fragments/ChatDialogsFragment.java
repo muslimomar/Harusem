@@ -215,7 +215,6 @@ public class ChatDialogsFragment extends Fragment implements QBSystemMessageList
         // Put dialog to cache
         // Because we send system message with content which is DialogId
         // So we can get dialog by Dialog Id
-        //TODO: should use getDialogId instaed of getbody()
         QBRestChatService.getChatDialogById(qbChatMessage.getBody()).performAsync(new QBEntityCallback<QBChatDialog>() {
             @Override
             public void onSuccess(QBChatDialog qbChatDialog, Bundle bundle) {

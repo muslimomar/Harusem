@@ -1,5 +1,6 @@
 package com.example.william.harusem.adapters;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import com.example.william.harusem.R;
 import com.example.william.harusem.activities.ChatActivity;
 import com.example.william.harusem.common.Common;
 import com.example.william.harusem.helper.QBFriendListHelper;
+import com.example.william.harusem.util.Helper;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBRestChatService;
 import com.quickblox.chat.QBSystemMessagesManager;
@@ -81,17 +83,15 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
         holder.messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                QBChatDialog privateChatDialog = createPrivateChatDialog(user);
-
-                Intent intent = new Intent(context, ChatActivity.class);
-                intent.putExtra(DIALOG_EXTRA, privateChatDialog);
-                context.startActivity(intent);
+                createPrivateChatDialog(user);
             }
         });
 
     }
 
-    private QBChatDialog createPrivateChatDialog(final QBUser user) {
+    private void createPrivateChatDialog(final QBUser user) {
+        final ProgressDialog progressDialog = Helper.buildProgressDialog(context, "", "Loading...", false);
+        progressDialog.show();
 
         QBChatDialog chatDialog = DialogUtils.buildPrivateDialog(user.getId());
 
@@ -109,15 +109,20 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
                 } catch (SmackException.NotConnectedException e) {
                     e.printStackTrace();
                 }
+
+                progressDialog.dismiss();
+
+                Intent intent = new Intent(context, ChatActivity.class);
+                intent.putExtra(DIALOG_EXTRA, qbChatDialog);
+                context.startActivity(intent);
             }
 
             @Override
             public void onError(QBResponseException e) {
-                Log.e("FriendsAdapter", "onError: ",e );
+                progressDialog.dismiss();
+                Helper.buildAlertDialog("Error", e.getMessage(),true, context);
             }
         });
-
-        return chatDialog;
     }
 
     @Override

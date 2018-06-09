@@ -27,6 +27,7 @@ import com.example.william.harusem.activities.FriendRequestsActivity;
 import com.example.william.harusem.activities.FriendsActivity;
 import com.example.william.harusem.activities.LoginActivity;
 import com.example.william.harusem.activities.PasswordActivity;
+import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.holder.QBFriendRequestsHolder;
 import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.util.Helper;
@@ -119,7 +120,11 @@ public class ProfileFragment extends Fragment {
 
                         if (getActivity() != null && isAdded()) {
                             nameTv.setText(user.getFullName());
+                            // TODO: get unread friend request
+
                             getUnreadFriendRequests();
+
+                            friendsCountValueTv.setText(String.valueOf(getFriendsCount()));
                         }
 
                         if (user.getFileId() != null) {
@@ -173,6 +178,11 @@ public class ProfileFragment extends Fragment {
                     }
                 });
 
+    }
+
+    private int getFriendsCount() {
+        QBFriendListHelper friendListHelper = new QBFriendListHelper(getActivity());
+        return friendListHelper.getAllFriends().size();
     }
 
     private void getUnreadFriendRequests() {
