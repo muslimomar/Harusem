@@ -1,6 +1,5 @@
 package com.example.william.harusem.activities;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,7 +13,6 @@ import com.example.william.harusem.R;
 import com.example.william.harusem.fragments.ChatDialogsFragment;
 import com.example.william.harusem.fragments.ProfileFragment;
 import com.example.william.harusem.fragments.SearchFragment;
-import com.quickblox.auth.session.QBSessionManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-            setupActionbar();
-            setupBottomNavigation();
+        setupActionbar();
+        setupBottomNavigation();
 
     }
 
@@ -91,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.frame_container, selectedFragment);
         fragmentTransaction.commit();
-
     }
 
 }

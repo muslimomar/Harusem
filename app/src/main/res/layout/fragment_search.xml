@@ -9,11 +9,21 @@
         android:id="@+id/all_users_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="empty"
-        android:background="@color/colorPrimaryDark"
-        android:textColor="@color/white"
         android:layout_centerInParent="true"
-        />
+        android:background="@color/colorPrimaryDark"
+        android:text="All Users"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/friends_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/all_users_btn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorSecondary"
+        android:text="Friends"
+        android:textColor="@color/white" />
 
 
 </RelativeLayout>

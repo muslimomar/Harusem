@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
@@ -41,6 +40,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.example.william.harusem.common.Common.UPDATE_ADD_MODE;
+import static com.example.william.harusem.common.Common.UPDATE_REMOVE_MODE;
 import static com.example.william.harusem.util.Helper.buildProgressDialog;
 
 
@@ -58,7 +58,6 @@ public class AllUsersActivity extends AppCompatActivity {
     String mode = "";
     QBChatDialog qbChatDialog;
     List<QBUser> addedUsers = new ArrayList<>();
-    private LinearLayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +68,6 @@ public class AllUsersActivity extends AppCompatActivity {
         mode = getIntent().getStringExtra(Common.UPDATE_MODE);
         qbChatDialog = (QBChatDialog) getIntent().getSerializableExtra(Common.UPDATE_DIALOG_EXTRA);
 
-
-        configRecyclerView();
-
         retrieveAllUser();
 
         usersRecyclerView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
@@ -81,7 +77,7 @@ public class AllUsersActivity extends AppCompatActivity {
         } else {
             if (mode.equals(UPDATE_ADD_MODE))
                 loadListAvailableUser();
-            else if (mode.equals(Common.UPDATE_REMOVE_MODE))
+            else if (mode.equals(UPDATE_REMOVE_MODE))
                 loadListUserInGroup();
         }
 
@@ -113,6 +109,7 @@ public class AllUsersActivity extends AppCompatActivity {
 
     }
 
+    // add user to the group
     private void loadListAvailableUser() {
         createChatBtn.setText("Add User");
 
@@ -171,27 +168,6 @@ public class AllUsersActivity extends AppCompatActivity {
 
     }
 
-
-    private void swipeLayoutRefresh() {
-        mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent),
-                getResources().getColor(R.color.colorPrimary),
-                getResources().getColor(R.color.colorPrimaryDark));
-
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // TODO: refresh
-            }
-        });
-    }
-
-
-    private void configRecyclerView() {
-//        mLayoutManager = new LinearLayoutManager(this);
-//        usersRecyclerView.setHasFixedSize(true);
-//        usersRecyclerView.setLayoutManager(mLayoutManager);
-    }
-
     @OnClick(R.id.create_chat_btn)
     public void setCreateChatBtn(View view) {
 
@@ -236,8 +212,8 @@ public class AllUsersActivity extends AppCompatActivity {
 
             }
 
-        }else if(mode.equals(Common.UPDATE_REMOVE_MODE) && qbChatDialog!=null) {
-            if(addedUsers.size() > 0) {
+        } else if (mode.equals(UPDATE_REMOVE_MODE) && qbChatDialog != null) {
+            if (addedUsers.size() > 0) {
                 QBDialogRequestBuilder requestBuilder = new QBDialogRequestBuilder();
 
                 int cntChoice = usersRecyclerView.getCount();
@@ -273,6 +249,7 @@ public class AllUsersActivity extends AppCompatActivity {
 
     }
 
+    // create group chat
     private void createGroupChat(SparseBooleanArray checkedItemPositions) {
         final ProgressDialog progressDialog = buildProgressDialog(this, "Please Wait", "", false);
         progressDialog.show();
@@ -324,6 +301,7 @@ public class AllUsersActivity extends AppCompatActivity {
 
     }
 
+    // create private chat
     private void createPrivateChat(SparseBooleanArray checkedItemPositions) {
 
         final ProgressDialog progressDialog = buildProgressDialog(this, "Please Wait", "", false);
@@ -346,12 +324,12 @@ public class AllUsersActivity extends AppCompatActivity {
                         QBChatMessage qbChatMessage = new QBChatMessage();
                         qbChatMessage.setRecipientId(user.getId());
                         qbChatMessage.setBody(qbChatDialog.getDialogId());
+
                         try {
                             qbSystemMessagesManager.sendSystemMessage(qbChatMessage);
                         } catch (SmackException.NotConnectedException e) {
                             e.printStackTrace();
                         }
-
 
                         finish();
                     }
@@ -364,8 +342,10 @@ public class AllUsersActivity extends AppCompatActivity {
 
             }
         }
-
-
     }
+
+    /////
+
+    /////
 
 }

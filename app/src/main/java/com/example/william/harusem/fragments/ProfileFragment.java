@@ -23,10 +23,11 @@ import android.widget.Toast;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.activities.AccountActivity;
-import com.example.william.harusem.activities.AllUsersActivity;
 import com.example.william.harusem.activities.FriendRequestsActivity;
+import com.example.william.harusem.activities.FriendsActivity;
 import com.example.william.harusem.activities.LoginActivity;
 import com.example.william.harusem.activities.PasswordActivity;
+import com.example.william.harusem.holder.QBFriendRequestsHolder;
 import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.util.Helper;
 import com.nex3z.notificationbadge.NotificationBadge;
@@ -113,13 +114,12 @@ public class ProfileFragment extends Fragment {
                 .performAsync(new QBEntityCallback<QBUser>() {
                     @Override
                     public void onSuccess(QBUser user, Bundle bundle) {
-                        // save to cache
 
                         QBUsersHolder.getInstance().putUser(user);
 
                         if (getActivity() != null && isAdded()) {
                             nameTv.setText(user.getFullName());
-
+                            getUnreadFriendRequests();
                         }
 
                         if (user.getFileId() != null) {
@@ -172,6 +172,18 @@ public class ProfileFragment extends Fragment {
                         Log.e(TAG, "onError: qbusers get user", e);
                     }
                 });
+
+    }
+
+    private void getUnreadFriendRequests() {
+        notificationBadge.clear();
+        int size = QBFriendRequestsHolder.getInstance().getAllFriendRequests().size();
+        if (size > 0) {
+            if (size > 99) {
+                size = 99;
+            }
+            notificationBadge.setText("" + size);
+        }
     }
 
     private void redirectToLogin() {
@@ -238,13 +250,10 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
+    public void onResume() {
+        super.onResume();
+        if (getActivity() != null && isAdded())
+            getUnreadFriendRequests();
     }
 
     @OnClick(R.id.profile_circle_iv)
@@ -352,14 +361,13 @@ public class ProfileFragment extends Fragment {
 
     @OnClick(R.id.friends_tv)
     public void setFriendsTv(View view) {
-        Intent i = new Intent(getActivity(), AllUsersActivity.class);
+        Intent i = new Intent(getActivity(), FriendsActivity.class);
         startActivity(i);
         ((Activity) getActivity()).overridePendingTransition(0, 0);
     }
 
     @OnClick(R.id.friends_requests_tv)
     public void setFriendsRequestsTv(View view) {
-        notificationBadge.setNumber(26);
         Intent intent = new Intent(getActivity(), FriendRequestsActivity.class);
         getActivity().startActivity(intent);
     }
@@ -382,5 +390,6 @@ public class ProfileFragment extends Fragment {
     public void enableUserInteraction() {
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
+
 
 }

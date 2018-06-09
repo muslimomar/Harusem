@@ -10,6 +10,8 @@ import android.widget.Button;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.activities.AllUsersActivity;
+import com.example.william.harusem.activities.FriendsActivity;
+import com.example.william.harusem.activities.UsersActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,7 +40,17 @@ public class SearchFragment extends Fragment {
         unbinder.unbind();
     }
 
-    @OnClick(R.id.all_users_btn) public void setAllUsersBtn(View view) {
+    @OnClick(R.id.all_users_btn)
+    public void setAllUsersBtn(View view) {
+        Intent intent = new Intent(getActivity(), UsersActivity.class);
+        startActivity(intent);
     }
+
+    @OnClick(R.id.friends_btn)
+    public void setFriendsBtn(View view) {
+        Intent intent = new Intent(getActivity(), FriendsActivity.class);
+        startActivity(intent);
+    }
+
 
 }

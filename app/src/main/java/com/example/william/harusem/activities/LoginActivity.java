@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.william.harusem.R;
+import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.util.SharedPrefsHelper;
 import com.quickblox.auth.session.QBSettings;
@@ -140,6 +141,8 @@ public class LoginActivity extends AppCompatActivity {
                         dismissDialog(loadingPb);
                         SharedPrefsHelper.getInstance(LoginActivity.this).saveQbUser(user);
                         QBUsersHolder.getInstance().setSignInQbUser(user);
+
+                        QBFriendListHelper friendListHelper = new QBFriendListHelper(LoginActivity.this);
                         redirectToMainActivity(email, pass);
                     }
 

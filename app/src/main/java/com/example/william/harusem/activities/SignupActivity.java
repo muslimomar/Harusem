@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.william.harusem.R;
+import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.util.SharedPrefsHelper;
 import com.mukesh.countrypicker.Country;
@@ -119,6 +120,8 @@ public class SignupActivity extends AppCompatActivity {
                         QBUsersHolder.getInstance().putUser(qbUser);
                         QBUsersHolder.getInstance().setSignInQbUser(qbUser);
                         SharedPrefsHelper.getInstance(SignupActivity.this).saveQbUser(qbUser);
+
+                        QBFriendListHelper friendListHelper = new QBFriendListHelper(SignupActivity.this);
                         redirectToMainActivity();
                     }
 

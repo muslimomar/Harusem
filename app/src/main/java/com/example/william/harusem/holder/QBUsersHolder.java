@@ -66,7 +66,6 @@ public class QBUsersHolder {
         for (int i = 0; i < qbUserSparseArray.size(); i++)
             result.add(qbUserSparseArray.valueAt(i));
             return result;
-
     }
 
 

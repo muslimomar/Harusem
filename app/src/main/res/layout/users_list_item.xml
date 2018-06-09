@@ -39,23 +39,23 @@
             android:layout_centerVertical="true"
             >
 
-            <TextView
-                android:id="@+id/user_name_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                tools:text="Jamal"
-                />
+        <TextView
+            android:id="@+id/user_display_name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            tools:text="Jamal"
+            />
 
-            <TextView
-                android:id="@+id/status_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="Status"
-                android:textSize="12.5sp"
-                android:layout_marginTop="6dp"
-                android:visibility="gone"
-                />
+        <TextView
+            android:id="@+id/status_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Status"
+            android:textSize="12.5sp"
+            android:layout_marginTop="6dp"
+            android:visibility="gone"
+            />
 
         </LinearLayout>
 
@@ -75,10 +75,9 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_alignParentRight="true"
-
             >
 
-            <!--<Button-->
+        <!--<Button-->
             <!--android:id="@+id/message_btn"-->
             <!--android:layout_width="wrap_content"-->
             <!--android:layout_height="31dp"-->
@@ -91,27 +90,20 @@
             <!--android:elevation="0dp"-->
             <!--android:textColor="@color/white" />-->
 
-            <ImageView
-                android:id="@+id/decline_iv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_close"
-                android:clickable="true"
-                android:focusable="true"
-                android:layout_marginRight="15dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                />
-
-            <ImageView
-                android:id="@+id/accept_iv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_tick"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                />
-
+        <Button
+            android:id="@+id/unfriend_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="31dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:background="@color/colorPrimary"
+            android:visibility="visible"
+            android:text="Add Friend"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:padding="5dp"
+            />
 
         </LinearLayout>
 
