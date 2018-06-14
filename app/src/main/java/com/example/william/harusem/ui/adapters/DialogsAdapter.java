@@ -87,13 +87,11 @@ public class DialogsAdapter extends BaseSelectableListAdapter<QBChatDialog> {
                     Integer fileId = recipient.getFileId();
                     getRecipientPhoto(fileId, holder.dialogImageView);
                 } else {
-                    holder.dialogImageView.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.placeholder_user));
-                    holder.dialogImageView.setImageDrawable(null);
+                    holder.dialogImageView.setImageResource(R.drawable.ic_user_new);
                 }
 
             } else {
-                holder.dialogImageView.setBackgroundDrawable(UiUtils.getGreyCircleDrawable());
-                holder.dialogImageView.setImageResource(R.drawable.ic_group_black_24dp);
+                holder.dialogImageView.setImageResource(R.drawable.ic_group_new);
             }
 
         }

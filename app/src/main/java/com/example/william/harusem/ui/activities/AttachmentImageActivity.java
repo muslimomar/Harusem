@@ -39,7 +39,8 @@ public class AttachmentImageActivity extends AppCompatActivity {
     ProgressBar progressBar;
     int type = 0;
     ActionBar actionBar;
-
+    @BindView(R.id.placeholder_iv)
+    ImageView placeholder_iv;
 
     public static void start(Context context, String url, int type, String dialogType) {
         Intent intent = new Intent(context, AttachmentImageActivity.class);
@@ -84,6 +85,9 @@ public class AttachmentImageActivity extends AppCompatActivity {
     }
 
     private void loadImage() {
+        imageView.setVisibility(View.VISIBLE);
+        placeholder_iv.setVisibility(View.GONE);
+
         int TYPE = getIntent().getIntExtra("type", 0);
         String url = getIntent().getStringExtra(EXTRA_URL);
         String dialogType = getIntent().getStringExtra("dialog_type");
@@ -160,13 +164,13 @@ public class AttachmentImageActivity extends AppCompatActivity {
                 });
 
             } else {
-                float scale = getResources().getDisplayMetrics().density;
-                int dpAsPixels = (int) (80*scale + 0.5f);
-                imageView.setPadding(dpAsPixels,dpAsPixels,dpAsPixels,dpAsPixels);
+                imageView.setVisibility(View.GONE);
+                placeholder_iv.setVisibility(View.VISIBLE);
+
                 if (dialogType.equals(QBDialogType.PRIVATE.toString())) {
-                    imageView.setBackgroundDrawable(getResources().getDrawable(R.drawable.placeholder_user));
+                    placeholder_iv.setImageResource(R.drawable.ic_user_new);
                 } else {
-                    imageView.setImageResource(R.drawable.ic_group_black_24dp);
+                    placeholder_iv.setImageResource(R.drawable.ic_group_new);
                 }
 
                 progressBar.setVisibility(View.GONE);

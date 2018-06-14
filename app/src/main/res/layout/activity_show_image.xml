@@ -1,23 +1,28 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/MatchParent"
     android:id="@+id/layout_root"
+    style="@style/MatchParent"
     android:background="@color/colorPrimary">
 
+    <ImageView
+        android:id="@+id/placeholder_iv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="80dp"
+        />
 
     <ImageView
         android:id="@+id/image_full_view"
         style="@style/MatchParent"
         android:layout_gravity="center"
         android:adjustViewBounds="true"
-
         />
 
     <ProgressBar
         android:id="@+id/progress_bar_show_image"
         style="@style/WrapContent"
         android:layout_gravity="center"
-        android:visibility="visible"
         android:indeterminateTint="@color/colorSecondary"
+        android:visibility="visible"
 
         />
 
