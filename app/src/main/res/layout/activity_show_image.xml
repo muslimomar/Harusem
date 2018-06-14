@@ -3,12 +3,13 @@
     android:id="@+id/layout_root"
     android:background="@color/colorPrimary">
 
+
     <ImageView
         android:id="@+id/image_full_view"
         style="@style/MatchParent"
         android:layout_gravity="center"
         android:adjustViewBounds="true"
-        android:src="@drawable/ic_group_black_24dp"
+
         />
 
     <ProgressBar

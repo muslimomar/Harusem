@@ -166,6 +166,13 @@ public class AttachmentImageActivity extends AppCompatActivity {
                     imageView.setImageResource(R.drawable.ic_group_black_24dp);
                 }
                 progressBar.setVisibility(View.GONE);
+
+
+
+                float scale = getResources().getDisplayMetrics().density;
+                int dpAsPixels = (int) (80*scale + 0.5f);
+                imageView.setPadding(dpAsPixels,dpAsPixels,dpAsPixels,dpAsPixels);
+
             }
 
 
