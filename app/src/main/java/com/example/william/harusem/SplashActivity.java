@@ -12,8 +12,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.example.william.harusem.activities.LoginActivity;
-import com.example.william.harusem.activities.MainActivity;
+import com.example.william.harusem.ui.activities.LoginActivity;
+import com.example.william.harusem.ui.activities.MainActivity;
 import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.util.SharedPrefsHelper;
 import com.quickblox.auth.session.QBSessionManager;

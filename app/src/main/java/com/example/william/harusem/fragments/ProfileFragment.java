@@ -22,15 +22,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.william.harusem.R;
-import com.example.william.harusem.activities.AccountActivity;
-import com.example.william.harusem.activities.FriendRequestsActivity;
-import com.example.william.harusem.activities.FriendsActivity;
-import com.example.william.harusem.activities.LoginActivity;
-import com.example.william.harusem.activities.PasswordActivity;
+import com.example.william.harusem.holder.QBChatDialogHolder;
+import com.example.william.harusem.ui.activities.AccountActivity;
+import com.example.william.harusem.ui.activities.FriendRequestsActivity;
+import com.example.william.harusem.ui.activities.FriendsActivity;
+import com.example.william.harusem.ui.activities.LoginActivity;
+import com.example.william.harusem.ui.activities.PasswordActivity;
 import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.holder.QBFriendRequestsHolder;
 import com.example.william.harusem.holder.QBUsersHolder;
-import com.example.william.harusem.util.Helper;
+import com.example.william.harusem.util.ChatHelper;
+import com.example.william.harusem.util.SharedPrefsHelper;
+import com.example.william.harusem.util.Utils;
 import com.nex3z.notificationbadge.NotificationBadge;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.content.QBContent;
@@ -215,6 +218,12 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void onSuccess(Void aVoid, Bundle bundle) {
                         hideProgressBar(logOutPb);
+
+                                SharedPrefsHelper.getInstance(getActivity()).removeQbUser();
+        ChatHelper.getInstance().destroy();
+        QBChatDialogHolder.getInstance().clear();
+
+
                         Log.d(TAG, "onSuccess: logout success!");
                         redirectToLogin();
                     }
@@ -290,7 +299,7 @@ public class ProfileFragment extends Fragment {
 
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
-                final ProgressDialog progressDialog = Helper.buildProgressDialog(getActivity(), "", "Please Wait...", false);
+                final ProgressDialog progressDialog = Utils.buildProgressDialog(getActivity(), "", "Please Wait...", false);
                 progressDialog.show();
 
                 Uri imageUri = result.getUri();
@@ -350,7 +359,6 @@ public class ProfileFragment extends Fragment {
 
 
                 profileCircleIv.setImageURI(imageUri);
-
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Log.e(TAG, "onActivityResult: ", result.getError());

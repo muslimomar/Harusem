@@ -1,6 +1,5 @@
 package com.example.william.harusem.slides;
 
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;

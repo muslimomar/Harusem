@@ -43,6 +43,9 @@ dependencies {
 //RecyclerView:
     implementation 'com.android.support:recyclerview-v7:26.1.0'
 
+    // sticky recyclerview
+    compile 'com.timehop.stickyheadersrecyclerview:library:0.4.3@aar'
+
 //CardView :
     compile 'com.android.support:cardview-v7:26.1.0'
 
@@ -84,10 +87,11 @@ dependencies {
     // adapter
     compile 'com.quickblox:chat-message-adapter:2.0'
 
+    // google play services gms
+    compile "com.google.android.gms:play-services-gcm:10.0.1"
+//    compile "com.google.firebase:firebase-messaging:10.0.1"
+//    compile "com.google.firebase:firebase-core:10.0.1"
+
 }
 
-
-
-
-
-
+//apply plugin: 'com.google.gms.google-services'

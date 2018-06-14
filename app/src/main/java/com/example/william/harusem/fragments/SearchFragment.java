@@ -9,9 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.william.harusem.R;
-import com.example.william.harusem.activities.AllUsersActivity;
-import com.example.william.harusem.activities.FriendsActivity;
-import com.example.william.harusem.activities.UsersActivity;
+import com.example.william.harusem.ui.activities.FriendsActivity;
+import com.example.william.harusem.ui.activities.UsersActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

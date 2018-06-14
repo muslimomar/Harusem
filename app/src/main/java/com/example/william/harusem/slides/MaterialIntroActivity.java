@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
-import com.example.william.harusem.activities.MainActivity;
+import com.example.william.harusem.ui.activities.MainActivity;
 
 /**
  * Created by william on 2/22/2018.

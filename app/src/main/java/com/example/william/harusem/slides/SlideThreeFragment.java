@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.william.harusem.activities.MainActivity;
+import com.example.william.harusem.ui.activities.MainActivity;
 import com.example.william.harusem.R;
 
 import agency.tango.materialintroscreen.SlideFragment;

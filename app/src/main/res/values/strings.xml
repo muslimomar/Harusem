@@ -4,4 +4,44 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="slide_2_string">No one to talk with?\n chat with a bot</string>
     <string name="notification">Notification</string>
+
+    <string name="no_internet_connection">No internet connection</string>
+
+
+    <!-- Dialog Strings -->
+    <string name="please_wait">Please wait…</string>
+
+    <string name="dlg_error">Error</string>
+    <string name="dlg_ok">OK</string>
+    <string name="dlg_cancel">Cancel</string>
+    <string name="dlg_loading">Loading…</string>
+    <string name="dlg_choose_image_from">Select photo from…</string>
+    <string name="dlg_retry">Retry</string>
+    <string name="chat_unsupported_type">Unsupported dialog type</string>
+    <string name="connection_error">Chat connection has been dropped</string>
+    <string name="chat_info_add_people_error">Add people errors</string>
+    <string name="chat_load_users_error">Load chat users errors</string>
+    <string name="public_group_chat_cannot_be_deleted">Public Group chat can be deleted only by owner</string>
+    <string name="dialogs_deletion_error">Dialog deletion errors</string>
+    <string name="chat_wait">Wait for all attachments to upload</string>
+
+    <string name="menu_new_chat">New Chat</string>
+    <string name="menu_chat_info">Chat info</string>
+    <string name="menu_add_users_to_chat">Add Users to Chat</string>
+    <string name="menu_leave_chat">Leave Chat</string>
+    <string name="menu_delete_chat">Delete Chat</string>
+    <string name="menu_dialogs_logout">Logout</string>
+    <string name="menu_dialogs_delete">Delete</string>
+    <string name="menu_select_people_done">Done</string>
+    <string name="error_leave_chat">Error leaving room</string>
+    <string name="reconnect_alert">Reconnecting in %s seconds</string>
+    <string name="chat_attachment">Photo</string>
+    <string name="dialogs_creation_error">Dialog creation errors</string>
+    <string name="create_chat">Creating chat…</string>
+    <string name="placeholder_username_you">%s (you)</string>
+    <string name="select_users_get_users_error">Error while retrieving users</string>
+    <string name="select_users_edit_chat">Add Users to chat</string>
+    <string name="select_users_create_chat">Create new chat</string>
+    <string name="select_users_choose_users">Get users errors</string>
+
 </resources>

@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="20dp"
-    tools:context="com.example.william.harusem.activities.AccountActivity">
+    tools:context=".ui.activities.AccountActivity">
 
     <LinearLayout
         android:id="@+id/container_layout"

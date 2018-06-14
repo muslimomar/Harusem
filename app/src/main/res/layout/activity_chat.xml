@@ -6,12 +6,13 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context="com.example.william.harusem.activities.ChatActivity">
+    tools:context=".ui.activities.MessageActivity">
 
     <LinearLayout
         android:id="@+id/toolbar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:elevation="20dp"
         android:orientation="vertical">
 
         <android.support.v7.widget.Toolbar
@@ -32,7 +33,9 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="16dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_arrow_white_24dp" />
+                    android:src="@drawable/ic_arrow_white_24dp"
+                    android:visibility="visible"
+                    android:layout_marginStart="16dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -45,12 +48,25 @@
                     android:id="@+id/dialog_avatar"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
+                    android:layout_centerInParent="true"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="@drawable/circle_ripple"
-                    android:src="@drawable/my_photo" />
+                    android:src="@drawable/profile_placeholder" />
+
+                <ImageButton
+                    android:id="@+id/more_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_more_vert_black_24dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="16dp"
+                    android:visibility="visible"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="16dp" />
+
 
             </RelativeLayout>
 
@@ -61,9 +77,7 @@
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:background="#f8f8f8"
-            app:contentInsetStart="0dp"
-
-            >
+            app:contentInsetStart="0dp">
 
             <RelativeLayout
                 android:id="@+id/small_toolbar_layout"
@@ -71,7 +85,7 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/friend_name_tv"
+                    android:id="@+id/opponent_name_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
@@ -89,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="30dp"
-                    android:layout_toRightOf="@id/friend_name_tv"
+                    android:layout_toRightOf="@id/opponent_name_tv"
                     android:src="@drawable/circle_shape" />
 
             </RelativeLayout>
@@ -103,7 +117,8 @@
         android:layout_width="match_parent"
         android:layout_height="0.3dp"
         android:layout_below="@id/toolbar_layout"
-        android:background="#bbbbbb" />
+        android:background="#bbbbbb"
+        android:elevation="2dp" />
 
 
     <LinearLayout
@@ -112,7 +127,8 @@
         android:layout_height="?attr/actionBarSize"
         android:layout_below="@id/divider"
         android:background="@color/colorPrimary"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
 
         <ImageView
@@ -136,12 +152,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_bar"
-        android:layout_below="@id/dialog_info"
-        android:paddingBottom="8dp">
-
-
-    </android.support.v7.widget.RecyclerView>
-
+        android:layout_below="@id/dialog_info" />
 
     <View
         android:id="@+id/divider_bottom"
@@ -155,10 +166,19 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/attach_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="10dp"
+            android:src="@drawable/ic_attach_file_black_24dp" />
+
 
         <EditText
             android:id="@+id/message_input_et"
@@ -176,8 +196,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="5dp"
             android:src="@drawable/ic_send_blue"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <ImageButton
             android:id="@+id/send_img_btn"
@@ -186,7 +207,7 @@
             android:layout_marginLeft="5dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_image_black_32dp"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
     </LinearLayout>
 
@@ -201,6 +222,36 @@
         app:color_array="@array/dot_colors"
         app:dot_radius="4dp"
         app:number_of_dots="3" />
+
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottom_bar"
+        android:layout_below="@id/dialog_info"
+        android:layout_centerInParent="true" />
+
+    <LinearLayout
+        android:id="@+id/layout_attachment_preview_container"
+        style="@style/MatchWidth"
+        android:layout_height="96dp"
+        android:layout_above="@+id/bottom_bar"
+        android:background="?attr/colorPrimary"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <View
+            android:id="@+id/divider_chat_attachments"
+            style="@style/HorizontalDividerStyle" />
+
+
+        <com.example.william.harusem.widget.AttachmentPreviewAdapterView
+            android:id="@+id/adapter_view_attachment_preview"
+            style="@style/MatchWidth" />
+
+
+    </LinearLayout>
 
 
 </RelativeLayout>

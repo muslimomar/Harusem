@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.william.harusem.holder.QBFriendRequestsHolder;
-import com.example.william.harusem.holder.QBUsersHolder;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBRoster;
 import com.quickblox.chat.listeners.QBRosterListener;
@@ -21,7 +20,6 @@ import org.jivesoftware.smack.roster.packet.RosterPacket;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by william on 6/8/2018.
@@ -34,15 +32,12 @@ public class QBFriendListHelper {
     private QBRoster roster;
     private QBFriendRequestsHolder qbFriendRequestsHolder;
 
-    private List<Integer> userLoadingIdsList;
-
     public QBFriendListHelper(Context context) {
         this.context = context;
         qbFriendRequestsHolder = QBFriendRequestsHolder.getInstance();
         roster = QBChatService.getInstance().getRoster(QBRoster.SubscriptionMode.mutual,
                 new SubscriptionListener());
         roster.setSubscriptionMode(QBRoster.SubscriptionMode.mutual);
-        roster.addRosterListener(new RosterListener());
     }
 
     public void acceptFriendRequest(final QBUser user, QBEntityCallback<Void> callback) {
@@ -53,8 +48,6 @@ public class QBFriendListHelper {
         roster.reject(user.getId(), callback);
         // consider clearing roster entry as in quminicate
     }
-
-
 
     public boolean isFriendRequestAlreadySent(int userId) {
         QBRosterEntry entry = roster.getEntry(userId);
@@ -72,8 +65,8 @@ public class QBFriendListHelper {
     public void cancelFriendRequest(int userId, QBEntityCallback<Void> callback) {
         QBRosterEntry entry = roster.getEntry(userId);
         if (entry != null && roster.contains(userId)) {
-//            roster.removeEntry(entry, callback);
-            roster.unsubscribe(userId,callback);
+            roster.removeEntry(entry, callback);
+            roster.unsubscribe(userId, callback);
         }
     }
 
@@ -134,31 +127,6 @@ public class QBFriendListHelper {
         }
     }
 
-    private class RosterListener implements QBRosterListener {
-
-        @Override
-        public void entriesDeleted(Collection<Integer> collection) {
-            Log.d(TAG, "RosterListener entriesDeleted: " + collection);
-
-
-        }
-
-        @Override
-        public void entriesAdded(Collection<Integer> collection) {
-            Log.d(TAG, "RosterListener entriesAdded: " + collection);
-
-        }
-
-        @Override
-        public void entriesUpdated(Collection<Integer> collection) {
-            Log.d(TAG, "RosterListener entriesUpdated: " + collection);
-        }
-
-        @Override
-        public void presenceChanged(QBPresence qbPresence) {
-            Log.d(TAG, "RosterListener presenceChanged: " + qbPresence);
-        }
-    }
 
 
 }

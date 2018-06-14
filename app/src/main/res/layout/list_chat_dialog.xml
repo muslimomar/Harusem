@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:id="@+id/root"
     android:padding="16dp">
 
 
@@ -12,18 +13,19 @@
         android:layout_height="wrap_content">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/image_chatDialog"
+            android:id="@+id/dialog_circle_iv"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_alignParentLeft="true"
-            tools:src="@drawable/circle_shape" />
+            tools:src="@drawable/ic_group_black_24dp"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@id/image_chatDialog"
+            android:layout_toRightOf="@id/dialog_circle_iv"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -31,7 +33,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/list_chat_dialog_title"
+                    android:id="@+id/dialog_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
@@ -39,7 +41,7 @@
                     tools:text="Xatar" />
 
                 <TextView
-                    android:id="@+id/last_message_time"
+                    android:id="@+id/last_message_time_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -48,23 +50,25 @@
                     android:textSize="12sp" />
 
                 <TextView
-                    android:id="@+id/list_chat_dialog_message"
+                    android:id="@+id/last_message_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/list_chat_dialog_title"
+                    android:layout_below="@id/dialog_name"
                     android:layout_marginTop="4dp"
                     tools:text="ich bin Kurde" />
 
-                <ImageView
-                    android:id="@+id/image_unRead"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+
+                <TextView
+                    android:id="@+id/text_dialog_unread_count"
+                    style="@style/DialogUnreadCounterStyle"
+                    android:layout_below="@id/last_message_time_tv"
                     android:layout_alignParentRight="true"
-                    android:layout_below="@id/last_message_time"
                     android:layout_centerVertical="true"
+                    android:visibility="visible"
                     android:layout_marginTop="4dp"
-                    tools:src="@drawable/circle_shape"
-                    tools:tint="@color/red" />
+                    tools:text="4" />
+
+
             </RelativeLayout>
 
 

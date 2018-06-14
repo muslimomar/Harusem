@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/LinearAttachWidgetFrame.Left"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentEnd="false"
+    android:layout_alignParentRight="false"
+    android:layout_marginEnd="8dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginStart="16dp"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/opponent_name_attach_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:textColor="@color/text_color_dark_grey"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/roboto_bold"
+        android:layout_weight="1"
+        tools:text="Opponent Name"
+        />
+
+    <TextView
+        android:id="@+id/msg_text_time_attach"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextViewAttach.Right"
+        tools:text="time"
+
+
+        />
+
+</LinearLayout>
