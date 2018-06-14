@@ -67,14 +67,12 @@ public class SplashActivity extends AppCompatActivity {
 
     private void restoreChatSession() {
         if (QBChatService.getInstance().isLoggedIn()) {
+            QBFriendListHelper friendListHelper = new QBFriendListHelper(SplashActivity.this);
             proceedToMainActivity();
         } else {
             QBUser user = getUserFromSession();
             loginToChat(user);
         }
-
-        // TODO: move this below line to after chat login to fix on start splash crash
-        QBFriendListHelper friendListHelper = new QBFriendListHelper(SplashActivity.this);
 
     }
 
@@ -85,6 +83,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Object o, Bundle bundle) {
                 // dismiss dialog
+                QBFriendListHelper friendListHelper = new QBFriendListHelper(SplashActivity.this);
                 proceedToMainActivity();
             }
 

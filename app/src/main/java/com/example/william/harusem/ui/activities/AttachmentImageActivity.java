@@ -160,18 +160,16 @@ public class AttachmentImageActivity extends AppCompatActivity {
                 });
 
             } else {
+                float scale = getResources().getDisplayMetrics().density;
+                int dpAsPixels = (int) (80*scale + 0.5f);
+                imageView.setPadding(dpAsPixels,dpAsPixels,dpAsPixels,dpAsPixels);
                 if (dialogType.equals(QBDialogType.PRIVATE.toString())) {
                     imageView.setBackgroundDrawable(getResources().getDrawable(R.drawable.placeholder_user));
                 } else {
                     imageView.setImageResource(R.drawable.ic_group_black_24dp);
                 }
+
                 progressBar.setVisibility(View.GONE);
-
-
-
-                float scale = getResources().getDisplayMetrics().density;
-                int dpAsPixels = (int) (80*scale + 0.5f);
-                imageView.setPadding(dpAsPixels,dpAsPixels,dpAsPixels,dpAsPixels);
 
             }
 

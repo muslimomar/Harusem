@@ -178,6 +178,8 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         qbFriendListHelper = new QBFriendListHelper(this);
 
         messageInputEt.addTextChangedListener(new TextWatcher() {
+            long currentTime;
+
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -185,13 +187,27 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                startTypingNotification();
+                Log.i(TAG, "Typing onTextChanged: " + "Start");
+                currentTime = System.currentTimeMillis();
+                if(!charSequence.toString().trim().isEmpty()) {
+                    startTypingNotification();
+                }
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-                stopTypingNotification();
-
+                Log.i(TAG, "Typing afterTextChanged: ");
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        long l = System.currentTimeMillis() - currentTime;
+                        if (l >= TYPING_TIME) {
+                            stopTypingNotification();
+                            Log.e(TAG, "Typing run:");
+                        }
+                    }
+                }, TYPING_TIME);
             }
         });
 
@@ -202,35 +218,23 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     private void initIsTypingListener() {
 
         typingListener = new QBChatDialogTypingListener() {
-            long currentTime;
 
             @Override
             public void processUserIsTyping(String s, Integer integer) {
-                currentTime = System.currentTimeMillis();
                 showTypingDots();
-                Log.d(TAG, "processUserIsTyping: +");
+                Log.d(TAG, "Typing processUserIsTyping: ++++++");
             }
 
             @Override
             public void processUserStopTyping(String s, Integer integer) {
-                Log.d(TAG, "processUserStopTyping: -");
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        long l = System.currentTimeMillis() - currentTime;
-                        if (l >= TYPING_TIME) {
-                            hideTypingDots();
-                            Log.e(TAG, "run: ");
-                        }
-                    }
-                }, TYPING_TIME);
-
+                Log.d(TAG, "Typing processUserStopTyping: ------");
+                hideTypingDots();
             }
         };
     }
 
     private void stopTypingNotification() {
+
         try {
             qbChatDialog.sendStopTypingNotification();
         } catch (XMPPException e) {
@@ -819,6 +823,18 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
     @OnClick(R.id.send_txt_btn)
     public void setSendTxtBtn(View view) {
+        qbChatDialog.sendStopTypingNotification(new QBEntityCallback<Void>() {
+            @Override
+            public void onSuccess(Void aVoid, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Log.e(TAG, "onError: ", e);
+            }
+        });
+
         int totalAttachmentsCount = attachmentPreviewAdapter.getCount();
         Collection<QBAttachment> uploadedAttachments = attachmentPreviewAdapter.getUploadedAttachments();
         if (!uploadedAttachments.isEmpty()) {

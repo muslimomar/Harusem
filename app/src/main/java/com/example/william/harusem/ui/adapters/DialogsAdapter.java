@@ -82,8 +82,9 @@ public class DialogsAdapter extends BaseSelectableListAdapter<QBChatDialog> {
         } else {
             if (dialog.getType().equals(QBDialogType.PRIVATE)) {
                 QBUser recipient = QBUsersHolder.getInstance().getUserById(dialog.getRecipientId());
-                Integer fileId = recipient.getFileId();
-                if (fileId != null) {
+
+                if (recipient!=null && recipient.getFileId() != null) {
+                    Integer fileId = recipient.getFileId();
                     getRecipientPhoto(fileId, holder.dialogImageView);
                 } else {
                     holder.dialogImageView.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.placeholder_user));
