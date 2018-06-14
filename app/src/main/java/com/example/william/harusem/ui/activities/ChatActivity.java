@@ -81,6 +81,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by william on 6/10/2018.
  */
 public class ChatActivity extends AppCompatActivity implements OnImagePickedListener, PopupMenu.OnMenuItemClickListener {
+    private static final int MESSAGE_ATTACHMENT = 1;
 
     public static final String EXTRA_DIALOG_ID = "dialogId";
     public static final String TAG = ChatActivity.class.getSimpleName();
@@ -621,6 +622,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             public void onSuccess(ArrayList<QBUser> qbUsers, Bundle bundle) {
                 setOpponentName();
                 loadChatHistory();
+                // TODO: dialogAvatar
             }
 
             @Override
@@ -825,7 +827,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
         @Override
         public void onLinkClicked(QBAttachment qbAttachment, int position) {
-            AttachmentImageActivity.start(ChatActivity.this, qbAttachment.getUrl());
+            AttachmentImageActivity.start(ChatActivity.this, qbAttachment.getUrl(), MESSAGE_ATTACHMENT);
         }
     }
 

@@ -28,7 +28,7 @@ import butterknife.ButterKnife;
 public class SplashActivity extends AppCompatActivity {
 
     private static final String TAG = SplashActivity.class.getSimpleName();
-    private final int SPLASH_DISPLAY_TIMER = 1000;
+    private final int SPLASH_DISPLAY_TIMER = 2000;
     @BindView(R.id.image_view)
     ImageView imageView;
 

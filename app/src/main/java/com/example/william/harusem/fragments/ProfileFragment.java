@@ -140,6 +140,7 @@ public class ProfileFragment extends Fragment {
                                         public void onSuccess(QBFile qbFile, Bundle bundle) {
 
                                             if (getActivity() != null && isAdded()) {
+
                                                 String fileUrl = qbFile.getPublicUrl();
                                                 Picasso.get().load(fileUrl)
                                                         .into(profileCircleIv, new Callback() {

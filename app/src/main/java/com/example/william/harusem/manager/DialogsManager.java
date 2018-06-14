@@ -77,7 +77,7 @@ public class DialogsManager {
     }
 
     public void onGlobalMessageReceived(String dialogId, QBChatMessage chatMessage){
-        if (chatMessage.getBody() != null && chatMessage.isMarkable()) { //for excluding status messages until will be released v.3.1
+        if ( (chatMessage.getBody() != null && chatMessage.isMarkable()) || (chatMessage.getAttachments() != null && chatMessage.getAttachments().size() > 0) ) { //for excluding status messages until will be released v.3.1
             if (QBChatDialogHolder.getInstance().hasDialogWithId(dialogId)) {
                 QBChatDialogHolder.getInstance().updateDialog(dialogId, chatMessage);
                 notifyListenersDialogUpdated(dialogId);
@@ -92,6 +92,7 @@ public class DialogsManager {
                 });
             }
         }
+
     }
 
     public void onSystemMessageReceived(QBChatMessage systemMessage){

@@ -15,9 +15,12 @@ import android.widget.Toast;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.helper.QBFriendListHelper;
+import com.quickblox.content.QBContent;
+import com.quickblox.content.model.QBFile;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.model.QBUser;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -51,14 +54,36 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
 
         holder.userDisplayName.setText(user.getFullName());
 
+        if (user.getFileId() != null) {
+            int profilePicId = user.getFileId();
+
+            QBContent.getFile(profilePicId).performAsync(new QBEntityCallback<QBFile>() {
+                @Override
+                public void onSuccess(QBFile qbFile, Bundle bundle) {
+                    Picasso.get()
+                            .load(qbFile.getPublicUrl())
+                            .resize(50, 50)
+                            .centerCrop()
+                            .into(holder.userThumbIv);
+                }
+
+                @Override
+                public void onError(QBResponseException e) {
+                    Log.e(TAG, "onError: ",e );
+                    holder.userThumbIv.setImageResource(R.drawable.placeholder_user);
+                }
+            });
+        }else {
+            holder.userThumbIv.setImageResource(R.drawable.placeholder_user);
+        }
 
         if (friendListHelper.isFriendRequestAlreadySent(user.getId())) {
-            holder.addFriendBtn.setText("Cancel Request");
+            holder.addFriendBtn.setText("Request Sent");
             holder.addFriendBtn.setBackgroundColor(Color.parseColor("#d14f4f"));
             holder.addFriendBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    cancelRequest(view, user, position);
+//                    cancelRequest(view, user, position);
                     Log.d(TAG, "onClick: " + "Cancel Request");
                     // if that didn't work try to set the button text after QBCallBack
                 }

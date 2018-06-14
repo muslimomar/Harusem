@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +24,12 @@ import com.quickblox.chat.QBSystemMessagesManager;
 import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.chat.utils.DialogUtils;
+import com.quickblox.content.QBContent;
+import com.quickblox.content.model.QBFile;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.model.QBUser;
+import com.squareup.picasso.Picasso;
 
 import org.jivesoftware.smack.SmackException;
 
@@ -56,7 +60,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         friendListHelper = new QBFriendListHelper(context);
 
         final QBUser user = usersList.get(position);
@@ -86,6 +90,30 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
                 createPrivateChatDialog(user);
             }
         });
+
+        if (user.getFileId() != null) {
+            int profilePicId = user.getFileId();
+
+            QBContent.getFile(profilePicId).performAsync(new QBEntityCallback<QBFile>() {
+                @Override
+                public void onSuccess(QBFile qbFile, Bundle bundle) {
+                    Picasso.get()
+                            .load(qbFile.getPublicUrl())
+                            .resize(50, 50)
+                            .centerCrop()
+                            .into(holder.userThumbIv);
+                }
+
+                @Override
+                public void onError(QBResponseException e) {
+                    Log.e("FriendsAdapter", "onError: ",e );
+                    holder.userThumbIv.setImageResource(R.drawable.placeholder_user);
+                }
+            });
+        }else{
+            holder.userThumbIv.setImageResource(R.drawable.placeholder_user);
+        }
+
 
     }
 

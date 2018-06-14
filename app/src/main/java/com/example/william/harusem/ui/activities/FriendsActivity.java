@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.ProgressBar;
 
 import com.example.william.harusem.R;
@@ -53,11 +54,15 @@ public class FriendsActivity extends AppCompatActivity {
 
 
     public void retrieveFriendsFromRoster() {
+        progressBar.setVisibility(View.VISIBLE);
         Collection<Integer> allFriends = qbFriendListHelper.getAllFriends();
 
         QBUsers.getUsersByIDs(allFriends, null).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
             @Override
             public void onSuccess(ArrayList<QBUser> qbUsers, Bundle bundle) {
+
+
+                progressBar.setVisibility(View.GONE);
                 adapter = new FriendsAdapter(qbUsers, FriendsActivity.this);
                 friendsRecyclerView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();

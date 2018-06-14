@@ -205,7 +205,6 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
 
     @Override
     public void onDestroy() {
-
         super.onDestroy();
         unregisterQbChatListeners();
 
