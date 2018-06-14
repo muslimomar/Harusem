@@ -34,12 +34,14 @@ import com.bhargavms.dotloader.DotLoader;
 import com.example.william.harusem.R;
 import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.holder.QBChatDialogHolder;
+import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.ui.adapters.AttachmentPreviewAdapter;
 import com.example.william.harusem.ui.adapters.ChatAdapter;
 import com.example.william.harusem.ui.dialog.ProgressDialogFragment;
 import com.example.william.harusem.util.ChatHelper;
 import com.example.william.harusem.util.ErrorUtils;
 import com.example.william.harusem.util.Toaster;
+import com.example.william.harusem.util.UiUtils;
 import com.example.william.harusem.util.imagepick.ImagePickHelper;
 import com.example.william.harusem.util.imagepick.OnImagePickedListener;
 import com.example.william.harusem.util.qb.PaginationHistoryListener;
@@ -56,10 +58,13 @@ import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.chat.model.QBDialogType;
 import com.quickblox.chat.model.QBPresence;
+import com.quickblox.content.QBContent;
+import com.quickblox.content.model.QBFile;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.ui.kit.chatmessage.adapter.listeners.QBChatAttachClickListener;
 import com.quickblox.users.model.QBUser;
+import com.squareup.picasso.Picasso;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import org.jivesoftware.smack.ConnectionListener;
@@ -81,10 +86,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by william on 6/10/2018.
  */
 public class ChatActivity extends AppCompatActivity implements OnImagePickedListener, PopupMenu.OnMenuItemClickListener {
-    private static final int MESSAGE_ATTACHMENT = 1;
-
     public static final String EXTRA_DIALOG_ID = "dialogId";
     public static final String TAG = ChatActivity.class.getSimpleName();
+    private static final int MESSAGE_ATTACHMENT = 1;
     private static final int REQUEST_CODE_ATTACHMENT = 721;
     private static final int REQUEST_CODE_SELECT_PEOPLE = 752;
     private static final int REQUEST_CODE = 40;
@@ -543,9 +547,11 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         switch (qbChatDialog.getType()) {
             case GROUP:
             case PUBLIC_GROUP:
+                statusSignIv.setVisibility(View.GONE);
                 joinGroupChat();
                 break;
             case PRIVATE:
+                statusSignIv.setVisibility(View.VISIBLE);
                 loadDialogUsers();
                 break;
 
@@ -622,7 +628,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             public void onSuccess(ArrayList<QBUser> qbUsers, Bundle bundle) {
                 setOpponentName();
                 loadChatHistory();
-                // TODO: dialogAvatar
+                getDialogPhoto();
             }
 
             @Override
@@ -635,6 +641,67 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
                             }
                         });
 
+            }
+        });
+
+    }
+
+    private void getDialogPhoto() {
+        QBChatDialog dialog = qbChatDialog;
+        if (dialog.getPhoto() != null && !dialog.getPhoto().equalsIgnoreCase("null")) {
+
+            QBContent.getFile(Integer.parseInt(dialog.getPhoto())).performAsync(new QBEntityCallback<QBFile>() {
+                @Override
+                public void onSuccess(QBFile qbFile, Bundle bundle) {
+                    String fileUrl = qbFile.getPublicUrl();
+                    Picasso.get()
+                            .load(fileUrl)
+                            .resize(50, 50)
+                            .centerCrop()
+                            .into(dialogAvatar);
+                }
+
+                @Override
+                public void onError(QBResponseException e) {
+                    Log.e(TAG, "onError: ", e);
+                }
+            });
+
+
+        } else {
+            if (dialog.getType().equals(QBDialogType.PRIVATE)) {
+                QBUser recipient = QBUsersHolder.getInstance().getUserById(dialog.getRecipientId());
+                Integer fileId = recipient.getFileId();
+                if (fileId != null) {
+                    getRecipientPhoto(fileId, dialogAvatar);
+                } else {
+                    dialogAvatar.setBackgroundDrawable(getResources().getDrawable(R.drawable.placeholder_user));
+                    dialogAvatar.setImageDrawable(null);
+                }
+
+            } else {
+                dialogAvatar.setBackgroundDrawable(UiUtils.getGreyCircleDrawable());
+                dialogAvatar.setImageResource(R.drawable.ic_group_black_24dp);
+            }
+
+        }
+    }
+
+    private void getRecipientPhoto(final Integer fileId, final ImageView dialogImageView) {
+        QBContent.getFile(fileId).performAsync(new QBEntityCallback<QBFile>() {
+            @Override
+            public void onSuccess(QBFile qbFile, Bundle bundle) {
+
+                String fileUrl = qbFile.getPublicUrl();
+                Picasso.get().load(fileUrl)
+                        .resize(50, 50)
+                        .centerCrop()
+                        .into(dialogImageView);
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Log.e(TAG, "onError: ", e);
             }
         });
 
@@ -860,12 +927,15 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
         @Override
         public void presenceChanged(QBPresence qbPresence) {
-            Log.d(TAG, "RosterListener presenceChanged: " + qbPresence);
-            if (qbPresence != null && qbChatDialog != null) {
-                if (qbPresence.getUserId().equals(qbChatDialog.getRecipientId())) {
-                    setPrivateRecipientStatus(qbPresence);
+            if (qbChatDialog.getType() == QBDialogType.PRIVATE) {
+                Log.d(TAG, "RosterListener presenceChanged: " + qbPresence);
+                if (qbPresence != null && qbChatDialog != null) {
+                    if (qbPresence.getUserId().equals(qbChatDialog.getRecipientId())) {
+                        setPrivateRecipientStatus(qbPresence);
+                    }
                 }
             }
+
         }
     }
 
