@@ -13,6 +13,7 @@ import com.example.william.harusem.R;
 import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.ui.activities.AttachmentImageActivity;
 import com.example.william.harusem.util.ResourceUtils;
+import com.example.william.harusem.util.TimeUtils;
 import com.example.william.harusem.util.UiUtils;
 import com.example.william.harusem.util.baseAdapters.BaseSelectableListAdapter;
 import com.example.william.harusem.util.qb.QbDialogUtils;
@@ -51,6 +52,7 @@ public class DialogsAdapter extends BaseSelectableListAdapter<QBChatDialog> {
             holder.lastMessageTextView = (TextView) convertView.findViewById(R.id.last_message_tv);
             holder.dialogImageView = (ImageView) convertView.findViewById(R.id.dialog_circle_iv);
             holder.unreadCounterTextView = (TextView) convertView.findViewById(R.id.text_dialog_unread_count);
+            holder.lastMessageTimeTv = (TextView) convertView.findViewById(R.id.last_message_time_tv);
 
             convertView.setTag(holder);
         } else {
@@ -99,6 +101,10 @@ public class DialogsAdapter extends BaseSelectableListAdapter<QBChatDialog> {
 
         holder.nameTextView.setText(QbDialogUtils.getDialogName(dialog));
         prepareTextLastMessage(dialog, holder.lastMessageTextView);
+
+        holder.lastMessageTimeTv.setText(TimeUtils.getTime(dialog.getLastMessageDateSent() * 1000));
+
+        holder.lastMessageTimeTv.setText(dialog.getLastMessageDateSent() > 0?TimeUtils.getTime(dialog.getLastMessageDateSent() * 1000):"");
 
         int unreadMessagesCount = getUnreadMsgCount(dialog);
         if (unreadMessagesCount == 0) {
@@ -185,5 +191,6 @@ public class DialogsAdapter extends BaseSelectableListAdapter<QBChatDialog> {
         TextView nameTextView;
         TextView lastMessageTextView;
         TextView unreadCounterTextView;
+        TextView lastMessageTimeTv;
     }
 }

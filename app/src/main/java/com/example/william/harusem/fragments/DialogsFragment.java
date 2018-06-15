@@ -42,6 +42,7 @@ import com.example.william.harusem.util.qb.QbChatDialogMessageListenerImp;
 import com.example.william.harusem.util.qb.callback.QbEntityCallbackImpl;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBIncomingMessagesManager;
+import com.quickblox.chat.QBRestChatService;
 import com.quickblox.chat.QBSystemMessagesManager;
 import com.quickblox.chat.exception.QBChatException;
 import com.quickblox.chat.listeners.QBChatDialogMessageListener;
@@ -459,7 +460,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     @OnClick(R.id.filter_iv)
     public void setFilterIv(View view) {
 
-        String[] strings = new String[]{"name", "Latest Message", "A-Z", "Z-A"};
+        String[] strings = new String[]{/*"A-Z", "Z-A",*/"Latest Message"};
 
         new LovelyChoiceDialog(getActivity())
                 .setTopColor(getResources().getColor(R.color.colorSecondary))
@@ -473,12 +474,12 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
                                 Toast.makeText(getActivity(), "last message", Toast.LENGTH_SHORT).show();
                                 filterDialogs();
                                 break;
-                            case "A-Z":
-                                Toast.makeText(getActivity(), "A-Z", Toast.LENGTH_SHORT).show();
-                                break;
-                            case "Z-A":
-                                Toast.makeText(getActivity(), "Z-A", Toast.LENGTH_SHORT).show();
-                                break;
+//                            case "A-Z":
+//                                Toast.makeText(getActivity(), "A-Z", Toast.LENGTH_SHORT).show();
+//                                break;
+//                            case "Z-A":
+//                                Toast.makeText(getActivity(), "Z-A", Toast.LENGTH_SHORT).show();
+//                                break;
                         }
                     }
                 })
@@ -488,11 +489,9 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     }
 
     private void filterDialogs() {
-        // TODO: to be finished
         QBRequestGetBuilder requestBuilder = new QBRequestGetBuilder();
         requestBuilder.setLimit(100);
-//        requestBuilder.sor
-
+        requestBuilder.sortDesc("date_sent");
     }
 
 

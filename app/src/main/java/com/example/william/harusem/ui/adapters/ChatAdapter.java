@@ -27,10 +27,6 @@ import org.jivesoftware.smack.XMPPException;
 
 import java.util.List;
 
-/**
- * Created by william on 6/10/2018.
- */
-
 public class ChatAdapter extends com.quickblox.ui.kit.chatmessage.adapter.QBMessagesAdapter<QBChatMessage> implements StickyRecyclerHeadersAdapter<RecyclerView.ViewHolder> {
     private static final String TAG = ChatAdapter.class.getSimpleName();
     private final QBChatDialog chatDialog;
@@ -163,6 +159,5 @@ public class ChatAdapter extends com.quickblox.ui.kit.chatmessage.adapter.QBMess
             lp.topMargin = 0;
         }
         dateTextView.setLayoutParams(lp);
-
     }
 }

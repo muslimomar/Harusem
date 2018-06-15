@@ -58,6 +58,9 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/dialog_name"
                     android:layout_marginTop="4dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/text_dialog_unread_count"
+                    android:singleLine="true"
                     tools:text="ich bin Kurde" />
 
 
@@ -68,6 +71,7 @@
                     android:layout_below="@id/last_message_time_tv"
                     android:layout_centerVertical="true"
                     android:layout_marginTop="4dp"
+                    android:layout_marginLeft="8dp"
                     android:visibility="visible"
                     tools:text="4" />
 

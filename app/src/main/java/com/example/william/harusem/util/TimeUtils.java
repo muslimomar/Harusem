@@ -10,6 +10,7 @@ public class TimeUtils {
     }
 
     public static String getTime(long milliseconds) {
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
         return dateFormat.format(new Date(milliseconds));
     }
