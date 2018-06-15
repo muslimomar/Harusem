@@ -26,7 +26,7 @@
             android:layout_height="50dp"
             android:layout_marginLeft="16dp"
             android:layout_centerVertical="true"
-            tools:src="@drawable/mauser"
+            tools:src="@drawable/ic_user_new"
             />
 
         <LinearLayout

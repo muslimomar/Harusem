@@ -418,9 +418,9 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_CODE_SELECT_PEOPLE) {
-                //                ArrayList<QBUser> selectedUsers = (ArrayList<QBUser>) data.getSerializableExtra(
-                //                        SelectUsersActivity.EXTRA_QB_USERS);
-                //                updateDialog(selectedUsers);
+                                ArrayList<QBUser> selectedUsers = (ArrayList<QBUser>) data.getSerializableExtra(
+                                        SelectUsersActivity.EXTRA_QB_USERS);
+                                updateDialog(selectedUsers);
 
             }
         }
@@ -520,7 +520,9 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         }
 
         chatMessage.setSaveToHistory(true);
-        chatMessage.setDateSent(System.currentTimeMillis());
+        chatMessage.setDateSent(System.currentTimeMillis() / 1000);
+        Log.i(TAG, "sendChatMessage: SystemDate" + System.currentTimeMillis());
+        Log.i(TAG, "sendChatMessage getDateSent: " + chatMessage.getDateSent());
         chatMessage.setMarkable(true);
 
         if (!QBDialogType.PRIVATE.equals(qbChatDialog.getType()) && !qbChatDialog.isJoined()) {
@@ -685,7 +687,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
             } else {
                 dialogAvatar.setBackgroundDrawable(UiUtils.getGreyCircleDrawable());
-                dialogAvatar.setImageResource(R.drawable.ic_group_black_24dp);
+                dialogAvatar.setImageResource(R.drawable.ic_group_new);
             }
 
         }
