@@ -1,5 +1,6 @@
 package com.example.william.harusem.fragments;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -222,7 +223,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
                     selectedUsers.remove(ChatHelper.getCurrentUser());
                     QBChatDialog existingPrivateDialog = QBChatDialogHolder.getInstance().getPrivateDialogWithUser(selectedUsers.get(0));
                     isProcessingResultInProgress = false;
-                    ChatActivity.startForResult(getActivity(), REQUEST_DIALOG_ID_FOR_UPDATE, existingPrivateDialog);
+                    startForResult(getActivity(), REQUEST_DIALOG_ID_FOR_UPDATE, existingPrivateDialog);
                 } else {
                     ProgressDialogFragment.show(getActivity().getSupportFragmentManager(), R.string.create_chat);
                     createDialog(selectedUsers);
@@ -287,7 +288,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 QBChatDialog selectedDialog = (QBChatDialog) adapterView.getItemAtPosition(i);
-                    ChatActivity.startForResult(getActivity(), REQUEST_DIALOG_ID_FOR_UPDATE, selectedDialog);
+                    startForResult(getActivity(), REQUEST_DIALOG_ID_FOR_UPDATE, selectedDialog);
             }
         });
 
@@ -345,7 +346,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
                     public void onSuccess(QBChatDialog dialog, Bundle args) {
                         isProcessingResultInProgress = false;
                         dialogsManager.sendSystemMessageAboutCreatingDialog(systemMessagesManager, dialog);
-                        ChatActivity.startForResult(getActivity(), REQUEST_DIALOG_ID_FOR_UPDATE, dialog);
+                        startForResult(getActivity(), REQUEST_DIALOG_ID_FOR_UPDATE, dialog);
                         ProgressDialogFragment.hide(getActivity().getSupportFragmentManager());
                     }
 
@@ -456,11 +457,10 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     }
 
 
-    private void filterDialogs() {
-        QBRequestGetBuilder requestBuilder = new QBRequestGetBuilder();
-        requestBuilder.setLimit(100);
-
+    public void startForResult(Activity activity, int code, QBChatDialog dialogId) {
+        Intent intent = new Intent(activity, ChatActivity.class);
+        intent.putExtra(ChatActivity.EXTRA_DIALOG_ID, dialogId);
+        startActivityForResult(intent, code);
     }
-
 
 }

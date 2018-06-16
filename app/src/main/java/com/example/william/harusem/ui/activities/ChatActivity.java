@@ -1,6 +1,5 @@
 package com.example.william.harusem.ui.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -143,11 +142,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     private ChatMessageListener chatMessageListener;
     private boolean checkAdapterInit;
 
-    public static void startForResult(Activity activity, int code, QBChatDialog dialogId) {
-        Intent intent = new Intent(activity, ChatActivity.class);
-        intent.putExtra(ChatActivity.EXTRA_DIALOG_ID, dialogId);
-        activity.startActivityForResult(intent, code);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,7 +183,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 Log.i(TAG, "Typing onTextChanged: " + "Start");
                 currentTime = System.currentTimeMillis();
-                if(!charSequence.toString().trim().isEmpty()) {
+                if (!charSequence.toString().trim().isEmpty()) {
                     startTypingNotification();
                 }
             }
@@ -314,7 +308,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
     private void addIsTypingListener() {
 
-        if(qbChatDialog.getType() == QBDialogType.PRIVATE) {
+        if (qbChatDialog.getType() == QBDialogType.PRIVATE) {
             if (typingListener != null) {
                 qbChatDialog.addIsTypingListener(typingListener);
             }
@@ -422,9 +416,9 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_CODE_SELECT_PEOPLE) {
-                                ArrayList<QBUser> selectedUsers = (ArrayList<QBUser>) data.getSerializableExtra(
-                                        SelectUsersActivity.EXTRA_QB_USERS);
-                                updateDialog(selectedUsers);
+                ArrayList<QBUser> selectedUsers = (ArrayList<QBUser>) data.getSerializableExtra(
+                        SelectUsersActivity.EXTRA_QB_USERS);
+                updateDialog(selectedUsers);
 
             }
         }
@@ -770,6 +764,9 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             @Override
             public void onSuccess(Void aVoid, Bundle bundle) {
                 setResult(RESULT_OK);
+
+
+
                 finish();
             }
 
@@ -913,7 +910,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     }
 
     private class ImageAttachClickListener implements QBChatAttachClickListener {
-
         @Override
         public void onLinkClicked(QBAttachment qbAttachment, int position) {
             AttachmentImageActivity.start(ChatActivity.this, qbAttachment.getUrl(), MESSAGE_ATTACHMENT);
@@ -960,5 +956,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
         }
     }
+
 
 }

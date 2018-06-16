@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -73,7 +74,8 @@ public class FriendsActivity extends AppCompatActivity {
 
             @Override
             public void onError(QBResponseException e) {
-
+                progressBar.setVisibility(View.GONE);
+                Log.e(TAG, "onError: ",e );
             }
         });
 
