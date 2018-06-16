@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -15,6 +18,9 @@ import android.widget.RelativeLayout;
 import com.example.william.harusem.ui.activities.LoginActivity;
 import com.example.william.harusem.ui.activities.MainActivity;
 import com.example.william.harusem.helper.QBFriendListHelper;
+import com.example.william.harusem.ui.dialog.ProgressDialogFragment;
+import com.example.william.harusem.util.ChatHelper;
+import com.example.william.harusem.util.ErrorUtils;
 import com.example.william.harusem.util.SharedPrefsHelper;
 import com.quickblox.auth.session.QBSessionManager;
 import com.quickblox.chat.QBChatService;
@@ -66,7 +72,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void restoreChatSession() {
-        if (QBChatService.getInstance().isLoggedIn()) {
+        if (ChatHelper.getInstance().isLogged()) {
             QBFriendListHelper friendListHelper = new QBFriendListHelper(SplashActivity.this);
             proceedToMainActivity();
         } else {
@@ -76,26 +82,46 @@ public class SplashActivity extends AppCompatActivity {
 
     }
 
-    private void loginToChat(QBUser user) {
+    private void loginToChat(final QBUser user) {
         // show dialog
+        ProgressDialogFragment.show(getSupportFragmentManager(), R.string.dlg_restoring_chat_session);
 
-        QBChatService.getInstance().login(user, new QBEntityCallback() {
+        ChatHelper.getInstance().loginToChat(user, new QBEntityCallback<Void>() {
             @Override
-            public void onSuccess(Object o, Bundle bundle) {
+            public void onSuccess(Void aVoid, Bundle bundle) {
                 // dismiss dialog
+
+                ProgressDialogFragment.hide(getSupportFragmentManager());
                 QBFriendListHelper friendListHelper = new QBFriendListHelper(SplashActivity.this);
                 proceedToMainActivity();
+
             }
 
             @Override
             public void onError(QBResponseException e) {
                 // dismiss dialog
+                ProgressDialogFragment.hide(getSupportFragmentManager());
                 Log.e(TAG, "onError: ", e);
+
+                showErrorSnackbar( findViewById(R.id.lin_lay), R.string.error_recreate_session, e,
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                loginToChat(user);
+                            }
+                        });
+
             }
         });
 
-
     }
+
+    protected Snackbar showErrorSnackbar(View chatListRecyclerView,@StringRes int resId, Exception e,
+                                         View.OnClickListener clickListener) {
+        return ErrorUtils.showSnackbar(chatListRecyclerView, resId, e,
+                R.string.dlg_retry, clickListener);
+    }
+
 
     private void proceedToLogin() {
         Intent mainIntent = new Intent(SplashActivity.this, LoginActivity.class);

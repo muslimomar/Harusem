@@ -9,6 +9,7 @@ import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.util.qb.QbDialogUtils;
 import com.example.william.harusem.util.qb.callback.QbEntityCallbackTwoTypeWrapper;
 import com.example.william.harusem.util.qb.callback.QbEntityCallbackWrapper;
+import com.quickblox.auth.session.QBSettings;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBRestChatService;
 import com.quickblox.chat.model.QBAttachment;
@@ -20,6 +21,7 @@ import com.quickblox.chat.request.QBMessageGetBuilder;
 import com.quickblox.chat.utils.DialogUtils;
 import com.quickblox.content.QBContent;
 import com.quickblox.content.model.QBFile;
+import com.quickblox.core.LogLevel;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.QBProgressCallback;
 import com.quickblox.core.exception.QBResponseException;
@@ -62,13 +64,22 @@ public class ChatHelper {
 
     public static synchronized ChatHelper getInstance() {
         if (instance == null) {
-//            QBSettings.getInstance().setLogLevel(LogLevel.DEBUG);
-//            QBChatService.setDebugEnabled(true);
-//            QBChatService.setConfigurationBuilder(buildChatConfigs());
+            QBSettings.getInstance().setLogLevel(LogLevel.DEBUG);
+            QBChatService.setDebugEnabled(true);
+            QBChatService.setConfigurationBuilder(buildChatConfigs());
             instance = new ChatHelper();
         }
         return instance;
     }
+
+    private static QBChatService.ConfigurationBuilder buildChatConfigs() {
+        QBChatService.ConfigurationBuilder configurationBuilder = new QBChatService.ConfigurationBuilder();
+         configurationBuilder.setSocketTimeout(0);
+        configurationBuilder.setKeepAlive(true);
+
+        return configurationBuilder;
+    }
+
 
     public static QBUser getCurrentUser() {
         return QBChatService.getInstance().getUser();
@@ -317,4 +328,15 @@ public class ChatHelper {
     public void destroy() {
         qbChatService.destroy();
     }
+
+
+    public void loginToChat(final QBUser user, final QBEntityCallback<Void> callback) {
+        if (qbChatService.isLoggedIn()) {
+            callback.onSuccess(null, null);
+            return;
+        }
+
+        qbChatService.login(user, callback);
+    }
+
 }
