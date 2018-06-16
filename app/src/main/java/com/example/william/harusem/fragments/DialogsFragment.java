@@ -76,8 +76,6 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
     /////
-    @BindView(R.id.filter_iv)
-    ImageView filterIv;
     @BindView(R.id.list_chat_dialogs)
     ListView dialogsListView;
     @BindView(R.id.fab)
@@ -457,41 +455,11 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
         startActivityForResult(intent, REQUEST_SELECT_PEOPLE);
     }
 
-    @OnClick(R.id.filter_iv)
-    public void setFilterIv(View view) {
-
-        String[] strings = new String[]{/*"A-Z", "Z-A",*/"Latest Message"};
-
-        new LovelyChoiceDialog(getActivity())
-                .setTopColor(getResources().getColor(R.color.colorSecondary))
-                .setTitle("Sort Chats By:")
-                .setIcon(R.drawable.ic_filter_list_black_48dp)
-                .setItems(strings, new LovelyChoiceDialog.OnItemSelectedListener<String>() {
-                    @Override
-                    public void onItemSelected(int position, String item) {
-                        switch (item) {
-                            case "Latest Message":
-                                Toast.makeText(getActivity(), "last message", Toast.LENGTH_SHORT).show();
-                                filterDialogs();
-                                break;
-//                            case "A-Z":
-//                                Toast.makeText(getActivity(), "A-Z", Toast.LENGTH_SHORT).show();
-//                                break;
-//                            case "Z-A":
-//                                Toast.makeText(getActivity(), "Z-A", Toast.LENGTH_SHORT).show();
-//                                break;
-                        }
-                    }
-                })
-                .show();
-
-
-    }
 
     private void filterDialogs() {
         QBRequestGetBuilder requestBuilder = new QBRequestGetBuilder();
         requestBuilder.setLimit(100);
-        requestBuilder.sortDesc("date_sent");
+
     }
 
 

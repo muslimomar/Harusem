@@ -189,7 +189,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 Log.i(TAG, "Typing onTextChanged: " + "Start");
                 currentTime = System.currentTimeMillis();
-                if (!charSequence.toString().trim().isEmpty()) {
+                if(!charSequence.toString().trim().isEmpty()) {
                     startTypingNotification();
                 }
             }
@@ -314,11 +314,12 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
     private void addIsTypingListener() {
 
-        if (qbChatDialog.getType() == QBDialogType.PRIVATE) {
+        if(qbChatDialog.getType() == QBDialogType.PRIVATE) {
             if (typingListener != null) {
                 qbChatDialog.addIsTypingListener(typingListener);
             }
         }
+
     }
 
     private void addRosterListener() {
@@ -421,9 +422,9 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_CODE_SELECT_PEOPLE) {
-                ArrayList<QBUser> selectedUsers = (ArrayList<QBUser>) data.getSerializableExtra(
-                        SelectUsersActivity.EXTRA_QB_USERS);
-                updateDialog(selectedUsers);
+                                ArrayList<QBUser> selectedUsers = (ArrayList<QBUser>) data.getSerializableExtra(
+                                        SelectUsersActivity.EXTRA_QB_USERS);
+                                updateDialog(selectedUsers);
 
             }
         }
