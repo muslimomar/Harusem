@@ -1,6 +1,8 @@
 package com.example.william.harusem.ui.adapters.newAdapters;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -12,7 +14,12 @@ import com.example.william.harusem.util.ResourceUtils;
 import com.example.william.harusem.util.UiUtils;
 import com.example.william.harusem.util.baseAdapters.BaseListAdapter;
 import com.quickblox.chat.QBChatService;
+import com.quickblox.content.QBContent;
+import com.quickblox.content.model.QBFile;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.model.QBUser;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -47,16 +54,44 @@ public class UsersAdapter extends BaseListAdapter<QBUser> {
             holder.loginTextView.setText(user.getFullName());
         }
 
+        getUserPhoto(user, holder.userImageView);
+
         if (isAvailableForSelection(user)) {
             holder.loginTextView.setTextColor(ResourceUtils.getColor(R.color.text_color_black));
         } else {
             holder.loginTextView.setTextColor(ResourceUtils.getColor(R.color.text_color_medium_grey));
         }
 
-        holder.userImageView.setBackgroundDrawable(UiUtils.getColorCircleDrawable(position));
         holder.userCheckBox.setVisibility(View.GONE);
 
         return convertView;
+    }
+
+    private void getUserPhoto(QBUser user, final ImageView userImageView) {
+
+        if (user.getFileId() != null) {
+            int profilePicId = user.getFileId();
+
+            QBContent.getFile(profilePicId).performAsync(new QBEntityCallback<QBFile>() {
+                @Override
+                public void onSuccess(QBFile qbFile, Bundle bundle) {
+                    Picasso.get()
+                            .load(qbFile.getPublicUrl())
+                            .resize(50, 50)
+                            .centerCrop()
+                            .into(userImageView);
+                }
+
+                @Override
+                public void onError(QBResponseException e) {
+                    Log.e("FriendsAdapter", "onError: ",e );
+                    userImageView.setImageResource(R.drawable.placeholder_user);
+                }
+            });
+        }else{
+            userImageView.setImageResource(R.drawable.placeholder_user);
+        }
+
     }
 
     protected boolean isUserMe(QBUser user) {

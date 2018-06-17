@@ -15,18 +15,18 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="25dp"
-        android:paddingBottom="25dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
 
         >
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/user_iv"
+            android:id="@+id/image_user"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="16dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_user_new"
+            tools:src="@drawable/ic_user_new"
             />
 
         <LinearLayout
@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_toRightOf="@+id/user_iv"
+            android:layout_toRightOf="@+id/image_user"
             android:layout_marginLeft="16dp"
             android:layout_centerVertical="true"
             >
@@ -77,19 +77,6 @@
             android:layout_alignParentRight="true"
 
             >
-
-            <!--<Button-->
-            <!--android:id="@+id/message_btn"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="31dp"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:layout_marginRight="12dp"-->
-            <!--android:background="@color/colorPrimary"-->
-            <!--android:text="Message"-->
-            <!--android:textAllCaps="false"-->
-            <!--android:visibility="visible"-->
-            <!--android:elevation="0dp"-->
-            <!--android:textColor="@color/white" />-->
 
             <ImageView
                 android:id="@+id/decline_iv"

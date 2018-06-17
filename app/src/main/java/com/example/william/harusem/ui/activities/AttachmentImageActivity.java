@@ -126,7 +126,6 @@ public class AttachmentImageActivity extends AppCompatActivity {
         } else {
             // Dialog Photo
             if (!url.isEmpty() && !url.equalsIgnoreCase("null")) {
-
                 QBContent.getFile(Integer.parseInt(url)).performAsync(new QBEntityCallback<QBFile>() {
                     @Override
                     public void onSuccess(QBFile qbFile, Bundle bundle) {

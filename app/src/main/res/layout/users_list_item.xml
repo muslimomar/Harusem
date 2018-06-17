@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginBottom="1dp"
     android:clipChildren="false"
     android:clipToPadding="false"
@@ -15,97 +15,59 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="25dp"
-        android:paddingBottom="25dp"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
 
         >
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/user_iv"
+            android:id="@+id/image_user"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="16dp"
             android:layout_centerVertical="true"
-            tools:src="@drawable/ic_user_new"
-            />
+            android:layout_marginLeft="16dp"
+            tools:src="@drawable/ic_user_new" />
 
         <LinearLayout
             android:id="@+id/name_status_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_toRightOf="@+id/user_iv"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
-            android:layout_centerVertical="true"
-            >
+            android:layout_toRightOf="@+id/image_user"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/user_display_name_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            tools:text="Jamal"
-            />
+            <TextView
+                android:id="@+id/user_display_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                tools:text="Jamal" />
 
-        <TextView
-            android:id="@+id/status_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="Status"
-            android:textSize="12.5sp"
-            android:layout_marginTop="6dp"
-            android:visibility="gone"
-            />
+            <TextView
+                android:id="@+id/status_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:textSize="12.5sp"
+                android:visibility="gone"
+                tools:text="Status" />
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/online_image_view"
-            android:layout_width="8dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/online_icon"
-            android:layout_toRightOf="@id/name_status_layout"
-            android:layout_marginLeft="8dp"
-            android:visibility="gone"
-            />
-
-        <LinearLayout
-            android:id="@+id/buttons_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_alignParentRight="true"
-            >
-
-        <!--<Button-->
-            <!--android:id="@+id/message_btn"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="31dp"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:layout_marginRight="12dp"-->
-            <!--android:background="@color/colorPrimary"-->
-            <!--android:text="Message"-->
-            <!--android:textAllCaps="false"-->
-            <!--android:visibility="visible"-->
-            <!--android:elevation="0dp"-->
-            <!--android:textColor="@color/white" />-->
-
-        <Button
-            android:id="@+id/unfriend_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="31dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:background="@color/colorPrimary"
-            android:visibility="visible"
-            android:text="Add Friend"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:padding="5dp"
-            />
-
-        </LinearLayout>
+            <Button
+                android:id="@+id/unfriend_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="31dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:background="@color/colorPrimary"
+                android:padding="5dp"
+                android:text="Add Friend"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:visibility="visible" />
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>

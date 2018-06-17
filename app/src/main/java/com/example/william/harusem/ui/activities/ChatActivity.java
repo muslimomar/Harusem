@@ -765,8 +765,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             public void onSuccess(Void aVoid, Bundle bundle) {
                 setResult(RESULT_OK);
 
-
-
                 finish();
             }
 

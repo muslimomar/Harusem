@@ -24,7 +24,6 @@ public class FriendRequestsActivity extends AppCompatActivity {
     @BindView(R.id.swipe)
     SwipeRefreshLayout mSwipeRefreshLayout;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +73,7 @@ public class FriendRequestsActivity extends AppCompatActivity {
 
             }
         });
+
 
 
     }

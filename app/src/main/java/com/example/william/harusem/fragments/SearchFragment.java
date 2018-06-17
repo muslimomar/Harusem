@@ -45,11 +45,5 @@ public class SearchFragment extends Fragment {
         startActivity(intent);
     }
 
-    @OnClick(R.id.friends_btn)
-    public void setFriendsBtn(View view) {
-        Intent intent = new Intent(getActivity(), FriendsActivity.class);
-        startActivity(intent);
-    }
-
 
 }

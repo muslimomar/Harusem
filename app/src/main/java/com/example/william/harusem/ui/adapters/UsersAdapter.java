@@ -104,7 +104,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
             holder.addFriendBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    sendRequest(user, view, position);
+                    sendRequest(user, view, position, holder.addFriendBtn);
                     Log.d(TAG, "onClick: " + "Send Request");
                 }
             });
@@ -142,11 +142,12 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
         });
     }
 
-    private void sendRequest(final QBUser user, final View view, final int position) {
+    private void sendRequest(final QBUser user, final View view, final int position, final Button addFriendBtn) {
         friendListHelper.sendFriendRequest(user, new QBEntityCallback<Void>() {
             @Override
             public void onSuccess(Void aVoid, Bundle bundle) {
                 notifyItemChanged(position);
+                // try use objectpaylod
                 showSnackBar(view, "Request Sent");
             }
 
@@ -178,7 +179,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
         public MyViewHolder(View view) {
             super(view);
             userDisplayName = (TextView) view.findViewById(R.id.user_display_name_tv);
-            userThumbIv = view.findViewById(R.id.user_iv);
+            userThumbIv = view.findViewById(R.id.image_user);
             addFriendBtn = view.findViewById(R.id.unfriend_btn);
         }
 

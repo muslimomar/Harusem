@@ -42,7 +42,7 @@
     <string name="select_users_get_users_error">Error while retrieving users</string>
     <string name="select_users_edit_chat">Add Users to chat</string>
     <string name="select_users_create_chat">Create new chat</string>
-    <string name="select_users_choose_users">Get users errors</string>
+    <string name="select_users_choose_users">Please select user/users</string>
     <string name="dlg_restoring_chat_session">Logging in…</string>
     <string name="error_recreate_session">Login Chat error</string>
 

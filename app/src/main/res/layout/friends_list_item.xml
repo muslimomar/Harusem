@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="1dp"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:divider="@android:color/transparent"
@@ -15,18 +14,18 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="25dp"
-        android:paddingTop="25dp"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
 
         >
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/user_iv"
+            android:id="@+id/image_user"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
-            android:src="@drawable/ic_user_new" />
+            tools:src="@drawable/ic_user_new" />
 
         <LinearLayout
             android:id="@+id/name_status_layout"
@@ -34,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@+id/user_iv"
+            android:layout_toRightOf="@+id/image_user"
             android:orientation="vertical"
             >
 
@@ -56,41 +55,26 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/online_image_view"
-            android:layout_width="8dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_toRightOf="@id/name_status_layout"
-            android:src="@drawable/online_icon"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:id="@+id/buttons_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:orientation="horizontal">
-
-            <!--<Button-->
-            <!--android:id="@+id/message_btn"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="31dp"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:layout_marginRight="12dp"-->
-            <!--android:background="@color/colorPrimary"-->
-            <!--android:text="Message"-->
-            <!--android:textAllCaps="false"-->
-            <!--android:visibility="visible"-->
-            <!--android:elevation="0dp"-->
-            <!--android:textColor="@color/white" />-->
+            <Button
+                android:id="@+id/unfriend_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="31dp"
+                android:background="#d14f4f"
+                android:padding="5dp"
+                android:text="Unfriend"
+                android:textAllCaps="false"
+                android:layout_below="@id/message_btn"
+                android:textColor="@color/white"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                android:visibility="visible" />
 
             <Button
                 android:id="@+id/message_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="31dp"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
                 android:layout_marginRight="16dp"
                 android:background="@color/colorPrimary"
                 android:padding="5dp"
@@ -98,24 +82,9 @@
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:visibility="visible"
-
                 />
 
-            <Button
-                android:id="@+id/unfriend_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="31dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="16dp"
-                android:background="#d14f4f"
-                android:padding="5dp"
-                android:text="Unfriend"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:visibility="visible" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
-    </RelativeLayout>
 </android.support.v7.widget.CardView>

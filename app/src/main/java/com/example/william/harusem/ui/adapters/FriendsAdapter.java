@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.ui.activities.ChatActivity;
-import com.example.william.harusem.ui.activities.MessageActivity;
 import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.util.Utils;
 import com.quickblox.chat.QBChatService;
@@ -36,8 +35,6 @@ import org.jivesoftware.smack.SmackException;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static com.example.william.harusem.common.Common.DIALOG_EXTRA;
 
 public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHolder> {
     public static final String EXTRA_DIALOG_ID = "dialogId";
@@ -174,7 +171,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
         public MyViewHolder(View view) {
             super(view);
             userDisplayName = (TextView) view.findViewById(R.id.user_display_name_tv);
-            userThumbIv = view.findViewById(R.id.user_iv);
+            userThumbIv = view.findViewById(R.id.image_user);
             unfriendBtn = view.findViewById(R.id.unfriend_btn);
             messageBtn = view.findViewById(R.id.message_btn);
         }

@@ -62,7 +62,6 @@ public class FriendsActivity extends AppCompatActivity {
             @Override
             public void onSuccess(ArrayList<QBUser> qbUsers, Bundle bundle) {
 
-
                 progressBar.setVisibility(View.GONE);
                 adapter = new FriendsAdapter(qbUsers, FriendsActivity.this);
                 friendsRecyclerView.setAdapter(adapter);
