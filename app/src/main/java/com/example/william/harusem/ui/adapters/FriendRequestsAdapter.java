@@ -60,8 +60,8 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
                     @Override
                     public void onSuccess(Void aVoid, Bundle bundle) {
                         QBFriendRequestsHolder.getInstance().removeFriendRequest(user.getId());
-                        refreshAdapter();
-                        // TODO: maybe make it notify remove later
+                        usersList.remove(user);
+                        notifyItemRemoved(usersList.indexOf(user));
                         showSnackBar(view, "Request Accepted");
 
                     }
@@ -82,7 +82,8 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
                     @Override
                     public void onSuccess(Void aVoid, Bundle bundle) {
                         QBFriendRequestsHolder.getInstance().removeFriendRequest(user.getId());
-                        refreshAdapter();
+                        usersList.remove(user);
+                        notifyItemRemoved(usersList.indexOf(user));
                         showSnackBar(view, "Request Declined");
                     }
 
@@ -99,11 +100,6 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
 
     }
 
-    private void refreshAdapter() {
-        usersList.clear();
-        usersList.addAll(QBFriendRequestsHolder.getInstance().getAllFriendRequests());
-        notifyDataSetChanged();
-    }
 
     private void getUserImage(QBUser user, final CircleImageView userThumbIv) {
         if (user.getFileId() != null) {

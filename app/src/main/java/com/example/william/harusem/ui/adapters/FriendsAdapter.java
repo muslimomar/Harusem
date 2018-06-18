@@ -1,5 +1,6 @@
 package com.example.william.harusem.ui.adapters;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -70,14 +71,16 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
                     @Override
                     public void onSuccess(Void aVoid, Bundle bundle) {
                         showSnackBar(view, "Friend Removed");
+                        usersList.remove(usersList.indexOf(user));
                         notifyItemRemoved(position);
                     }
 
                     @Override
                     public void onError(QBResponseException e) {
-
+    showSnackBar(view,e.getMessage());
                     }
                 });
+
             }
         });
 
@@ -85,6 +88,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
             @Override
             public void onClick(View view) {
                 createPrivateChatDialog(user);
+
             }
         });
 
@@ -140,6 +144,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
                 Intent intent = new Intent(context, ChatActivity.class);
                 intent.putExtra(EXTRA_DIALOG_ID, qbChatDialog);
                 context.startActivity(intent);
+                ( (Activity) context).finish();
             }
 
             @Override

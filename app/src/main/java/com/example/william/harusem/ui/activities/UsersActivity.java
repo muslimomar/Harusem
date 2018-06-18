@@ -8,8 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.example.william.harusem.R;
-import com.example.william.harusem.ui.adapters.UsersAdapter;
 import com.example.william.harusem.holder.QBUsersHolder;
+import com.example.william.harusem.ui.adapters.UsersAdapter;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;

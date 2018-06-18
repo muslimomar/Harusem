@@ -13,8 +13,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.view.ActionMode;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -34,6 +31,7 @@ import com.example.william.harusem.manager.DialogsManager;
 import com.example.william.harusem.ui.activities.ChatActivity;
 import com.example.william.harusem.ui.activities.SelectUsersActivity;
 import com.example.william.harusem.ui.adapters.DialogsAdapter;
+import com.example.william.harusem.ui.adapters.FriendsAdapter;
 import com.example.william.harusem.ui.dialog.ProgressDialogFragment;
 import com.example.william.harusem.util.ChatHelper;
 import com.example.william.harusem.util.ErrorUtils;
@@ -43,7 +41,6 @@ import com.example.william.harusem.util.qb.QbChatDialogMessageListenerImp;
 import com.example.william.harusem.util.qb.callback.QbEntityCallbackImpl;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBIncomingMessagesManager;
-import com.quickblox.chat.QBRestChatService;
 import com.quickblox.chat.QBSystemMessagesManager;
 import com.quickblox.chat.exception.QBChatException;
 import com.quickblox.chat.listeners.QBChatDialogMessageListener;
@@ -54,10 +51,8 @@ import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.core.request.QBRequestGetBuilder;
 import com.quickblox.users.model.QBUser;
-import com.yarolegovich.lovelydialog.LovelyChoiceDialog;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -120,13 +115,13 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
 
             initUi();
 
-        registerQbChatListeners();
+            registerQbChatListeners();
 
-        if (QBChatDialogHolder.getInstance().getDialogs().size() > 0) {
-            loadDialogsFromQb(true, true);
-        } else {
-            loadDialogsFromQb(false, true);
-        }
+            if (QBChatDialogHolder.getInstance().getDialogs().size() > 0) {
+                loadDialogsFromQb(true, true);
+            } else {
+                loadDialogsFromQb(false, true);
+            }
 
             registerForContextMenu(dialogsListView);
 
@@ -135,6 +130,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
 
         return view;
     }
+
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -288,7 +284,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 QBChatDialog selectedDialog = (QBChatDialog) adapterView.getItemAtPosition(i);
-                    startForResult(getActivity(), REQUEST_DIALOG_ID_FOR_UPDATE, selectedDialog);
+                startForResult(getActivity(), REQUEST_DIALOG_ID_FOR_UPDATE, selectedDialog);
             }
         });
 
@@ -418,6 +414,29 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
         updateDialogsAdapter();
     }
 
+    @OnClick(R.id.fab)
+    public void createChatFab(View view) {
+        Intent intent = new Intent(getActivity(), SelectUsersActivity.class);
+        startActivityForResult(intent, REQUEST_SELECT_PEOPLE);
+    }
+
+    public void startForResult(Activity activity, int code, QBChatDialog dialogId) {
+        Intent intent = new Intent(activity, ChatActivity.class);
+        intent.putExtra(ChatActivity.EXTRA_DIALOG_ID, dialogId);
+        startActivityForResult(intent, code);
+    }
+
+//    private class PushBroadcastReceiver extends BroadcastReceiver {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            // Get extra data included in the Intent
+//            String message = intent.getStringExtra(GcmConsts.EXTRA_GCM_MESSAGE);
+//            Log.v(TAG, "Received broadcast " + intent.getAction() + " with data: " + message);
+//            requestBuilder.setSkip(skipRecords = 0);
+//            loadDialogsFromQb(true, true);
+//        }
+//    }
+
     private class SystemMessagesListener implements QBSystemMessageListener {
         @Override
         public void processMessage(final QBChatMessage qbChatMessage) {
@@ -437,30 +456,6 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
                 dialogsManager.onGlobalMessageReceived(dialogId, qbChatMessage);
             }
         }
-    }
-
-//    private class PushBroadcastReceiver extends BroadcastReceiver {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            // Get extra data included in the Intent
-//            String message = intent.getStringExtra(GcmConsts.EXTRA_GCM_MESSAGE);
-//            Log.v(TAG, "Received broadcast " + intent.getAction() + " with data: " + message);
-//            requestBuilder.setSkip(skipRecords = 0);
-//            loadDialogsFromQb(true, true);
-//        }
-//    }
-
-    @OnClick(R.id.fab)
-    public void createChatFab(View view) {
-        Intent intent = new Intent(getActivity(), SelectUsersActivity.class);
-        startActivityForResult(intent, REQUEST_SELECT_PEOPLE);
-    }
-
-
-    public void startForResult(Activity activity, int code, QBChatDialog dialogId) {
-        Intent intent = new Intent(activity, ChatActivity.class);
-        intent.putExtra(ChatActivity.EXTRA_DIALOG_ID, dialogId);
-        startActivityForResult(intent, code);
     }
 
 }

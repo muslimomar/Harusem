@@ -51,6 +51,7 @@ public class FriendsActivity extends AppCompatActivity {
         retrieveFriendsFromRoster();
 
         swipeLayoutRefresh();
+
     }
 
 
@@ -79,6 +80,8 @@ public class FriendsActivity extends AppCompatActivity {
         });
 
     }
+
+
 
     private void configRecyclerView() {
         mLayoutManager = new LinearLayoutManager(this);

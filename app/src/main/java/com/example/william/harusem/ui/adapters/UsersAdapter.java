@@ -54,6 +54,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
 
         holder.userDisplayName.setText(user.getFullName());
 
+
         if (user.getFileId() != null) {
             int profilePicId = user.getFileId();
 
@@ -69,53 +70,66 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
 
                 @Override
                 public void onError(QBResponseException e) {
-                    Log.e(TAG, "onError: ",e );
+                    Log.e(TAG, "onError: ", e);
                     holder.userThumbIv.setImageResource(R.drawable.placeholder_user);
                 }
             });
-        }else {
+        } else {
             holder.userThumbIv.setImageResource(R.drawable.placeholder_user);
         }
 
+        setButtonName(holder.button, user);
+
+        holder.button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (friendListHelper.isFriend(user.getId())) {
+                    deleteFriend(view, position, user, holder.button);
+
+                } else if (!friendListHelper.isFriendRequestAlreadySent(user.getId()) && !friendListHelper.isFriend(user.getId())) {
+                    sendRequest(user, view, position, holder.button);
+                }
+
+            }
+        });
+    }
+
+    private void setButtonName(Button button, QBUser user) {
         if (friendListHelper.isFriendRequestAlreadySent(user.getId())) {
-            holder.addFriendBtn.setText("Request Sent");
-            holder.addFriendBtn.setBackgroundColor(Color.parseColor("#d14f4f"));
-            holder.addFriendBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-//                    cancelRequest(view, user, position);
-                    Log.d(TAG, "onClick: " + "Cancel Request");
-                    // if that didn't work try to set the button text after QBCallBack
-                }
-            });
+            setRequestSentBtn(button);
+
         } else if (friendListHelper.isFriend(user.getId())) {
-            holder.addFriendBtn.setText("Unfriend");
-            holder.addFriendBtn.setBackgroundColor(Color.parseColor("#d14f4f"));
-            holder.addFriendBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    deleteFriend(view, position, user);
-                    Log.d(TAG, "onClick: " + "Delete Friend");
-                }
-            });
-        } else {
-            holder.addFriendBtn.setText("Add Friend");
-            holder.addFriendBtn.setBackgroundColor(Color.parseColor("#239ab6"));
-            holder.addFriendBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    sendRequest(user, view, position, holder.addFriendBtn);
-                    Log.d(TAG, "onClick: " + "Send Request");
-                }
-            });
+            setUnfriendBtn(button);
+
+        } else if (!friendListHelper.isFriendRequestAlreadySent(user.getId()) &&
+                !friendListHelper.isFriend(user.getId())) {
+
+            setAddFriendBtn(button);
         }
     }
 
-    private void deleteFriend(final View view, final int position, QBUser user) {
+    private void setAddFriendBtn(Button button) {
+        button.setText("Add Friend");
+        button.setBackgroundColor(Color.parseColor("#239ab6"));
+    }
+
+    private void setUnfriendBtn(Button button) {
+        button.setText("Unfriend");
+        button.setBackgroundColor(Color.parseColor("#d14f4f"));
+    }
+
+    private void setRequestSentBtn(Button button) {
+        button.setText("Request Sent");
+        button.setBackgroundColor(Color.parseColor("#d14f4f"));
+        button.setEnabled(false);
+    }
+
+    private void deleteFriend(final View view, final int position, QBUser user, final Button addFriendBtn) {
         friendListHelper.removeFriend(user, new QBEntityCallback<Void>() {
             @Override
             public void onSuccess(Void aVoid, Bundle bundle) {
-                notifyItemChanged(position);
+                setAddFriendBtn(addFriendBtn);
                 showSnackBar(view, "Friend Removed");
             }
 
@@ -146,8 +160,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
         friendListHelper.sendFriendRequest(user, new QBEntityCallback<Void>() {
             @Override
             public void onSuccess(Void aVoid, Bundle bundle) {
-                notifyItemChanged(position);
-                // try use objectpaylod
+                setRequestSentBtn(addFriendBtn);
                 showSnackBar(view, "Request Sent");
             }
 
@@ -174,13 +187,13 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView userDisplayName;
         public CircleImageView userThumbIv;
-        public Button addFriendBtn;
+        public Button button;
 
         public MyViewHolder(View view) {
             super(view);
             userDisplayName = (TextView) view.findViewById(R.id.user_display_name_tv);
             userThumbIv = view.findViewById(R.id.image_user);
-            addFriendBtn = view.findViewById(R.id.unfriend_btn);
+            button = view.findViewById(R.id.unfriend_btn);
         }
 
     }
