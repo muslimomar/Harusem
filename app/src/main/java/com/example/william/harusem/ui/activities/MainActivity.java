@@ -1,19 +1,20 @@
 package com.example.william.harusem.ui.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ActionMode;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-import com.example.william.harusem.fragments.DialogsFragment;
 import com.example.william.harusem.R;
+import com.example.william.harusem.fragments.DialogsFragment;
 import com.example.william.harusem.fragments.ProfileFragment;
 import com.example.william.harusem.fragments.SearchFragment;
+import com.example.william.harusem.notifications.NotificationsListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,17 +23,17 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.bottom_navigation)
     AHBottomNavigation bottomNavigation;
+    BroadcastReceiver pushBroadcastReceiver;
+    Context context;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
         setupBottomNavigation();
-
     }
-
 
 
     private void setupBottomNavigation() {
