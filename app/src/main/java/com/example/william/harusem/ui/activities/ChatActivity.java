@@ -28,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bhargavms.dotloader.DotLoader;
 import com.example.william.harusem.R;
@@ -48,6 +49,7 @@ import com.example.william.harusem.util.qb.QbChatDialogMessageListenerImp;
 import com.example.william.harusem.util.qb.QbDialogUtils;
 import com.example.william.harusem.util.qb.VerboseQbChatConnectionListener;
 import com.example.william.harusem.widget.AttachmentPreviewAdapterView;
+import com.quickblox.auth.session.QBSessionManager;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBRoster;
 import com.quickblox.chat.listeners.QBChatDialogTypingListener;
@@ -61,6 +63,11 @@ import com.quickblox.content.QBContent;
 import com.quickblox.content.model.QBFile;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.helper.StringifyArrayList;
+import com.quickblox.messages.QBPushNotifications;
+import com.quickblox.messages.model.QBEnvironment;
+import com.quickblox.messages.model.QBEvent;
+import com.quickblox.messages.model.QBNotificationType;
 import com.quickblox.ui.kit.chatmessage.adapter.listeners.QBChatAttachClickListener;
 import com.quickblox.users.model.QBUser;
 import com.squareup.picasso.Picasso;
@@ -69,6 +76,7 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -530,6 +538,51 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
         try {
             qbChatDialog.sendMessage(chatMessage);
+
+
+
+            //Create custom data and send it via Quickblox notifications ( هون مافي مشاكل أبداً)
+
+            StringifyArrayList<Integer> userIds = new StringifyArrayList<Integer>();
+            userIds.add(qbChatDialog.getRecipientId());
+
+            QBEvent event = new QBEvent();
+            event.setUserIds(userIds);
+            event.setEnvironment(QBEnvironment.PRODUCTION);
+            event.setNotificationType(QBNotificationType.PUSH);
+            event.setMessage(messageInputEt.getText().toString()+qbChatDialog.getName());
+
+
+            JSONObject json = new JSONObject();
+            try {
+                qbChatDialog.sendMessage(chatMessage);
+                json.put("message", messageInputEt.getText().toString());
+
+                // custom parameters
+
+
+                json.put("user_name", QBSessionManager.getInstance().getSessionParameters().getUserLogin());
+                //json.put("thread_id", "8343");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            event.setMessage(json.toString());
+
+            QBPushNotifications.createEvent(event).performAsync(new QBEntityCallback<QBEvent>() {
+                @Override
+                public void onSuccess(QBEvent qbEvent, Bundle bundle) {
+                    Toast.makeText(ChatActivity.this, "Notifcation Sent!", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onError(QBResponseException e) {
+                    Log.v("ERROR", e.getMessage());
+
+                }
+            });
+
 
             if (QBDialogType.PRIVATE.equals(qbChatDialog.getType())) {
                 showMessage(chatMessage);
