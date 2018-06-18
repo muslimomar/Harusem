@@ -13,9 +13,12 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +32,9 @@ import com.example.william.harusem.R;
 import com.example.william.harusem.holder.QBChatDialogHolder;
 import com.example.william.harusem.manager.DialogsManager;
 import com.example.william.harusem.ui.activities.ChatActivity;
+import com.example.william.harusem.ui.activities.MainActivity;
 import com.example.william.harusem.ui.activities.SelectUsersActivity;
 import com.example.william.harusem.ui.adapters.DialogsAdapter;
-import com.example.william.harusem.ui.adapters.FriendsAdapter;
 import com.example.william.harusem.ui.dialog.ProgressDialogFragment;
 import com.example.william.harusem.util.ChatHelper;
 import com.example.william.harusem.util.ErrorUtils;
@@ -79,6 +82,8 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     @BindView(R.id.layout_root)
     RelativeLayout layoutRoot;
     Unbinder unbinder;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private QBRequestGetBuilder requestBuilder;
     private Menu menu;
     private int skipRecords = 0;
@@ -100,6 +105,12 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
         View view = inflater.inflate(R.layout.fragment_chat_dialogs, container, false);
         unbinder = ButterKnife.bind(this, view);
 
+        if (getActivity() != null) {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        }
+
+//        setHasOptionsMenu(true);
+
         googlePlayServicesHelper = new GooglePlayServicesHelper();
 
 //        pushBroadcastReceiver = new PushBroadcastReceiver();
@@ -110,6 +121,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
         dialogsManager = new DialogsManager();
 
         currentUser = ChatHelper.getCurrentUser();
+
 
         if (getActivity() != null && isAdded()) {
 
@@ -124,13 +136,29 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
             }
 
             registerForContextMenu(dialogsListView);
-
         }
-
 
         return view;
     }
 
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        inflater.inflate(R.menu.activity_chat_dialogs, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_dialog_action_add:
+                Toast.makeText(getActivity(), "Add Users", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {

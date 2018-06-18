@@ -6,11 +6,25 @@
     android:orientation="vertical"
     tools:context="com.example.william.harusem.fragments.DialogsFragment">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        app:title="Conversations"
+        app:titleTextColor="@color/white"
+        app:popupTheme="@style/AppTheme"
+        android:theme="@style/ToolbarColoredBackArrow"
+        >
+
+    </android.support.v7.widget.Toolbar>
+
     <RelativeLayout
         android:id="@+id/layout_root"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/top_layout">
+        android:layout_below="@id/toolbar"
+        >
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh"
@@ -31,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:visibility="visible"
+            android:visibility="gone"
             style="?android:attr/progressBarStyleLarge"
             />
 
