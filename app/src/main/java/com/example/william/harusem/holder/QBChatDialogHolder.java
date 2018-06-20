@@ -1,7 +1,7 @@
 package com.example.william.harusem.holder;
 
-import com.quickblox.chat.model.QBChatDialog;
 
+import com.quickblox.chat.model.QBChatDialog;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

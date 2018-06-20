@@ -84,7 +84,11 @@ dependencies {
     // adapter
     compile 'com.quickblox:chat-message-adapter:2.0'
 
+    //Cardview
+    compile 'com.android.support:cardview-v7:26.1.0'
+
 }
+
 
 
 
