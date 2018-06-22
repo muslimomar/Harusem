@@ -108,6 +108,12 @@
             </intent-filter>
         </service>
 
+        <receiver android:name=".fragments.DialogsFragment$PushBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </receiver>
+
 
 
 

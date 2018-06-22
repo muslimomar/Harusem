@@ -455,7 +455,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
         startActivityForResult(intent, code);
     }
 
-    private class PushBroadcastReceiver extends BroadcastReceiver {
+    public class PushBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent

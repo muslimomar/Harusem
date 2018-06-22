@@ -1,6 +1,7 @@
 package com.example.william.harusem.ui.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -49,7 +50,6 @@ import com.example.william.harusem.util.qb.QbChatDialogMessageListenerImp;
 import com.example.william.harusem.util.qb.QbDialogUtils;
 import com.example.william.harusem.util.qb.VerboseQbChatConnectionListener;
 import com.example.william.harusem.widget.AttachmentPreviewAdapterView;
-import com.quickblox.auth.session.QBSessionManager;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBRoster;
 import com.quickblox.chat.listeners.QBChatDialogTypingListener;
@@ -69,6 +69,7 @@ import com.quickblox.messages.model.QBEnvironment;
 import com.quickblox.messages.model.QBEvent;
 import com.quickblox.messages.model.QBNotificationType;
 import com.quickblox.ui.kit.chatmessage.adapter.listeners.QBChatAttachClickListener;
+import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 import com.squareup.picasso.Picasso;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
@@ -149,6 +150,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     private int skipPagination = 0;
     private ChatMessageListener chatMessageListener;
     private boolean checkAdapterInit;
+    private String fullName;
 
 
     @Override
@@ -158,6 +160,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         ButterKnife.bind(this);
         hideKeyboard();
         setupActionBar();
+        loadUserFullName();
 
         Log.v(TAG, "onCreate ChatActivity on Thread ID = " + Thread.currentThread().getId());
         qbChatDialog = (QBChatDialog) getIntent().getSerializableExtra(EXTRA_DIALOG_ID);
@@ -540,8 +543,8 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             qbChatDialog.sendMessage(chatMessage);
 
 
-
-            //Create custom data and send it via Quickblox notifications ( هون مافي مشاكل أبداً)
+            //String currentUserFullName = sharedPreferences.getString("qb_user_full_name","");
+            //Create custom data and send it via Quickblox notifications
 
             StringifyArrayList<Integer> userIds = new StringifyArrayList<Integer>();
             userIds.add(qbChatDialog.getRecipientId());
@@ -550,18 +553,14 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             event.setUserIds(userIds);
             event.setEnvironment(QBEnvironment.PRODUCTION);
             event.setNotificationType(QBNotificationType.PUSH);
-            event.setMessage(messageInputEt.getText().toString()+qbChatDialog.getName());
+            event.setMessage(messageInputEt.getText().toString() + qbChatDialog.getName());
 
 
             JSONObject json = new JSONObject();
             try {
-                qbChatDialog.sendMessage(chatMessage);
-                json.put("message", messageInputEt.getText().toString());
-
                 // custom parameters
-
-
-                json.put("user_name", QBSessionManager.getInstance().getSessionParameters().getUserLogin());
+                json.put("user_name", fullName);
+                json.put("message", messageInputEt.getText().toString());
                 //json.put("thread_id", "8343");
 
             } catch (Exception e) {
@@ -598,6 +597,22 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             Toaster.shortToast("Can't send a message, You are not connected to chat");
         }
     }
+
+    private void loadUserFullName() {
+        QBUser currentUser = QBChatService.getInstance().getUser();
+        QBUsers.getUser(currentUser.getId()).performAsync(new QBEntityCallback<QBUser>() {
+            @Override
+            public void onSuccess(QBUser user, Bundle bundle) {
+                fullName = user.getFullName();
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Log.e(TAG, "onError: ", e);
+            }
+        });
+    }
+
 
     private void initChat() {
 
