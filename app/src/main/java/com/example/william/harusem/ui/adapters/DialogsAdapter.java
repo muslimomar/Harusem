@@ -3,6 +3,7 @@ package com.example.william.harusem.ui.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.model.QBUser;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.List;
 
 import static com.example.william.harusem.ui.activities.MessageActivity.TAG;
@@ -121,11 +123,15 @@ public class DialogsAdapter extends BaseSelectableListAdapter<QBChatDialog> {
         holder.dialogImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (dialog.getType() == QBDialogType.PRIVATE) {
+
                     Intent intent = new Intent(context, ProfileActivity.class);
                     Integer recipientId = dialog.getRecipientId();
-                    intent.putExtra("recipient_id", recipientId);
+                    intent.putExtra("user_id","" +recipientId);
+                    intent.putExtra("name", QbDialogUtils.getDialogName(dialog));
                     context.startActivity(intent);
+
                 } else {
                     showImage(dialog);
                 }
