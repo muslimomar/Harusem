@@ -45,5 +45,6 @@
     <string name="select_users_choose_users">Please select user/users</string>
     <string name="dlg_restoring_chat_session">Logging in…</string>
     <string name="error_recreate_session">Login Chat error</string>
+    <string name="sender_id">640804138209</string>
 
 </resources>

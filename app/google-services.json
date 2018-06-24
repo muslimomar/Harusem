@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "640804138209",
+    "firebase_url": "https://harusem-new.firebaseio.com",
+    "project_id": "harusem-new",
+    "storage_bucket": "harusem-new.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:640804138209:android:6399e09a1152446f",
+        "android_client_info": {
+          "package_name": "com.example.william.harusem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "640804138209-t5qvibh6jnakch7iimevmsh37r0vj04k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.william.harusem",
+            "certificate_hash": "960092cad70dab417767632d05da1bf1a0891ad0"
+          }
+        },
+        {
+          "client_id": "640804138209-ib9779ke8q85p25eu7da1nd1hjkoqr80.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "640804138209-ib9779ke8q85p25eu7da1nd1hjkoqr80.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAy0_EEkWP5N2B44YX64VJwCN7UYbUEfbw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "640804138209-ib9779ke8q85p25eu7da1nd1hjkoqr80.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

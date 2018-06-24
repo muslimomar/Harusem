@@ -1,7 +1,9 @@
 package com.example.william.harusem.ui.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -12,9 +14,9 @@ import android.widget.TextView;
 import com.example.william.harusem.R;
 import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.ui.activities.AttachmentImageActivity;
+import com.example.william.harusem.ui.activities.ProfileActivity;
 import com.example.william.harusem.util.ResourceUtils;
 import com.example.william.harusem.util.TimeUtils;
-import com.example.william.harusem.util.UiUtils;
 import com.example.william.harusem.util.baseAdapters.BaseSelectableListAdapter;
 import com.example.william.harusem.util.qb.QbDialogUtils;
 import com.quickblox.chat.model.QBChatDialog;
@@ -26,6 +28,7 @@ import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.model.QBUser;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.List;
 
 import static com.example.william.harusem.ui.activities.MessageActivity.TAG;
@@ -85,7 +88,7 @@ public class DialogsAdapter extends BaseSelectableListAdapter<QBChatDialog> {
             if (dialog.getType().equals(QBDialogType.PRIVATE)) {
                 QBUser recipient = QBUsersHolder.getInstance().getUserById(dialog.getRecipientId());
 
-                if (recipient!=null && recipient.getFileId() != null) {
+                if (recipient != null && recipient.getFileId() != null) {
                     Integer fileId = recipient.getFileId();
                     getRecipientPhoto(fileId, holder.dialogImageView);
                 } else {
@@ -104,7 +107,7 @@ public class DialogsAdapter extends BaseSelectableListAdapter<QBChatDialog> {
 
         holder.lastMessageTimeTv.setText(TimeUtils.getTime(dialog.getLastMessageDateSent() * 1000));
 
-        holder.lastMessageTimeTv.setText(dialog.getLastMessageDateSent() > 0?TimeUtils.getTime(dialog.getLastMessageDateSent() * 1000):"");
+        holder.lastMessageTimeTv.setText(dialog.getLastMessageDateSent() > 0 ? TimeUtils.getTime(dialog.getLastMessageDateSent() * 1000) : "");
 
         int unreadMessagesCount = getUnreadMsgCount(dialog);
         if (unreadMessagesCount == 0) {
@@ -120,22 +123,40 @@ public class DialogsAdapter extends BaseSelectableListAdapter<QBChatDialog> {
         holder.dialogImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String imageUrl = "";
-                String photo = dialog.getPhoto();
-                if (photo != null && !photo.equalsIgnoreCase("null")) {
-                    imageUrl = photo;
+
+                if (dialog.getType() == QBDialogType.PRIVATE) {
+
+                    Intent intent = new Intent(context, ProfileActivity.class);
+                    Integer recipientId = dialog.getRecipientId();
+                    intent.putExtra("user_id","" +recipientId);
+                    intent.putExtra("name", QbDialogUtils.getDialogName(dialog));
+                    context.startActivity(intent);
+
                 } else {
-                    QBUser recipient = QBUsersHolder.getInstance().getUserById(dialog.getRecipientId());
-                    if (recipient != null && recipient.getFileId() != null) {
-                        imageUrl = recipient.getFileId().toString();
-                    }
+                    showImage(dialog);
                 }
 
-                AttachmentImageActivity.start(context, imageUrl, DIALOG_IMAGE, String.valueOf(dialog.getType()));
             }
         });
 
         return convertView;
+    }
+
+    private void showImage(QBChatDialog dialog) {
+
+        String imageUrl = "";
+        String photo = dialog.getPhoto();
+        if (photo != null && !photo.equalsIgnoreCase("null")) {
+            imageUrl = photo;
+        } else {
+            QBUser recipient = QBUsersHolder.getInstance().getUserById(dialog.getRecipientId());
+            if (recipient != null && recipient.getFileId() != null) {
+                imageUrl = recipient.getFileId().toString();
+            }
+        }
+
+        AttachmentImageActivity.start(context, imageUrl, DIALOG_IMAGE, String.valueOf(dialog.getType()));
+
     }
 
     private void getRecipientPhoto(final Integer fileId, final ImageView dialogImageView) {

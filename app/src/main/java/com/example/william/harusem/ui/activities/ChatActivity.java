@@ -1,6 +1,7 @@
 package com.example.william.harusem.ui.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bhargavms.dotloader.DotLoader;
 import com.example.william.harusem.R;
@@ -61,7 +63,13 @@ import com.quickblox.content.QBContent;
 import com.quickblox.content.model.QBFile;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.helper.StringifyArrayList;
+import com.quickblox.messages.QBPushNotifications;
+import com.quickblox.messages.model.QBEnvironment;
+import com.quickblox.messages.model.QBEvent;
+import com.quickblox.messages.model.QBNotificationType;
 import com.quickblox.ui.kit.chatmessage.adapter.listeners.QBChatAttachClickListener;
+import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 import com.squareup.picasso.Picasso;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
@@ -69,6 +77,7 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -141,6 +150,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     private int skipPagination = 0;
     private ChatMessageListener chatMessageListener;
     private boolean checkAdapterInit;
+    private String fullName;
 
 
     @Override
@@ -150,6 +160,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         ButterKnife.bind(this);
         hideKeyboard();
         setupActionBar();
+        loadUserFullName();
 
         Log.v(TAG, "onCreate ChatActivity on Thread ID = " + Thread.currentThread().getId());
         qbChatDialog = (QBChatDialog) getIntent().getSerializableExtra(EXTRA_DIALOG_ID);
@@ -532,6 +543,47 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         try {
             qbChatDialog.sendMessage(chatMessage);
 
+
+            //String currentUserFullName = sharedPreferences.getString("qb_user_full_name","");
+            //Create custom data and send it via Quickblox notifications
+
+            StringifyArrayList<Integer> userIds = new StringifyArrayList<Integer>();
+            userIds.add(qbChatDialog.getRecipientId());
+
+            QBEvent event = new QBEvent();
+            event.setUserIds(userIds);
+            event.setEnvironment(QBEnvironment.PRODUCTION);
+            event.setNotificationType(QBNotificationType.PUSH);
+            event.setMessage(messageInputEt.getText().toString() + qbChatDialog.getName());
+
+
+            JSONObject json = new JSONObject();
+            try {
+                // custom parameters
+                json.put("user_name", fullName);
+                json.put("message", messageInputEt.getText().toString());
+                //json.put("thread_id", "8343");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            event.setMessage(json.toString());
+
+            QBPushNotifications.createEvent(event).performAsync(new QBEntityCallback<QBEvent>() {
+                @Override
+                public void onSuccess(QBEvent qbEvent, Bundle bundle) {
+                    Toast.makeText(ChatActivity.this, "Notifcation Sent!", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onError(QBResponseException e) {
+                    Log.v("ERROR", e.getMessage());
+
+                }
+            });
+
+
             if (QBDialogType.PRIVATE.equals(qbChatDialog.getType())) {
                 showMessage(chatMessage);
             }
@@ -546,6 +598,22 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             Toaster.shortToast("Can't send a message, You are not connected to chat");
         }
     }
+
+    private void loadUserFullName() {
+        QBUser currentUser = QBChatService.getInstance().getUser();
+        QBUsers.getUser(currentUser.getId()).performAsync(new QBEntityCallback<QBUser>() {
+            @Override
+            public void onSuccess(QBUser user, Bundle bundle) {
+                fullName = user.getFullName();
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Log.e(TAG, "onError: ", e);
+            }
+        });
+    }
+
 
     private void initChat() {
 
