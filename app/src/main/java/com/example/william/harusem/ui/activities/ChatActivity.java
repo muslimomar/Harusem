@@ -304,16 +304,17 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         ChatHelper.getInstance().addConnectionListener(chatConnectionListener);
         addRosterListener();
         addIsTypingListener();
+
+        setPrivateRecipientStatus(qbFriendListHelper.getUserPresence(qbChatDialog.getRecipientId()));
     }
 
-    private void addIsTypingListener() {
 
+    private void addIsTypingListener() {
         if (qbChatDialog.getType() == QBDialogType.PRIVATE) {
             if (typingListener != null) {
                 qbChatDialog.addIsTypingListener(typingListener);
             }
         }
-
     }
 
     private void addRosterListener() {
@@ -954,6 +955,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
         }
     }
+
 
 
 }

@@ -122,7 +122,6 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
 
         currentUser = ChatHelper.getCurrentUser();
 
-
         if (getActivity() != null && isAdded()) {
 
             initUi();

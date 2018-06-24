@@ -127,6 +127,12 @@ public class QBFriendListHelper {
         }
     }
 
-
+    public QBPresence getUserPresence(int userId) {
+        QBPresence presence = roster.getPresence(userId);
+        if (presence != null) {
+            return presence;
+        }
+        return null;
+    }
 
 }
