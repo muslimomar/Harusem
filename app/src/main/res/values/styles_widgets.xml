@@ -169,5 +169,12 @@
         <item name="android:paddingEnd">12dp</item>
     </style>
 
+    <style name="BubbleAttachAudioFrame.Right">
+        <item name="android:background">@drawable/shape_bg_outgoing_bubble</item>
+    </style>
+
+    <style name="BubbleAttachAudioFrame.Left">
+        <item name="android:background">@drawable/shape_bg_incoming_bubble</item>
+    </style>
 
 </resources>

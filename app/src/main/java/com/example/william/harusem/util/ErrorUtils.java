@@ -96,4 +96,8 @@ public class ErrorUtils {
             }
         });
     }
+
+    public static void logError(Exception e) {
+        e.printStackTrace();
+    }
 }

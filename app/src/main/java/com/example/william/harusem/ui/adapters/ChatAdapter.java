@@ -33,7 +33,6 @@ public class ChatAdapter extends com.quickblox.ui.kit.chatmessage.adapter.QBMess
     private PaginationHistoryListener paginationListener;
     private int previousGetCount = 0;
 
-
     public ChatAdapter(Context context, QBChatDialog chatDialog, List<QBChatMessage> chatMessages) {
         super(context, chatMessages);
         this.chatDialog = chatDialog;
@@ -160,4 +159,24 @@ public class ChatAdapter extends com.quickblox.ui.kit.chatmessage.adapter.QBMess
         }
         dateTextView.setLayoutParams(lp);
     }
+
+    @Override
+    protected void onBindViewAttachLeftAudioHolder(AudioAttachHolder holder, QBChatMessage chatMessage, int position) {
+        updateMessageState(chatMessage, chatDialog);
+
+
+        super.onBindViewAttachLeftAudioHolder(holder, chatMessage, position);
+    }
+
+    private void updateMessageState(QBChatMessage chatMessage, QBChatDialog chatDialog) {
+
+    }
+
+    protected void setViewVisibility(View view, int visibility) {
+        if (view != null) {
+            view.setVisibility(visibility);
+        }
+    }
+
+
 }
