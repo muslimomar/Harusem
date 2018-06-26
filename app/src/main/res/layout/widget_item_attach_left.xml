@@ -10,7 +10,8 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="8dp"
     android:layout_marginStart="16dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    >
 
     <TextView
         android:id="@+id/opponent_name_attach_view"

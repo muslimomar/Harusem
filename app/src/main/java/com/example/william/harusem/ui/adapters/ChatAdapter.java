@@ -1,8 +1,10 @@
 package com.example.william.harusem.ui.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -19,6 +21,8 @@ import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.chat.model.QBDialogType;
 import com.quickblox.core.helper.CollectionsUtil;
+import com.quickblox.ui.kit.chatmessage.adapter.*;
+import com.quickblox.ui.kit.chatmessage.adapter.QBMessagesAdapter;
 import com.quickblox.users.model.QBUser;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
@@ -89,8 +93,12 @@ public class ChatAdapter extends com.quickblox.ui.kit.chatmessage.adapter.QBMess
     @Override
     protected void onBindViewAttachLeftHolder(ImageAttachHolder holder, QBChatMessage chatMessage, int position) {
         TextView opponentNameTextView = holder.itemView.findViewById(R.id.opponent_name_attach_view);
-        opponentNameTextView.setTextColor(UiUtils.getRandomTextColorById(chatMessage.getSenderId()));
-        opponentNameTextView.setText(getSenderName(chatMessage));
+        if (chatDialog.getType() == QBDialogType.PRIVATE) {
+            opponentNameTextView.setVisibility(View.GONE);
+        }else {
+            opponentNameTextView.setTextColor(UiUtils.getRandomTextColorById(chatMessage.getSenderId()));
+            opponentNameTextView.setText(getSenderName(chatMessage));
+        }
 
         super.onBindViewAttachLeftHolder(holder, chatMessage, position);
     }
@@ -162,21 +170,9 @@ public class ChatAdapter extends com.quickblox.ui.kit.chatmessage.adapter.QBMess
 
     @Override
     protected void onBindViewAttachLeftAudioHolder(AudioAttachHolder holder, QBChatMessage chatMessage, int position) {
-        updateMessageState(chatMessage, chatDialog);
-
-
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        layoutParams.gravity = Gravity.RIGHT;
+        holder.attachTextTime.setLayoutParams(layoutParams);
         super.onBindViewAttachLeftAudioHolder(holder, chatMessage, position);
     }
-
-    private void updateMessageState(QBChatMessage chatMessage, QBChatDialog chatDialog) {
-
-    }
-
-    protected void setViewVisibility(View view, int visibility) {
-        if (view != null) {
-            view.setVisibility(visibility);
-        }
-    }
-
-
 }
