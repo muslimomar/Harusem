@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/LinearAttachWidgetFrame.Left"
+    style="@style/LinearAttachWidgetFrame.Right"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_alignParentEnd="false"
-    android:layout_alignParentRight="false"
-    android:layout_marginEnd="8dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="8dp"
-    android:layout_marginStart="16dp"
+    android:layout_alignParentStart="false"
+    android:layout_alignParentLeft="false"
+    android:layout_marginEnd="12dp"
+    android:layout_marginRight="12dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginStart="8dp"
     android:orientation="horizontal"
     >
 
@@ -26,15 +26,16 @@
         android:fontFamily="@font/roboto_bold"
         android:layout_weight="1"
         tools:text="Opponent Name"
+        android:gravity="right"
         />
 
     <TextView
         android:id="@+id/msg_text_time_attach"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/TextViewAttach.Right"
+        style="@style/TextViewAttach.Left"
         tools:text="time"
-
+        android:layout_gravity="right"
 
         />
 

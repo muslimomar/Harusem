@@ -253,6 +253,8 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
         initIsTypingListener();
 
+        QBUser signInQbUser = QBUsersHolder.getInstance().getSignInQbUser();
+        Log.i(TAG, "signInQbUser: " + signInQbUser);
 
     }
 
