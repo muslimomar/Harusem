@@ -60,7 +60,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activities.UsersActivity"></activity>
-        <activity android:name=".ui.activities.FriendsActivity"></activity>
+        <activity android:name=".ui.activities.FriendsActivity"
+            android:theme="@style/NoActionBar"></activity>
 
         <activity
             android:name=".ui.activities.ChatActivity"
