@@ -92,6 +92,7 @@ public class ChatAdapter extends com.quickblox.ui.kit.chatmessage.adapter.QBMess
         if (chatDialog.getType() == QBDialogType.PRIVATE) {
             opponentNameTextView.setVisibility(View.GONE);
         } else {
+            opponentNameTextView.setVisibility(View.VISIBLE);
             opponentNameTextView.setTextColor(UiUtils.getRandomTextColorById(chatMessage.getSenderId()));
             opponentNameTextView.setText(getSenderName(chatMessage));
         }
