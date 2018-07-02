@@ -1,7 +1,6 @@
 package com.example.william.harusem.ui.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -69,7 +68,6 @@ import com.quickblox.messages.model.QBEnvironment;
 import com.quickblox.messages.model.QBEvent;
 import com.quickblox.messages.model.QBNotificationType;
 import com.quickblox.ui.kit.chatmessage.adapter.listeners.QBChatAttachClickListener;
-import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 import com.squareup.picasso.Picasso;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
@@ -150,7 +148,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     private int skipPagination = 0;
     private ChatMessageListener chatMessageListener;
     private boolean checkAdapterInit;
-    private String fullName;
+    //private String fullName;
 
 
     @Override
@@ -160,7 +158,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         ButterKnife.bind(this);
         hideKeyboard();
         setupActionBar();
-        loadUserFullName();
 
         Log.v(TAG, "onCreate ChatActivity on Thread ID = " + Thread.currentThread().getId());
         qbChatDialog = (QBChatDialog) getIntent().getSerializableExtra(EXTRA_DIALOG_ID);
@@ -540,27 +537,35 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         }
 
         try {
-            qbChatDialog.sendMessage(chatMessage);
-
-
-            //String currentUserFullName = sharedPreferences.getString("qb_user_full_name","");
             //Create custom data and send it via Quickblox notifications
+            //StringifyArrayList<Integer> userIds = new StringifyArrayList<Integer>();
+            //QBUser recipient = QBUsersHolder.getInstance().getUserById(qbChatDialog.getRecipientId());
+            //Integer recipientId = recipient.getId();
+            //userIds.add(recipientId);
 
-            StringifyArrayList<Integer> userIds = new StringifyArrayList<Integer>();
-            userIds.add(qbChatDialog.getRecipientId());
+            StringifyArrayList<Integer> occupants = new StringifyArrayList<>(qbChatDialog.getOccupants());
+            Log.i("ocupants ", "" + occupants);
+            occupants.remove(QBChatService.getInstance().getUser().getId());
+
+            Log.i("ocupants current", "" + occupants);
 
             QBEvent event = new QBEvent();
-            event.setUserIds(userIds);
+            event.setUserIds(occupants);
             event.setEnvironment(QBEnvironment.PRODUCTION);
             event.setNotificationType(QBNotificationType.PUSH);
             event.setMessage(messageInputEt.getText().toString() + qbChatDialog.getName());
 
+            // Get current user fullname
+            QBUser currentUser = QBUsersHolder.getInstance().getUserById(QBChatService.getInstance().getUser().getId());
+            String currentt = currentUser.getFullName();
 
+            Log.i(TAG, "sendChatMessage: " + currentt);
             JSONObject json = new JSONObject();
             try {
                 // custom parameters
-                json.put("user_name", fullName);
+                json.put("user_name", currentt);
                 json.put("message", messageInputEt.getText().toString());
+                json.put("dialogID", qbChatDialog);
                 //json.put("thread_id", "8343");
 
             } catch (Exception e) {
@@ -582,6 +587,8 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
                 }
             });
 
+            qbChatDialog.sendMessage(chatMessage);
+
 
             if (QBDialogType.PRIVATE.equals(qbChatDialog.getType())) {
                 showMessage(chatMessage);
@@ -598,7 +605,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         }
     }
 
-    private void loadUserFullName() {
+ /*   private void loadUserFullName() {
         QBUser currentUser = QBChatService.getInstance().getUser();
         QBUsers.getUser(currentUser.getId()).performAsync(new QBEntityCallback<QBUser>() {
             @Override
@@ -613,6 +620,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         });
     }
 
+    */
 
     private void initChat() {
 

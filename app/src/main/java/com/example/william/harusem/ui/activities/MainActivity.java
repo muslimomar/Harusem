@@ -1,12 +1,17 @@
 package com.example.william.harusem.ui.activities;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
@@ -14,10 +19,18 @@ import com.example.william.harusem.R;
 import com.example.william.harusem.fragments.DialogsFragment;
 import com.example.william.harusem.fragments.ProfileFragment;
 import com.example.william.harusem.fragments.SearchFragment;
-import com.example.william.harusem.notifications.NotificationsListener;
+import com.example.william.harusem.holder.QBChatDialogHolder;
+import com.example.william.harusem.ui.adapters.DialogsAdapter;
+import com.example.william.harusem.util.ChatHelper;
+import com.quickblox.chat.model.QBChatDialog;
+import com.quickblox.core.request.QBRequestGetBuilder;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.app.PendingIntent.getActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setupBottomNavigation();
+        switchFromNotification();
     }
-
 
     private void setupBottomNavigation() {
 
@@ -87,5 +100,30 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+    public void switchFromNotification() {
 
+        String fragmentDialog = getIntent().getStringExtra("fragmentName");
+
+        if (fragmentDialog != null) {
+            switch (fragmentDialog) {
+                case "chatsDialog":
+                    //FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    //DialogsFragment dialogsFragment = new DialogsFragment();
+                    //fragmentTransaction.replace(R.id.frame_container, dialogsFragment).commit();
+                case "dialog":
+                    //Intent intent = new Intent(this, ChatActivity.class);
+                    //intent.putExtra(ChatActivity.EXTRA_DIALOG_ID, dialogId);
+                    //startActivityForResult(intent, code);
+                    break;
+            }
+        }
+
+
+    }
+
+    public void startForResult(Activity activity, int code, QBChatDialog dialogId) {
+        Intent intent = new Intent(activity, ChatActivity.class);
+        intent.putExtra(ChatActivity.EXTRA_DIALOG_ID, dialogId);
+        startActivityForResult(intent, code);
+    }
 }

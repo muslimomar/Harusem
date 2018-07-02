@@ -161,6 +161,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
             @Override
             public void onSuccess(Void aVoid, Bundle bundle) {
                 setRequestSentBtn(addFriendBtn);
+
                 showSnackBar(view, "Request Sent");
             }
 
@@ -170,6 +171,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
             }
         });
     }
+
 
 
     @Override

@@ -15,6 +15,7 @@ public class SharedPrefsHelper {
     private static final String QB_USER_TAGS = "qb_user_tags";
     private static final String QB_USER_CUSTOM_DATA = "qb_user_custom_data";
     private static final String QB_USER_EMAIL = "qb_user_email";
+    public static final String  QB_USER_FULL_NAME_FOR_NOTIFICATIONS ="qb_user_full_name_for_notify";
     private static SharedPrefsHelper instance;
 
     private Context cx;

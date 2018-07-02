@@ -4,8 +4,10 @@ package com.example.william.harusem.ui.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.helper.QBFriendListHelper;
@@ -122,6 +125,13 @@ public class SignupActivity extends AppCompatActivity {
                         SharedPrefsHelper.getInstance(SignupActivity.this).saveQbUser(qbUser);
 
                         QBFriendListHelper friendListHelper = new QBFriendListHelper(SignupActivity.this);
+
+                        String fullName = nameEt.getText().toString();
+                        SharedPreferences pref = getApplicationContext().getSharedPreferences("user_details", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString("QB_USER_FULL_NAME_FOR_NOTIFICATIONS", fullName);  // Saving string
+                        editor.apply();
+                        Toast.makeText(SignupActivity.this, "Save To Success" + fullName, Toast.LENGTH_SHORT).show();
                         redirectToMainActivity();
                     }
 

@@ -1,10 +1,16 @@
 package com.example.william.harusem;
 
 import android.app.Application;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.quickblox.auth.session.QBSettings;
+import com.quickblox.chat.QBChatService;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.messages.services.QBPushManager;
+import com.quickblox.users.QBUsers;
+import com.quickblox.users.model.QBUser;
 
 import static com.example.william.harusem.common.Extras.ACCOUNT_KEY;
 import static com.example.william.harusem.common.Extras.APP_ID;
@@ -54,5 +60,4 @@ public class Harusem extends Application {
             }
         });
     }
-
 }
