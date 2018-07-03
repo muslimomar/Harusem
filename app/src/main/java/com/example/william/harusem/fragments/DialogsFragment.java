@@ -125,7 +125,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
 
         googlePlayServicesHelper = new GooglePlayServicesHelper();
 
-//        pushBroadcastReceiver = new PushBroadcastReceiver();
+        pushBroadcastReceiver = new PushBroadcastReceiver();
 
         allDialogsMessagesListener = new AllDialogsMessageListener();
         systemMessagesListener = new SystemMessagesListener();
@@ -133,7 +133,6 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
         dialogsManager = new DialogsManager();
 
         currentUser = ChatHelper.getCurrentUser();
-
 
         if (getActivity() != null && isAdded()) {
 
@@ -336,7 +335,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     public void onPause() {
         super.onPause();
 
-//        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(pushBroadcastReceiver);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(pushBroadcastReceiver);
     }
 
     @Override
@@ -566,16 +565,16 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
         startActivityForResult(intent, code);
     }
 
-//    private class PushBroadcastReceiver extends BroadcastReceiver {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            // Get extra data included in the Intent
-//            String message = intent.getStringExtra(GcmConsts.EXTRA_GCM_MESSAGE);
-//            Log.v(TAG, "Received broadcast " + intent.getAction() + " with data: " + message);
-//            requestBuilder.setSkip(skipRecords = 0);
-//            loadDialogsFromQb(true, true);
-//        }
-//    }
+    public class PushBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            String message = intent.getStringExtra(GcmConsts.EXTRA_GCM_MESSAGE);
+            Log.v(TAG, "Received broadcast " + intent.getAction() + " with data: " + message);
+            requestBuilder.setSkip(skipRecords = 0);
+            loadDialogsFromQb(true, true);
+        }
+    }
 
     private class SystemMessagesListener implements QBSystemMessageListener {
         @Override

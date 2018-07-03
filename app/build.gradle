@@ -101,7 +101,10 @@ dependencies {
     compile 'com.miguelcatalan:materialsearchview:1.4.0'
 
 
+    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
 
+    implementation "com.j256.ormlite:ormlite-android:5.0"
+    implementation "com.j256.ormlite:ormlite-core:5.0"
 }
 
 

@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     style="@style/ListItemTextMessage.Left"
-    custom:widget_id_top="@layout/custom_msg_left_top_widget">
+    custom:widget_id_top="@layout/custom_msg_left_top_widget"
+
+    >
 
 </com.quickblox.ui.kit.chatmessage.adapter.widget.MessageTextViewLeft>

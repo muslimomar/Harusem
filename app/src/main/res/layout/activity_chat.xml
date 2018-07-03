@@ -32,9 +32,9 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="16dp"
-                    android:padding="5dp"
                     android:layout_marginStart="16dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="5dp"
                     android:src="@drawable/ic_arrow_white_24dp"
                     android:visibility="visible" />
 
@@ -65,10 +65,9 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_more_vert_black_24dp"
                     android:padding="5dp"
+                    android:src="@drawable/ic_more_vert_black_24dp"
                     android:visibility="visible" />
-
 
             </RelativeLayout>
 
@@ -81,14 +80,12 @@
             android:background="#f8f8f8"
             app:contentInsetStart="0dp">
 
-
             <RelativeLayout
                 android:id="@+id/small_toolbar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                >
+                android:layout_marginRight="16dp">
 
                 <TextView
                     android:id="@+id/opponent_name_tv"
@@ -96,13 +93,12 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_centerVertical="true"
+                    android:gravity="center_horizontal"
+                    android:singleLine="true"
                     android:text="Jane "
                     android:textColor="@color/colorPrimary"
                     android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:singleLine="true"
-                    android:gravity="center_horizontal"
-                    />
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/status_sign_iv"
@@ -127,7 +123,6 @@
         android:layout_below="@id/toolbar_layout"
         android:background="#bbbbbb"
         android:elevation="2dp" />
-
 
     <LinearLayout
         android:id="@+id/dialog_info"
@@ -188,7 +183,6 @@
             android:padding="10dp"
             android:src="@drawable/ic_attach_file_black_24dp" />
 
-
         <EditText
             android:id="@+id/message_input_et"
             android:layout_width="wrap_content"
@@ -205,21 +199,20 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="5dp"
+            android:padding="8dp"
             android:src="@drawable/ic_send_blue"
-            android:visibility="visible" />
-
-        <ImageButton
-            android:id="@+id/send_img_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_image_black_32dp"
             android:visibility="gone" />
 
-    </LinearLayout>
+        <com.quickblox.ui.kit.chatmessage.adapter.media.recorder.view.QBRecordAudioButton
+            android:id="@+id/record_audio_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            android:src="@android:drawable/ic_btn_speak_now" />
 
+    </LinearLayout>
 
     <com.bhargavms.dotloader.DotLoader
         android:id="@+id/dot_loader"
@@ -231,7 +224,6 @@
         app:color_array="@array/dot_colors"
         app:dot_radius="4dp"
         app:number_of_dots="3" />
-
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -254,13 +246,12 @@
             android:id="@+id/divider_chat_attachments"
             style="@style/HorizontalDividerStyle" />
 
-
         <com.example.william.harusem.widget.AttachmentPreviewAdapterView
             android:id="@+id/adapter_view_attachment_preview"
             style="@style/MatchWidth" />
 
-
     </LinearLayout>
-
+    <include layout="@layout/chat_audio_attach_container"
+        android:visibility="invisible" />
 
 </RelativeLayout>

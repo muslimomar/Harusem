@@ -16,6 +16,7 @@ import java.util.ArrayList;
 public class SystemPermissionHelper {
     private static final int PERMISSIONS_FOR_SAVE_FILE_IMAGE_REQUEST = 1;
     private static final int PERMISSIONS_FOR_TAKE_PHOTO_REQUEST = 2;
+    public static final int PERMISSIONS_FOR_AUDIO_RECORD_REQUEST = 20;
 
     private Activity activity;
     private Fragment fragment;
@@ -34,6 +35,11 @@ public class SystemPermissionHelper {
 
     public boolean isCameraPermissionGranted() {
         return isPermissionGranted(Manifest.permission.CAMERA);
+    }
+
+
+    public void requestAllPermissionForAudioRecord() {
+        checkAndRequestPermissions(PERMISSIONS_FOR_AUDIO_RECORD_REQUEST, Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 
     private boolean isPermissionGranted(String permission) {
@@ -76,4 +82,21 @@ public class SystemPermissionHelper {
             ActivityCompat.requestPermissions(activity, permissions, requestCode);
         }
     }
+
+
+    public boolean isAllAudioRecordPermissionGranted() {
+        return isAllPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO);
+    }
+
+    public boolean isAllPermissionGranted(String... permissions) {
+        for (String permission : permissions) {
+            if (!isPermissionGranted(permission)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
 }

@@ -1,9 +1,10 @@
 package com.example.william.harusem.notifications;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.graphics.Color;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 
 import com.example.william.harusem.R;
@@ -13,11 +14,14 @@ import com.quickblox.messages.services.fcm.QBFcmPushListenerService;
 import java.util.Map;
 
 public class NotificationsListener extends QBFcmPushListenerService {
+    private String userName;
+    private String message;
+    private static final int NOTIFICATION_ID = 4;
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        //TODO FIX NULL POINT EXCEPTION in onReceive
         //Even if you get the message (see logcat) you have NPE!
         //How you get NPE while you already got the message data!
         RemoteMessage.Notification notification = remoteMessage.getNotification();
@@ -25,21 +29,39 @@ public class NotificationsListener extends QBFcmPushListenerService {
 
 
         //Custom params receiver from Push notifications
-        String userName = data.get("user_name");
-        String message = data.get("message");
-
-        displayNotifcation(userName,message);
-
+        userName = data.get("user_name");
+        message = data.get("message");
+        sendNotification();
     }
-    public void displayNotifcation(String title, String contentText){
 
-        // I changed the notifications I know it's not working always but it's not important now I can fix later the important is why we have NPE? in onReceive
-        Notification notification = new NotificationCompat.Builder(this)
-                .setContentTitle(title)
-                .setContentText(contentText)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .build();
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(14, notification);
+    public void sendNotification() {
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        Intent intent = new Intent(this, NotificationsListener.class);
+        PendingIntent pi = PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        String notificationContent = userName + ":" + message;
+        String notificationTitle = "HARUSEM";
+
+        NotificationCompat.Builder note = new NotificationCompat.Builder(this)
+                .setContentTitle(notificationTitle)
+                .setContentText(notificationContent)
+                .setContentIntent(pi)
+                .setSmallIcon(R.drawable.harusem_logo)
+                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
+                .setAutoCancel(true);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+            NotificationChannel channel = new NotificationChannel("channel_01", "Chats",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription("Chats");
+            manager.createNotificationChannel(channel);
+            note.setChannelId("channel_01");
+        }
+
+        manager.notify(NOTIFICATION_ID, note.build());
     }
 }

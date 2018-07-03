@@ -47,4 +47,40 @@
     <string name="error_recreate_session">Login Chat error</string>
     <string name="sender_id">640804138209</string>
 
+    <string name="auth_full_name_field_not_entered">Please enter Full Name</string>
+    <string name="auth_full_name_field_is_too_short">Full Name is too short (minimum is 3 characters)</string>
+    <string name="auth_full_name_field_is_too_long">Full Name is too long (maximum is 200 characters)</string>
+    <string name="profile_full_name_not_entered">Please enter Full Name</string>
+    <string name="dlg_open_app_settings">Settings</string>
+
+    <!-- Dialog -->
+    <string name="dialog_hint_message">Message</string>
+    <string name="dialog_no_chats">Oops…\nYou don\'t have any chats,\n tap \'Create\' button to create new group chat \nor go in private chat \nvia Friends Details page"</string>
+    <string name="dialog_reply">Reply</string>
+    <string name="dialog_user_is_not_friend">User is not your friend</string>
+    <string name="dialog_confirm_sending_attach">Do you really want to send %1$s?</string>
+    <string name="dialog_attach_image">attachment image</string>
+    <string name="dialog_attach_audio">attachment audio</string>
+    <string name="dialog_attach_video">attachment video</string>
+    <string name="dialog_location">location</string>
+    <string name="dialog_now_typing">Typing…</string>
+    <string name="dialog_message_reject_friend">Do you really want to reject contact request from %1$s?</string>
+    <string name="dialog_ctx_menu_reply">Reply</string>
+    <string name="dialog_ctx_menu_prv_message">Private Message</string>
+    <string name="dialog_ctx_menu_video_call">Video Call</string>
+    <string name="dialog_ctx_menu_profile">View Profile</string>
+    <string name="dialog_ctx_menu_remove">Leave and remove chat</string>
+    <string name="dialog_ctx_menu_delete">Delete dialog</string>
+    <string name="dialog_loading_dialogs">Updating dialogs list… Please wait</string>
+    <string name="dialog_record_cancel">slide to cancel</string>
+    <string name="dialog_record_canceled">Audio recording has been canceled</string>
+    <string name="dialog_count_unread">99+</string>
+
+    <string name="dlg_unsupported_file">This file format isn\'t supported</string>
+    <string name="dlg_filename_long">File name must be less than 100 characters</string>
+    <string name="dlg_image_big">File mustn\u0027t be more than 10 MB</string>
+    <string name="dlg_audio_video_big">File mustn\u0027t be more than 100 MB</string>
+    <string name="dlg_fail_upload_attach">Errors occurred during loading file. Please, check your internet connection</string>
+
+
 </resources>
