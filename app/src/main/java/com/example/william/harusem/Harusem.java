@@ -31,6 +31,7 @@ public class Harusem extends Application {
         instance = this;
         initializeFramework();
 
+
     }
 
 

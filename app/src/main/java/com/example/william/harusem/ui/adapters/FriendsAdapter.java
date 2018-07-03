@@ -33,6 +33,7 @@ import com.squareup.picasso.Picasso;
 
 import org.jivesoftware.smack.SmackException;
 
+import java.util.Collection;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -43,9 +44,14 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
     private List<QBUser> usersList;
     private Context context;
     private QBFriendListHelper friendListHelper;
+    private Collection<Integer> qbusers;
 
     public FriendsAdapter(List<QBUser> usersList, Context context) {
         this.usersList = usersList;
+        this.context = context;
+    }
+    public FriendsAdapter(Collection<Integer> qbusers,Context context){
+        this.qbusers = qbusers;
         this.context = context;
     }
 
