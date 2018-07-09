@@ -2,6 +2,7 @@ package com.example.william.harusem.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import com.example.william.harusem.Harusem;
 
 import com.quickblox.core.helper.StringifyArrayList;
 import com.quickblox.users.model.QBUser;
@@ -20,15 +21,15 @@ public class SharedPrefsHelper {
     private Context cx;
     private SharedPreferences sharedPreferences;
 
-    private SharedPrefsHelper(Context context) {
+    private SharedPrefsHelper() {
         instance = this;
-        this.cx = context;
-        sharedPreferences = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+
+        sharedPreferences = Harusem.getInstance().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
     }
 
-    public static synchronized SharedPrefsHelper getInstance(Context context) {
+    public static synchronized SharedPrefsHelper getInstance() {
         if (instance == null) {
-            instance = new SharedPrefsHelper(context.getApplicationContext());
+            instance = new SharedPrefsHelper();
         }
         return instance;
     }

@@ -22,6 +22,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.william.harusem.holder.QBFriendRequestsHolder;
+import com.example.william.harusem.holder.QBUsersHolder;
+import com.example.william.harusem.helper.QBFriendListHelper;
+
 import com.example.william.harusem.R;
 import com.example.william.harusem.holder.QBChatDialogHolder;
 import com.example.william.harusem.ui.activities.AccountActivity;
@@ -221,7 +225,7 @@ public class ProfileFragment extends Fragment {
                     public void onSuccess(Void aVoid, Bundle bundle) {
                         hideProgressBar(logOutPb);
 
-                                SharedPrefsHelper.getInstance(getActivity()).removeQbUser();
+                                SharedPrefsHelper.getInstance().removeQbUser();
         ChatHelper.getInstance().destroy();
         QBChatDialogHolder.getInstance().clear();
 

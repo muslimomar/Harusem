@@ -6,6 +6,8 @@ import com.quickblox.users.model.QBUser;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.util.Log;
+import static com.example.william.harusem.ui.activities.ChatActivity.TAG;
 
 /**
  * Created by william on 5/29/2018.
