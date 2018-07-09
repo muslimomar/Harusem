@@ -23,7 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
+
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -148,17 +148,6 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
 
             registerForContextMenu(dialogsListView);
         }
-
-
-
-
-
-
-
-
-
-
-
 
 
         searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {

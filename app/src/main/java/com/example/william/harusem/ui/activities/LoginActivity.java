@@ -143,7 +143,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Object o, Bundle bundle) {
                         dismissDialog(loadingPb);
-                        SharedPrefsHelper.getInstance(LoginActivity.this).saveQbUser(user);
+                        SharedPrefsHelper.getInstance().saveQbUser(user);
                         QBUsersHolder.getInstance().setSignInQbUser(user);
 
                         QBFriendListHelper friendListHelper = new QBFriendListHelper(LoginActivity.this);

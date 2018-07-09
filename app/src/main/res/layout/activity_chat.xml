@@ -69,6 +69,19 @@
                     android:src="@drawable/ic_more_vert_black_24dp"
                     android:visibility="visible" />
 
+
+                <ImageButton
+                    android:id="@+id/audio_call_img_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/more_iv"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="12dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_action_audio_call"
+                    android:padding="3dp"
+                    android:visibility="visible" />
+
             </RelativeLayout>
 
         </android.support.v7.widget.Toolbar>

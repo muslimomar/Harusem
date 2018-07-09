@@ -1,5 +1,6 @@
 package com.example.william.harusem.ui.activities;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -8,6 +9,9 @@ import android.os.Handler;
 import android.os.PersistableBundle;
 import android.os.SystemClock;
 import android.os.Vibrator;
+import com.example.william.harusem.services.CallService;
+import com.example.william.harusem.util.SharedPrefsHelper;
+import com.example.william.harusem.util.consts.Consts;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -127,6 +131,9 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     private static final int CHRONOMETER_ALARM_SECOND = 27;
     protected List<QBChatMessage> messagesList;
     protected AudioRecorder audioRecorder;
+    private QBUser userForSave;
+    @BindView(R.id.audio_call_img_btn)
+    ImageButton audioCallBtn;
     long TYPING_TIME = 2000;
     @BindView(R.id.attach_iv)
     ImageView attachIv;
@@ -253,10 +260,51 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
         initIsTypingListener();
 
+        //Go to audio call activity
+        audioCallBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                startCall();
+
+                //Intent intent= new Intent(ChatActivity.this,CallActivity.class);
+                //startActivity(intent);
+            }
+        });
+
         QBUser signInQbUser = QBUsersHolder.getInstance().getSignInQbUser();
         Log.i(TAG, "signInQbUser: " + signInQbUser);
 
     }
+
+
+    //not really sure about this one ask ask !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    private void startCall() {
+        QBUser current = SharedPrefsHelper.getInstance().getQbUser();
+        startLoginService(current);
+    }
+
+    // private void loginToChat(final ArrayList<QBUser> qbUser) {
+    //qbUser.setPassword(Consts.DEFAULT_USER_PASSWORD);
+
+    //userForSave = qbUser;
+    //startLoginService(qbUser);
+    //}
+
+    private void startLoginService(QBUser qbUser) {
+
+        Intent tempIntent = new Intent(this, CallService.class);
+        PendingIntent pendingIntent = createPendingResult(Consts.EXTRA_LOGIN_RESULT_CODE, tempIntent, 0);
+        CallService.start(this, qbUser, pendingIntent);
+        /////////////// where do we really change the intent
+        startOpponentsActivity();
+    }
+
+    private void startOpponentsActivity() {
+        OpponentsActivity.start(ChatActivity.this, false);
+        finish();
+    }
+
 
     private void initCustomListeners() {
         recordAudioBtn.setRecordTouchListener(new RecordTouchListener());

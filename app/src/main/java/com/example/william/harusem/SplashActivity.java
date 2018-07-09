@@ -155,7 +155,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private QBUser getUserFromSession() {
-        QBUser user = SharedPrefsHelper.getInstance(this).getQbUser();
+        QBUser user = SharedPrefsHelper.getInstance().getQbUser();
         user.setId(QBSessionManager.getInstance().getSessionParameters().getUserId());
         return user;
     }
