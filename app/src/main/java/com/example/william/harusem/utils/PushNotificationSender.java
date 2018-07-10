@@ -20,7 +20,7 @@ public class PushNotificationSender {
         // Send Push: create QuickBlox Push Notification Event
         QBEvent qbEvent = new QBEvent();
         qbEvent.setNotificationType(QBNotificationType.PUSH);
-        qbEvent.setEnvironment(QBEnvironment.DEVELOPMENT);
+        qbEvent.setEnvironment(QBEnvironment.PRODUCTION);
         // Generic push - will be delivered to all platforms (Android, iOS, WP, Blackberry..)
         qbEvent.setMessage(outMessage);
 
