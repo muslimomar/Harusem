@@ -59,7 +59,6 @@ public class QBFriendRequestsHolder {
         return result;
     }
 
-
     public void removeFriendRequest(int id) {
         qbFriendRequestsArray.remove(id);
     }

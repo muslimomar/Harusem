@@ -18,7 +18,8 @@
             android:layout_gravity="center"
             android:background="@color/colorPrimary"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_circle_iv"
@@ -29,8 +30,7 @@
                 android:focusable="true"
                 android:foreground="@drawable/circle_ripple"
                 app:civ_border_width="0dp"
-
-                />
+                tools:src="@drawable/profile_placeholder" />
 
             <TextView
                 android:id="@+id/name_tv"
@@ -113,7 +113,10 @@
             android:layout_below="@id/top_layout"
             android:layout_margin="@dimen/space_between_options_profile"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="gone"
+            tools:visibility="visible"
+
+            >
 
             <TextView
                 android:id="@+id/account_tv"
@@ -194,6 +197,25 @@
 
                 />
 
+            <TextView
+                android:id="@+id/blocking_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_between_options_profile"
+                android:clickable="true"
+                android:drawableLeft="@drawable/ic_block"
+                android:drawablePadding="@dimen/profile_drawable_padding"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:padding="8dp"
+                android:text="Blocking List"
+                android:textColor="@android:color/tab_indicator_text"
+                android:textSize="15sp"
+                android:textStyle="bold"
+
+                />
+
+
             <RelativeLayout
                 android:id="@+id/log_out_layout"
                 android:layout_width="match_parent"
@@ -231,6 +253,7 @@
 
             </RelativeLayout>
 
+
         </LinearLayout>
 
         <ProgressBar
@@ -239,8 +262,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:visibility="visible" />
+            android:visibility="visible"
+            tools:visibility="gone" />
 
     </RelativeLayout>
+
 
 </ScrollView>
