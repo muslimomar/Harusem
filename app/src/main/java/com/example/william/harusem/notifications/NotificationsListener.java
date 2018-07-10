@@ -38,7 +38,7 @@ public class NotificationsListener extends QBFcmPushListenerService {
     private static int id =0;
     private static int unread_notif = 0;
     final static String GROUP_KEY_GUEST = "group_key_guest";
-    private QBChatDialog dialogId;
+    public static String EXTRA_DIALOG_ID = "dialogId";
     private String userName;
     private String message;
     private String friendRequestNotifierName;
@@ -55,12 +55,12 @@ public class NotificationsListener extends QBFcmPushListenerService {
         userName = data.get("user_name");
         message = data.get("message");
         friendRequestNotifierName = data.get("notifier_name");
-        //dialogId = data.get("dialogID");
-        Intent result = new Intent();
-        result.putExtra(ChatActivity.EXTRA_DIALOG_ID,dialogId);
+        EXTRA_DIALOG_ID = data.get("dialogID");
+        //Intent result = new Intent(this,ChatActivity.class);
+        //result.putExtra("dialogIdForNotification",EXTRA_DIALOG_ID);
 
 
-        Log.e("taggy","tagi" +dialogId);
+        Log.e("taggy","tagi" +EXTRA_DIALOG_ID);
         //Toast.makeText(this, "Message: " + message + "Username: " + userName, Toast.LENGTH_SHORT).show();
         sendNotification();
         //friendRequestNotifications();
@@ -79,7 +79,7 @@ public class NotificationsListener extends QBFcmPushListenerService {
         //Intent resultIntent = new Intent(this, ChatActivity.class);
 
         Intent resultIntent = new Intent(this, ChatActivity.class);
-        resultIntent.putExtra(ChatActivity.EXTRA_DIALOG_ID, dialogId);
+        resultIntent.putExtra("dialogIdForNotification", EXTRA_DIALOG_ID);
         //resultIntent.putExtra(ChatActivity.EXTRA_DIALOG_ID, dialogId);
 
 // Create the TaskStackBuilder and add the intent, which inflates the back stack

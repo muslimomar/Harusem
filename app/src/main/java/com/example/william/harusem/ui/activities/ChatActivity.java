@@ -92,7 +92,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by william on 6/10/2018.
  */
 public class ChatActivity extends AppCompatActivity implements OnImagePickedListener, PopupMenu.OnMenuItemClickListener {
-    public static final String EXTRA_DIALOG_ID = "dialogId";
+    public static  String EXTRA_DIALOG_ID = "dialogId";
     public static final String TAG = ChatActivity.class.getSimpleName();
     private static final int MESSAGE_ATTACHMENT = 1;
     private static final int REQUEST_CODE_ATTACHMENT = 721;
@@ -160,11 +160,16 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         setupActionBar();
 
         Log.v(TAG, "onCreate ChatActivity on Thread ID = " + Thread.currentThread().getId());
+        Bundle extras = getIntent().getExtras();
+        if (extras != null){
+
+            //EXTRA_DIALOG_ID = extras.getString("dialogIdForNotification");
+            Log.v("id_notify","hello"+EXTRA_DIALOG_ID);
+        }
         qbChatDialog = (QBChatDialog) getIntent().getSerializableExtra(EXTRA_DIALOG_ID);
 
         Log.v(TAG, "deserialized dialog = " + qbChatDialog);
         qbChatDialog.initForChat(QBChatService.getInstance());
-
         initViews();
         initMessagesRecyclerView();
 
@@ -565,7 +570,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
                 // custom parameters
                 json.put("user_name", currentt);
                 json.put("message", messageInputEt.getText().toString());
-                json.put("dialogID", qbChatDialog);
+                json.put("dialogID", qbChatDialog.getDialogId());
                 //json.put("thread_id", "8343");
 
             } catch (Exception e) {
