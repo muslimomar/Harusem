@@ -58,8 +58,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".ui.activities.UsersActivity" />
         <activity android:name=".ui.activities.FriendsActivity" />
+
         <activity
             android:name=".ui.activities.ChatActivity"
             android:parentActivityName=".ui.activities.MainActivity"

@@ -3,8 +3,10 @@ package com.example.william.harusem.ui.adapters;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,10 +34,20 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
     private List<QBUser> usersList;
     private Context context;
     private QBFriendListHelper friendListHelper;
+    private @LayoutRes int resource;
+
 
     public UsersAdapter(List<QBUser> usersList, Context context) {
         this.usersList = usersList;
         this.context = context;
+
+    }
+
+    public UsersAdapter(Context context,@LayoutRes int resource ,List<QBUser> usersList){
+        this.resource = resource ;
+        this.context = context;
+        this.usersList = usersList;
+
 
     }
 

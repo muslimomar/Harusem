@@ -3,27 +3,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="com.example.william.harusem.fragments.DialogsFragment">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        app:title="Conversations"
-        app:titleTextColor="@color/white"
-        app:popupTheme="@style/AppTheme"
-        android:theme="@style/ToolbarColoredBackArrow"
-        >
 
-    </android.support.v7.widget.Toolbar>
+    <FrameLayout
+        android:id="@+id/toolbar_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_dialog"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            app:title="Conversations"
+            app:titleTextColor="@color/white" />
+
+
+        <com.miguelcatalan.materialsearchview.MaterialSearchView
+            android:id="@+id/search_view_dialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            app:searchBackIcon="@drawable/ic_action_navigation_arrow_back_inverted"
+            app:searchBackground="@color/colorPrimary"
+            app:searchCloseIcon="@drawable/ic_action_navigation_close_inverted"
+            app:searchSuggestionBackground="@color/colorPrimary"
+            app:searchSuggestionIcon="@drawable/ic_suggestion"
+
+            />
+
+    </FrameLayout>
 
     <RelativeLayout
         android:id="@+id/layout_root"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar"
+        android:layout_below="@id/toolbar_container"
         >
 
         <android.support.v4.widget.SwipeRefreshLayout

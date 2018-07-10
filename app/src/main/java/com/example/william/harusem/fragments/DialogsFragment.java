@@ -23,19 +23,23 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import com.example.william.harusem.util.qb.QbDialogUtils;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.holder.QBChatDialogHolder;
+import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.manager.DialogsManager;
 import com.example.william.harusem.ui.activities.ChatActivity;
 import com.example.william.harusem.ui.activities.MainActivity;
 import com.example.william.harusem.ui.activities.SelectUsersActivity;
 import com.example.william.harusem.ui.adapters.DialogsAdapter;
+import com.example.william.harusem.ui.adapters.UsersAdapter;
 import com.example.william.harusem.ui.dialog.ProgressDialogFragment;
 import com.example.william.harusem.util.ChatHelper;
 import com.example.william.harusem.util.ErrorUtils;
@@ -43,6 +47,7 @@ import com.example.william.harusem.util.consts.GcmConsts;
 import com.example.william.harusem.util.gcm.GooglePlayServicesHelper;
 import com.example.william.harusem.util.qb.QbChatDialogMessageListenerImp;
 import com.example.william.harusem.util.qb.callback.QbEntityCallbackImpl;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBIncomingMessagesManager;
 import com.quickblox.chat.QBSystemMessagesManager;
@@ -54,6 +59,7 @@ import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.core.request.QBRequestGetBuilder;
+import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
 import java.util.ArrayList;
@@ -71,11 +77,16 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     private static final String TAG = DialogFragment.class.getSimpleName();
     private static final int REQUEST_SELECT_PEOPLE = 174;
     private static final int REQUEST_DIALOG_ID_FOR_UPDATE = 165;
+
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
     /////
+    @BindView(R.id.search_view_dialog)
+    MaterialSearchView searchView;
+    @BindView(R.id.toolbar_dialog)
+    Toolbar toolbar;
     @BindView(R.id.list_chat_dialogs)
     ListView dialogsListView;
     @BindView(R.id.fab)
@@ -83,8 +94,6 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     @BindView(R.id.layout_root)
     RelativeLayout layoutRoot;
     Unbinder unbinder;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
     private QBRequestGetBuilder requestBuilder;
     private Menu menu;
     private int skipRecords = 0;
@@ -99,6 +108,8 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     private DialogsManager dialogsManager;
     private QBUser currentUser;
 
+    private static ArrayList<QBChatDialog> qbUserWithoutCurrent = new ArrayList<>();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -110,7 +121,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         }
 
-//        setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
 
         googlePlayServicesHelper = new GooglePlayServicesHelper();
 
@@ -138,6 +149,104 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
             registerForContextMenu(dialogsListView);
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+
+                qbUserWithoutCurrent = new ArrayList<QBChatDialog>(QBChatDialogHolder.getInstance().getDialogs().values());
+                DialogsAdapter adapter = new DialogsAdapter(getContext(),qbUserWithoutCurrent);
+                dialogsListView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+
+                qbUserWithoutCurrent = new ArrayList<QBChatDialog>(QBChatDialogHolder.getInstance().getDialogs().values());
+                DialogsAdapter adapter = new DialogsAdapter(getContext(),qbUserWithoutCurrent);
+                dialogsListView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if(query != null && !query.isEmpty()){
+
+                    qbUserWithoutCurrent = new ArrayList<QBChatDialog>(QBChatDialogHolder.getInstance().getDialogs().values());
+
+                    ArrayList<QBChatDialog> lstFound = new ArrayList<>();
+                    for(QBChatDialog item:qbUserWithoutCurrent){
+                        if(item.getName().toLowerCase().contains(query.toLowerCase()))
+                            lstFound.add(item);
+
+                    }
+
+                    DialogsAdapter adapter = new DialogsAdapter(getContext(),lstFound);
+                    dialogsListView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+
+
+                }
+                else {
+                    // if search text is null
+                    // return default
+                    DialogsAdapter adapter = new DialogsAdapter(getContext(),qbUserWithoutCurrent);
+                    dialogsListView.setAdapter(adapter);
+                }
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(final String newText) {
+
+                if(newText != null && !newText.isEmpty()){
+
+                    qbUserWithoutCurrent = new ArrayList<QBChatDialog>(QBChatDialogHolder.getInstance().getDialogs().values());
+
+                    ArrayList<QBChatDialog> lstFound = new ArrayList<>();
+                    for(QBChatDialog item:qbUserWithoutCurrent){
+                        if(item.getName().toLowerCase().contains(newText.toLowerCase()))
+                            lstFound.add(item);
+
+                    }
+
+                    DialogsAdapter adapter = new DialogsAdapter(getContext(),lstFound);
+                    dialogsListView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+
+
+                }
+                else {
+                    // if search text is null
+                    // return default
+                    DialogsAdapter adapter = new DialogsAdapter(getContext(),qbUserWithoutCurrent);
+                    dialogsListView.setAdapter(adapter);
+                }
+                return true;
+            }
+        });
+
+
+
+
+
         return view;
     }
 
@@ -145,16 +254,18 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        inflater.inflate(R.menu.activity_chat_dialogs, menu);
-        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.dialog_search_menu_item, menu);
+        MenuItem item = menu.findItem(R.id.action_search_dialog);
+        searchView.setMenuItem(item);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_dialog_action_add:
-                Toast.makeText(getActivity(), "Add Users", Toast.LENGTH_SHORT).show();
-                break;
+            case R.id.action_search_dialog:
+//                Toast.makeText(getActivity(), "Add Users", Toast.LENGTH_SHORT).show();
+                searchView.setMenuItem(item);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

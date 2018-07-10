@@ -41,7 +41,7 @@ public class UsersActivity extends AppCompatActivity {
         swipeLayoutRefresh();
     }
 
-    private void retrieveAllUser() {
+    public void retrieveAllUser() {
 
         QBUsers.getUsers(null).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
             @Override
