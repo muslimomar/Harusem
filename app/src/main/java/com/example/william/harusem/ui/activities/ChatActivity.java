@@ -65,6 +65,7 @@ import com.example.william.harusem.util.qb.QbDialogUtils;
 import com.example.william.harusem.util.qb.VerboseQbChatConnectionListener;
 import com.example.william.harusem.widget.AttachmentPreviewAdapterView;
 import com.quickblox.chat.QBChatService;
+import com.quickblox.chat.QBPrivacyListsManager;
 import com.quickblox.chat.QBRoster;
 import com.quickblox.chat.listeners.QBChatDialogTypingListener;
 import com.quickblox.chat.listeners.QBRosterListener;
@@ -73,6 +74,8 @@ import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.chat.model.QBDialogType;
 import com.quickblox.chat.model.QBPresence;
+import com.quickblox.chat.model.QBPrivacyList;
+import com.quickblox.chat.model.QBPrivacyListItem;
 import com.quickblox.content.QBContent;
 import com.quickblox.content.model.QBFile;
 import com.quickblox.core.QBEntityCallback;
@@ -288,6 +291,30 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             sendTxtBtn.setVisibility(View.VISIBLE);
             recordAudioBtn.setVisibility(View.GONE);
         }
+    }
+
+    // user blocking metod
+    boolean isUserBlocked(String userID) {
+        QBPrivacyListsManager privacyListsManager = QBChatService.getInstance().getPrivacyListsManager();
+
+        List<QBPrivacyList> lists = null;
+        try {
+            lists = privacyListsManager.getPrivacyLists();
+            for (QBPrivacyList qbPrivacyList : lists) {
+                if (qbPrivacyList.getName().equals("public")) {
+
+                    for (QBPrivacyListItem item : qbPrivacyList.getItems()) {
+                        if (item.getValueForType().contains(userID)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        } catch (SmackException.NotConnectedException | SmackException.NoResponseException | XMPPException.XMPPErrorException e) {
+            e.printStackTrace();
+        }
+        return false;
+
     }
 
     private void initIsTypingListener() {
@@ -1007,6 +1034,13 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         }
 
         String text = messageInputEt.getText().toString().trim();
+
+        if(isUserBlocked(qbChatDialog.getRecipientId().toString())) {
+            Toast.makeText(this, "You can't send message to this user!", Toast.LENGTH_SHORT).show();
+            messageInputEt.setText("");
+            return;
+        }
+
         if (!TextUtils.isEmpty(text)) {
             sendChatMessage(text, null);
         }
