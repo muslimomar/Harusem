@@ -138,14 +138,14 @@ public class LoginActivity extends AppCompatActivity {
         QBUsers.signIn(user).performAsync(new QBEntityCallback<QBUser>() {
             @Override
             public void onSuccess(QBUser qbUser, Bundle bundle) {
-
                 QBChatService.getInstance().login(user, new QBEntityCallback() {
+
                     @Override
                     public void onSuccess(Object o, Bundle bundle) {
                         dismissDialog(loadingPb);
-                        SharedPrefsHelper.getInstance().saveQbUser(user);
-                        QBUsersHolder.getInstance().setSignInQbUser(user);
-
+                        qbUser.setPassword(user.getPassword());
+                        SharedPrefsHelper.getInstance().saveQbUser(qbUser);
+                        QBUsersHolder.getInstance().setSignInQbUser(qbUser);
                         QBFriendListHelper friendListHelper = new QBFriendListHelper(LoginActivity.this);
                         redirectToMainActivity(email, pass);
                     }

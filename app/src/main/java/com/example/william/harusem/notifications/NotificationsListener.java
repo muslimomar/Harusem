@@ -32,8 +32,6 @@ public class NotificationsListener extends QBFcmPushListenerService {
             startLoginService(qbUser);
         }
 
-
-
         /*
         //Even if you get the message (see logcat) you have NPE!
         //How you get NPE while you already got the message data!
