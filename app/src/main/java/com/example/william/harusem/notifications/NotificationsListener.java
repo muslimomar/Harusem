@@ -12,6 +12,7 @@ import com.example.william.harusem.R;
 import com.example.william.harusem.services.CallService;
 import com.example.william.harusem.util.SharedPrefsHelper;
 import com.google.firebase.messaging.RemoteMessage;
+import com.quickblox.chat.QBChatService;
 import com.quickblox.messages.services.fcm.QBFcmPushListenerService;
 import com.quickblox.users.model.QBUser;
 
@@ -28,6 +29,7 @@ public class NotificationsListener extends QBFcmPushListenerService {
         SharedPrefsHelper sharedPrefsHelper = SharedPrefsHelper.getInstance();
         if (sharedPrefsHelper.hasQbUser()) {
             Log.d(TAG, "App have logined user");
+            Log.d(TAG, "isLoggedIn" + QBChatService.getInstance().isLoggedIn());
             QBUser qbUser = sharedPrefsHelper.getQbUser();
             startLoginService(qbUser);
         }

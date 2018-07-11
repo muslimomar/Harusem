@@ -138,12 +138,12 @@ public class OpponentsActivity extends BaseActivity {
             @Override
             public void onError(QBResponseException responseException) {
                 hideProgressDialog();
-                showErrorSnackbar(R.string.loading_users_error, responseException, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startLoadUsers();
-                    }
-                });
+//                showErrorSnackbar(R.string.loading_users_error, responseException, new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        startLoadUsers();
+//                    }
+//                });
             }
         });
 

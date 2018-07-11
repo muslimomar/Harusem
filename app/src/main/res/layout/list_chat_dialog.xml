@@ -7,7 +7,6 @@
     android:orientation="horizontal"
     android:padding="16dp">
 
-
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -61,7 +60,9 @@
                     android:layout_alignParentLeft="true"
                     android:layout_toLeftOf="@id/text_dialog_unread_count"
                     android:singleLine="true"
-                    tools:text="ich bin Kurde" />
+                    tools:text="ich bin Kurde"
+                    android:visibility="visible"
+                    />
 
 
                 <TextView

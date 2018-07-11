@@ -105,8 +105,7 @@ public class IncomeCallFragment extends Fragment implements Serializable, View.O
     }
 
     public void hideToolBar() {
-        //////in main
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar_call);
         toolbar.setVisibility(View.GONE);
     }
 

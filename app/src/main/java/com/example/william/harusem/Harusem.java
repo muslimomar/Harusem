@@ -20,6 +20,8 @@ import static com.example.william.harusem.common.Extras.ACCOUNT_KEY;
 import static com.example.william.harusem.common.Extras.APP_ID;
 import static com.example.william.harusem.common.Extras.AUTH_KEY;
 import static com.example.william.harusem.common.Extras.AUTH_SECRET;
+import static com.quickblox.core.QBSettingsSaver.API_DOMAIN;
+import static com.quickblox.core.QBSettingsSaver.CHAT_DOMAIN;
 
 /**
  * Created by william on 6/1/2018.
@@ -31,8 +33,6 @@ public class Harusem extends Application {
 
     private static Harusem instance;
     private QBResRequestExecutor qbResRequestExecutor;
-    private static final String QB_CONFIG_DEFAULT_FILE_NAME = "qb_config.json";
-    protected QbConfigs qbConfigs;
 
     public static synchronized Harusem getInstance() {
         return instance;
@@ -44,9 +44,6 @@ public class Harusem extends Application {
         instance = this;
         initializeFramework();
         Fabric.with(this, new Crashlytics());
-        initQbConfigs();
-        initCredentials();
-
 
     }
 
@@ -76,31 +73,5 @@ public class Harusem extends Application {
                 ? qbResRequestExecutor = new QBResRequestExecutor()
                 : qbResRequestExecutor;
     }
-
-    private void initQbConfigs() {
-        Log.e(TAG, "QB CONFIG FILE NAME: " + getQbConfigFileName());
-        qbConfigs = CoreConfigUtils.getCoreConfigsOrNull(getQbConfigFileName());
-    }
-
-
-    public void initCredentials(){
-        if (qbConfigs != null) {
-
-            if (!TextUtils.isEmpty(qbConfigs.getApiDomain()) && !TextUtils.isEmpty(qbConfigs.getChatDomain())) {
-                QBSettings.getInstance().setEndpoints(qbConfigs.getApiDomain(), qbConfigs.getChatDomain(), ServiceZone.PRODUCTION);
-                QBSettings.getInstance().setZone(ServiceZone.PRODUCTION);
-            }
-        }
-    }
-
-    public QbConfigs getQbConfigs(){
-        return qbConfigs;
-    }
-
-    protected String getQbConfigFileName(){
-        return QB_CONFIG_DEFAULT_FILE_NAME;
-    }
-
-
 
 }
