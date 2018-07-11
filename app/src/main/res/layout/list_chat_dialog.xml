@@ -14,14 +14,16 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_alignParentLeft="true"
-        tools:src="@drawable/ic_group_new" />
+        tools:src="@drawable/ic_user_new" />
 
     <RelativeLayout
+        android:id="@+id/left_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="16dp"
         android:layout_toRightOf="@id/dialog_circle_iv"
+        android:layout_toLeftOf="@id/right_layout"
         android:orientation="vertical">
 
         <TextView
@@ -32,8 +34,8 @@
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="16sp"
-            tools:text="Xatar" />
-
+            tools:text="test user"
+            />
 
         <TextView
             android:id="@+id/last_message_tv"
@@ -43,9 +45,21 @@
             android:layout_below="@id/dialog_name"
             android:layout_marginTop="4dp"
             android:singleLine="true"
-            android:visibility="gone"
-            tools:text="ich bin Kurde" />
+            tools:text="ich bin Kurde"
 
+            />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/right_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:gravity="right"
+        >
 
         <TextView
             android:id="@+id/last_message_time_tv"
@@ -54,8 +68,9 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="8dp"
-            android:text="12:00"
-            android:textSize="12sp" />
+            tools:text="12:00"
+            android:textSize="12sp"
+            />
 
         <TextView
             android:id="@+id/text_dialog_unread_count"
@@ -66,8 +81,11 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="4dp"
             android:visibility="visible"
-            tools:text="4" />
+            tools:text="4"
 
-    </RelativeLayout>
+            />
+
+    </LinearLayout>
+
 
 </RelativeLayout>
