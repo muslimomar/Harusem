@@ -122,7 +122,7 @@ public class SignupActivity extends AppCompatActivity {
                         dismissDialog(loadingPb);
                         QBUsersHolder.getInstance().putUser(qbUser);
                         QBUsersHolder.getInstance().setSignInQbUser(qbUser);
-                        SharedPrefsHelper.getInstance(SignupActivity.this).saveQbUser(qbUser);
+                        SharedPrefsHelper.getInstance().saveQbUser(qbUser);
 
                         QBFriendListHelper friendListHelper = new QBFriendListHelper(SignupActivity.this);
 

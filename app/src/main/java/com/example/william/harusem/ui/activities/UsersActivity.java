@@ -34,14 +34,12 @@ public class UsersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users);
         ButterKnife.bind(this);
-
         configRecyclerView();
-
         retrieveAllUser();
         swipeLayoutRefresh();
     }
 
-    private void retrieveAllUser() {
+    public void retrieveAllUser() {
 
         QBUsers.getUsers(null).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
             @Override

@@ -4,7 +4,15 @@
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
 
     <application
         android:name=".Harusem"
@@ -60,7 +68,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activities.UsersActivity"></activity>
-        <activity android:name=".ui.activities.FriendsActivity"></activity>
+        <activity android:name=".ui.activities.FriendsActivity"
+            android:theme="@style/NoActionBar"></activity>
 
         <activity
             android:name=".ui.activities.ChatActivity"
@@ -84,6 +93,10 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
+     	<activity android:name=".ui.activities.CallActivity" android:theme="@style/NoActionBar" />
+             <activity android:name=".ui.activities.OpponentsActivity" />
+
+
 
         <meta-data
             android:name="com.quickblox.messages.TYPE"
@@ -95,12 +108,6 @@
             android:name="com.quickblox.messages.QB_ENVIRONMENT"
             android:value="PRODUCTION" />
 
-
-        <service android:name=".notifications.NotificationsListener">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
 
         <service android:name="com.quickblox.messages.services.fcm.QBFcmPushInstanceIDService">
             <intent-filter>
@@ -114,6 +121,20 @@
             </intent-filter>
         </receiver>
 
+        <service android:name=".services.CallService"/>
+        <activity android:name=".ui.activities.PermissionsActivity"/>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="87963ed2b1ac264f9de64f4b04da2bec7299e91d"
+            />
+
+        <service
+            android:name=".fcm.FcmPushListenerService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
 
 

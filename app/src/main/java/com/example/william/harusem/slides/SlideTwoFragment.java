@@ -25,7 +25,6 @@ public class SlideTwoFragment extends SlideFragment {
         slideOneTitle.setTypeface(custom_font);
         slideOneDescription.setTypeface(custom_font);
 
-
         return rootView;
 
     }

@@ -1,10 +1,24 @@
 apply plugin: 'com.android.application'
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.22.1'
+    }
+}
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
 
 android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.example.william.harusem"
-        minSdkVersion 15
+        minSdkVersion 23
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -17,9 +31,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    ////////////////////////////////////////////////////last added ta da h
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
 }
 
+//the lambda things
+android.compileOptions.sourceCompatibility 1.8
+android.compileOptions.targetCompatibility 1.8
+
+
 dependencies {
+    compile 'com.pubnub:pubnub:3.7.2'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.google.firebase:firebase-messaging:11.0.1'
@@ -96,6 +121,35 @@ dependencies {
     // progress button
     compile 'com.github.dmytrodanylyk.circular-progress-button:library:1.1.3'
     compile "com.google.android.gms:play-services-gcm:10.2.1"
+
+    // Add Library
+    compile 'com.miguelcatalan:materialsearchview:1.4.0'
+
+
+    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
+
+    implementation "com.j256.ormlite:ormlite-android:5.0"
+    implementation "com.j256.ormlite:ormlite-core:5.0"
+    //audio and video call
+
+    implementation 'com.quickblox:quickblox-android-sdk-videochat-webrtc:3.8.1'
+
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
+    implementation 'com.android.support:cardview-v7:26.1.0'
+    implementation 'com.android.support:support-annotations:26.1.1'
+    implementation 'com.navercorp.pulltorefresh:library:3.2.0@aar'
+    //implementation 'com.github.bumptech.glide:glide:4.7.1'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+
+
+
+    //down here !!!!!!!!!!!!!!!!
+    implementation ('com.crashlytics.sdk.android:crashlytics:2.6.7@aar') {
+        transitive = true
+    }
+    //compile 'com.quickblox:quickblox-android-sdk-videochat-webrtc:3.8.1'
+
+
 }
 
 

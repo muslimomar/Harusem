@@ -2,9 +2,17 @@ package com.example.william.harusem.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import com.example.william.harusem.Harusem;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.quickblox.core.helper.StringifyArrayList;
 import com.quickblox.users.model.QBUser;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SharedPrefsHelper {
     private static final String SHARED_PREFS_NAME = "qb";
@@ -13,23 +21,25 @@ public class SharedPrefsHelper {
     private static final String QB_USER_PASSWORD = "qb_user_password";
     private static final String QB_USER_FULL_NAME = "qb_user_full_name";
     private static final String QB_USER_TAGS = "qb_user_tags";
+    private static final String QB_PUSH_DIALOG_ID = "qb_dialog_id";
     private static final String QB_USER_CUSTOM_DATA = "qb_user_custom_data";
     private static final String QB_USER_EMAIL = "qb_user_email";
+    private static final String MESSAGES_ARRAY = "messages_array";
     public static final String  QB_USER_FULL_NAME_FOR_NOTIFICATIONS ="qb_user_full_name_for_notify";
     private static SharedPrefsHelper instance;
 
     private Context cx;
     private SharedPreferences sharedPreferences;
 
-    private SharedPrefsHelper(Context context) {
+    private SharedPrefsHelper() {
         instance = this;
-        this.cx = context;
-        sharedPreferences = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+
+        sharedPreferences = Harusem.getInstance().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
     }
 
-    public static synchronized SharedPrefsHelper getInstance(Context context) {
+    public static synchronized SharedPrefsHelper getInstance() {
         if (instance == null) {
-            instance = new SharedPrefsHelper(context.getApplicationContext());
+            instance = new SharedPrefsHelper();
         }
         return instance;
     }
@@ -39,6 +49,46 @@ public class SharedPrefsHelper {
             getEditor().remove(key).commit();
         }
     }
+
+    public ArrayList<String> getMessagesArray() {
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString(MESSAGES_ARRAY, null);
+        Type type = new TypeToken<ArrayList<String>>() {
+        }.getType();
+        return gson.fromJson(json, type);
+    }
+
+    public void saveMessagesArray(ArrayList<String> list) {
+        SharedPreferences.Editor editor = getEditor();
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
+        editor.putString(MESSAGES_ARRAY, json);
+        editor.commit();     // This line is IMPORTANT !!!
+    }
+
+
+
+    public void savePushDialogId(String dialogId) {
+        Set<String> dialogIdsSet = getPushDialogIds();
+        if (dialogIdsSet == null) {
+            dialogIdsSet = new HashSet<>();
+        }
+        dialogIdsSet.add(dialogId);
+        saveDialogIds(dialogIdsSet);
+
+    }
+
+    public Set<String> getPushDialogIds() {
+        return get(QB_PUSH_DIALOG_ID, null);
+    }
+
+    private void saveDialogIds(Set<String> dialogIds) {
+        SharedPreferences.Editor editor = getEditor();
+        editor.putStringSet(QB_PUSH_DIALOG_ID, dialogIds);
+        editor.commit();
+    }
+
+
 
     public void save(String key, Object value) {
         SharedPreferences.Editor editor = getEditor();
@@ -134,6 +184,15 @@ public class SharedPrefsHelper {
         SharedPreferences.Editor editor = getEditor();
         editor.clear().commit();
     }
+
+    public void clearMessagesArray() {
+        delete(MESSAGES_ARRAY);
+    }
+    public void clearPushDialogIds() {
+        delete(QB_PUSH_DIALOG_ID);
+    }
+
+
 
     private SharedPreferences.Editor getEditor() {
         return sharedPreferences.edit();

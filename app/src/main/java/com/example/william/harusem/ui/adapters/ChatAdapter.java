@@ -19,6 +19,7 @@ import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.chat.model.QBDialogType;
 import com.quickblox.core.helper.CollectionsUtil;
+import com.quickblox.ui.kit.chatmessage.adapter.*;
 import com.quickblox.users.model.QBUser;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
@@ -32,7 +33,6 @@ public class ChatAdapter extends com.quickblox.ui.kit.chatmessage.adapter.QBMess
     private final QBChatDialog chatDialog;
     private PaginationHistoryListener paginationListener;
     private int previousGetCount = 0;
-
 
     public ChatAdapter(Context context, QBChatDialog chatDialog, List<QBChatMessage> chatMessages) {
         super(context, chatMessages);
@@ -66,12 +66,11 @@ public class ChatAdapter extends com.quickblox.ui.kit.chatmessage.adapter.QBMess
         return attachment.getUrl();
     }
 
-
     @Override
     protected void onBindViewMsgLeftHolder(TextMessageHolder holder, QBChatMessage chatMessage, int position) {
         holder.timeTextMessageTextView.setVisibility(View.GONE);
 
-        TextView opponentNameTv = holder.itemView.findViewById(R.id.opponent_name_text_view);
+        TextView opponentNameTv = holder.itemView.findViewById(R.id.opponent_name_tv);
 
         if (chatDialog.getType() == QBDialogType.PRIVATE) {
             opponentNameTv.setVisibility(View.GONE);
@@ -90,8 +89,13 @@ public class ChatAdapter extends com.quickblox.ui.kit.chatmessage.adapter.QBMess
     @Override
     protected void onBindViewAttachLeftHolder(ImageAttachHolder holder, QBChatMessage chatMessage, int position) {
         TextView opponentNameTextView = holder.itemView.findViewById(R.id.opponent_name_attach_view);
-        opponentNameTextView.setTextColor(UiUtils.getRandomTextColorById(chatMessage.getSenderId()));
-        opponentNameTextView.setText(getSenderName(chatMessage));
+        if (chatDialog.getType() == QBDialogType.PRIVATE) {
+            opponentNameTextView.setVisibility(View.GONE);
+        } else {
+            opponentNameTextView.setVisibility(View.VISIBLE);
+            opponentNameTextView.setTextColor(UiUtils.getRandomTextColorById(chatMessage.getSenderId()));
+            opponentNameTextView.setText(getSenderName(chatMessage));
+        }
 
         super.onBindViewAttachLeftHolder(holder, chatMessage, position);
     }
@@ -154,10 +158,20 @@ public class ChatAdapter extends com.quickblox.ui.kit.chatmessage.adapter.QBMess
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) dateTextView.getLayoutParams();
         if (position == 0) {
             lp.topMargin = (int) context.getResources().getDimension(R.dimen.chat_date_header_top_margin);
-
         } else {
             lp.topMargin = 0;
         }
         dateTextView.setLayoutParams(lp);
+    }
+
+    @Override
+    protected void onBindViewAttachLeftAudioHolder(AudioAttachHolder holder, QBChatMessage chatMessage, int position) {
+        TextView opponentNameTv = holder.itemView.findViewById(R.id.opponent_name_attach_view);
+
+        if (chatDialog.getType() == QBDialogType.PRIVATE) {
+            opponentNameTv.setVisibility(View.GONE);
+        }
+
+        super.onBindViewAttachLeftAudioHolder(holder, chatMessage, position);
     }
 }

@@ -15,8 +15,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.william.harusem.R;
-import com.example.william.harusem.ui.activities.ChatActivity;
 import com.example.william.harusem.helper.QBFriendListHelper;
+import com.example.william.harusem.ui.activities.ChatActivity;
 import com.example.william.harusem.util.Utils;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBRestChatService;
@@ -33,6 +33,7 @@ import com.squareup.picasso.Picasso;
 
 import org.jivesoftware.smack.SmackException;
 
+import java.util.Collection;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -43,9 +44,14 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
     private List<QBUser> usersList;
     private Context context;
     private QBFriendListHelper friendListHelper;
+    private Collection<Integer> qbusers;
 
     public FriendsAdapter(List<QBUser> usersList, Context context) {
         this.usersList = usersList;
+        this.context = context;
+    }
+    public FriendsAdapter(Collection<Integer> qbusers,Context context){
+        this.qbusers = qbusers;
         this.context = context;
     }
 
@@ -77,7 +83,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
 
                     @Override
                     public void onError(QBResponseException e) {
-    showSnackBar(view,e.getMessage());
+                        showSnackBar(view, e.getMessage());
                     }
                 });
 
@@ -107,11 +113,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
 
                 @Override
                 public void onError(QBResponseException e) {
-                    Log.e("FriendsAdapter", "onError: ",e );
+                    Log.e("FriendsAdapter", "onError: ", e);
                     holder.userThumbIv.setImageResource(R.drawable.placeholder_user);
                 }
             });
-        }else{
+        } else {
             holder.userThumbIv.setImageResource(R.drawable.placeholder_user);
         }
 
@@ -144,13 +150,13 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
                 Intent intent = new Intent(context, ChatActivity.class);
                 intent.putExtra(EXTRA_DIALOG_ID, qbChatDialog);
                 context.startActivity(intent);
-                ( (Activity) context).finish();
+                ((Activity) context).finish();
             }
 
             @Override
             public void onError(QBResponseException e) {
                 progressDialog.dismiss();
-                Utils.buildAlertDialog("Error", e.getMessage(),true, context);
+                Utils.buildAlertDialog("Error", e.getMessage(), true, context);
             }
         });
     }
