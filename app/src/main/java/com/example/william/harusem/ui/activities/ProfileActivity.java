@@ -14,7 +14,6 @@ import com.example.william.harusem.R;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBPrivacyListsManager;
 import com.quickblox.chat.listeners.QBPrivacyListListener;
-import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBPrivacyList;
 import com.quickblox.chat.model.QBPrivacyListItem;
 
@@ -24,15 +23,23 @@ import org.jivesoftware.smack.XMPPException;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    private static final String TAG = ProfileActivity.class.getSimpleName();
+
+    @BindView(R.id.friend_name_friend_detail)
     TextView nameTV;
+
     QBPrivacyListsManager privacyListsManager;
     QBPrivacyListListener privacyListListener;
-    QBChatDialog qbChatDialog;
+
     String userID;
+    String friendUserName;
+    private Menu menu;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,18 +47,71 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         ButterKnife.bind(this);
 
-        nameTV = (TextView) findViewById(R.id.friend_name_friend_detail);
+        privacyListsManager = QBChatService.getInstance().getPrivacyListsManager();
+
         Intent intent = getIntent();
-        String friendUserName = intent.getStringExtra("name");
-        userID = intent.getStringExtra("user_id");
-        Toast.makeText(this, "bu bir ID: " + userID, Toast.LENGTH_SHORT).show();
+        friendUserName = intent.getStringExtra("name");
         nameTV.setText(friendUserName);
+
+        //UserId Setting for intent
+        userID = String.valueOf(intent.getStringExtra("user_id"));
+
+        Log.v("emine", "eee" + userID);
+
+        initPrivacyListListener();
+
+    }
+
+    private void checkBlockingStatus() {
+
+        MenuItem menuItem = menu.findItem(R.id.friend_blocking_icon);
+        if (isUserBlocked(userID)) {
+            menuItem.setTitle("UnBlock");
+        } else {
+            menuItem.setTitle("Block");
+        }
+        invalidateOptionsMenu();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (privacyListListener != null) {
+            privacyListsManager.removePrivacyListListener(privacyListListener);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (privacyListListener != null) {
+            privacyListsManager.addPrivacyListListener(privacyListListener);
+        }
+    }
+
+    private void initPrivacyListListener() {
+        privacyListListener = new QBPrivacyListListener() {
+            @Override
+            public void setPrivacyList(String s, List<QBPrivacyListItem> list) {
+                Log.i(TAG, "userblocking setPrivacyList: ");
+
+            }
+
+            @Override
+            public void updatedPrivacyList(String s) {
+                Log.i(TAG, "userblocking updatedPrivacyList: ");
+            }
+        };
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.friend_blocking_menu, menu);
+        this.menu = menu;
+
+        checkBlockingStatus();
+
         return true;
     }
 
@@ -60,34 +120,146 @@ public class ProfileActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.friend_blocking_icon:
-                blockUser();
+
+                if (isUserBlocked(userID)) {
+                    unblockUser();
+                    item.setTitle("UnBlock");
+                } else {
+                    blockUser();
+                    item.setTitle("Block");
+                }
                 break;
         }
         return true;
     }
 
-    private void blockUser() {
+    private void unblockUser() {
 
-        retrievePrivacyList(); //ilk önce gizlilik için listeyi sıralıyoruz
-
-        QBPrivacyList list = new QBPrivacyList();
-        list.setName("public");
+        QBPrivacyList publicPrivacyList = getPublicPrivacyList();
 
         ArrayList<QBPrivacyListItem> items = new ArrayList<QBPrivacyListItem>();
 
-        QBPrivacyListItem item1 = new QBPrivacyListItem();
+        items.addAll(publicPrivacyList.getItems());
 
-//        Log.e(TAG, "issallow "+item1.isAllow() );
-        item1.setAllow(false);
-        item1.setType(QBPrivacyListItem.Type.USER_ID);
-        item1.setValueForType(userID);
-        item1.setMutualBlock(true);
+        for (QBPrivacyListItem item : publicPrivacyList.getItems()) {
+            if (item.getValueForType().contains(userID)) {
+                items.remove(item);
+            }
+        }
 
-        items.add(item1);
+        publicPrivacyList.setItems(items);
 
-        list.setItems(items);
-        Log.e("list1", "privacyCreate:l1 " + list);
+        updatePrivacyList(publicPrivacyList, items.size());
 
+        checkBlockingStatus();
+
+        Toast.makeText(this, friendUserName + "  You have unblocked your user", Toast.LENGTH_SHORT).show();
+
+    }
+
+    private void blockUser() {
+
+        QBPrivacyList publicPrivacyList = getPublicPrivacyList();
+
+        if (publicPrivacyList == null) {
+            QBPrivacyList list = new QBPrivacyList();
+            list.setName("public");
+
+            ArrayList<QBPrivacyListItem> items = new ArrayList<QBPrivacyListItem>();
+
+            QBPrivacyListItem item1 = new QBPrivacyListItem();
+
+            item1.setAllow(false);
+            item1.setType(QBPrivacyListItem.Type.USER_ID);
+            item1.setValueForType(userID);
+            item1.setMutualBlock(true);
+
+            items.add(item1);
+
+            list.setItems(items);
+            list.setDefaultList(true);
+
+            createPublicPrivacyList(list);
+
+            Toast.makeText(this, friendUserName + "  you have blocked the user", Toast.LENGTH_SHORT).show();
+
+        } else {
+            ArrayList<QBPrivacyListItem> items = new ArrayList<QBPrivacyListItem>();
+
+            QBPrivacyListItem item1 = new QBPrivacyListItem();
+
+            item1.setAllow(false);
+            item1.setType(QBPrivacyListItem.Type.USER_ID);
+            item1.setValueForType(userID);
+            item1.setMutualBlock(true);
+
+            items.addAll(publicPrivacyList.getItems());
+            items.add(item1);
+
+            publicPrivacyList.setItems(items);
+
+            updatePrivacyList(publicPrivacyList, items.size());
+
+        }
+
+        checkBlockingStatus();
+    }
+
+    private void updatePrivacyList(QBPrivacyList publicPrivacyList, int itemsSize) {
+
+        try {
+            privacyListsManager.declinePrivacyList();
+        } catch (SmackException.NotConnectedException e) {
+            Log.e(TAG, "blockUser: ", e);
+            e.printStackTrace();
+        } catch (XMPPException.XMPPErrorException e) {
+            Log.e(TAG, "blockUser: ", e);
+            e.printStackTrace();
+        } catch (SmackException.NoResponseException e) {
+            Log.e(TAG, "blockUser: ", e);
+            e.printStackTrace();
+        }
+
+        if (itemsSize > 0) {
+
+            try {
+                privacyListsManager.createPrivacyList(publicPrivacyList);
+            } catch (SmackException.NotConnectedException e) {
+                e.printStackTrace();
+            } catch (XMPPException.XMPPErrorException e) {
+                e.printStackTrace();
+            } catch (SmackException.NoResponseException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                privacyListsManager.applyPrivacyList(publicPrivacyList);
+            } catch (SmackException.NotConnectedException e) {
+                Log.e(TAG, "blockUser: ", e);
+                e.printStackTrace();
+            } catch (XMPPException.XMPPErrorException e) {
+                Log.e(TAG, "blockUser: ", e);
+                e.printStackTrace();
+            } catch (SmackException.NoResponseException e) {
+                Log.e(TAG, "blockUser: ", e);
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                privacyListsManager.deletePrivacyList("public");
+            } catch (SmackException.NotConnectedException e) {
+                e.printStackTrace();
+            } catch (XMPPException.XMPPErrorException e) {
+                e.printStackTrace();
+            } catch (SmackException.NoResponseException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+    private void createPublicPrivacyList(QBPrivacyList list) {
         try {
             privacyListsManager.createPrivacyList(list);
         } catch (SmackException.NotConnectedException e) {
@@ -97,22 +269,15 @@ public class ProfileActivity extends AppCompatActivity {
         } catch (SmackException.NoResponseException e) {
             e.printStackTrace();
         }
+    }
 
-// set listener
-        QBPrivacyListListener privacyListListener = new QBPrivacyListListener() {
-            @Override
-            public void setPrivacyList(String userID, List<QBPrivacyListItem> listItem) {
 
-            }
+    private QBPrivacyList getPublicPrivacyList() {
 
-            @Override
-            public void updatedPrivacyList(String listName) {
-
-            }
-        };
+        QBPrivacyList publicList = null;
 
         try {
-            privacyListsManager.applyPrivacyList("public");
+            publicList = privacyListsManager.getPrivacyList("public");
         } catch (SmackException.NotConnectedException e) {
             e.printStackTrace();
         } catch (XMPPException.XMPPErrorException e) {
@@ -120,24 +285,101 @@ public class ProfileActivity extends AppCompatActivity {
         } catch (SmackException.NoResponseException e) {
             e.printStackTrace();
         }
+
+        return publicList;
     }
+    //private void sendPushNotification() {
+//        StringifyArrayList<Integer> userIds = new StringifyArrayList<Integer>();
+//        userIds.add(Integer.valueOf(loginUserId));
+//        userIds.add(Integer.valueOf(userID));
+//
+//        QBEvent event = new QBEvent();
+//        event.setUserIds(userIds);
+//        event.setEnvironment(QBEnvironment.DEVELOPMENT);
+//        event.setNotificationType(QBNotificationType.PUSH);
+//        event.setPushType(QBPushType.GCM);
+//        HashMap<String, String> data = new HashMap<String, String>();
+//        data.put("data.message", "Hello");
+//        data.put("data.type", "welcome message");
+//        event.setMessage(String.valueOf(data));
+//
+//        QBPushNotifications.createEvent(event).performAsync(new QBEntityCallback<QBEvent>() {
+//            @Override
+//            public void onSuccess(QBEvent qbEvent, Bundle bundle) {
+//                Toast.makeText(ProfileActivity.this, "You can not send message", Toast.LENGTH_SHORT);
+//                //sent
+//            }
+//
+//            @Override
+//            public void onError(QBResponseException e) {
+//
+//            }
+//        });
+//    }
+//
 
-    private void retrievePrivacyList() {
+    boolean isUserBlocked(String userID) {
 
-        privacyListsManager = QBChatService.getInstance().getPrivacyListsManager();
-        privacyListsManager.addPrivacyListListener(privacyListListener);
-
-// gizlilik listelerinin adlarını al
-        List<QBPrivacyList> lists = null;
+        QBPrivacyList list = null;
         try {
-            lists = privacyListsManager.getPrivacyLists();
-        } catch (SmackException.NotConnectedException e) {
-            e.printStackTrace();
-        } catch (XMPPException.XMPPErrorException e) {
-            e.printStackTrace();
-        } catch (SmackException.NoResponseException e) {
+            list = privacyListsManager.getPrivacyList("public");
+
+            for (QBPrivacyListItem item : list.getItems()) {
+                if (item.getValueForType().contains(userID)) {
+                    return true;
+                }
+            }
+        } catch (SmackException.NotConnectedException | SmackException.NoResponseException | XMPPException.XMPPErrorException e) {
             e.printStackTrace();
         }
+        return false;
+
     }
+
+//    private static class blockTask extends AsyncTask<Void, Void, Void> {
+//        ProgressDialog progressDialog;
+//        int actionType;
+//        private WeakReference<ProfileActivity> profileActivity;
+//
+//        public blockTask(int actionType, ProfileActivity profileActivity) {
+//            this.actionType = actionType;
+//            this.profileActivity = new WeakReference<>(profileActivity);
+//
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+//            if(profileActivity.get() !=null) {
+//                progressDialog = Utils.buildProgressDialog(profileActivity.get(), "", "Please Wait...", false);
+//                    progressDialog.show();
+//            }
+//
+//        }
+//
+//
+//        @Override
+//        protected void onPostExecute(Void aVoid) {
+//            if (profileActivity.get() != null) {
+//                if (progressDialog.isShowing()) {
+//                    progressDialog.dismiss();
+//                    progressDialog = null;
+//                }
+//            }
+//
+//        }
+//
+//        @Override
+//        protected Void doInBackground(Void... voids) {
+//
+//            if (actionType == BLOCK_USER) {
+//                profileActivity.get().blockUser();
+//
+//            } else if (actionType == UNBLOCK_USER) {
+//                profileActivity.get().unblockUser();
+//            }
+//
+//            return null;
+//        }
+//    }
 
 }

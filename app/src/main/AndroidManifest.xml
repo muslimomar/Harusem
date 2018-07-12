@@ -31,14 +31,12 @@
         <activity
             android:name=".ui.activities.MessageActivity"
             android:parentActivityName=".ui.activities.MainActivity"
-            android:theme="@style/NoActionBar"
-
-            >
+            android:theme="@style/NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainActivity" />
         </activity>
-        <activity android:name=".ui.activities.LoginActivity"></activity>
+        <activity android:name=".ui.activities.LoginActivity" />
         <activity android:name=".ui.activities.SignupActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
@@ -67,9 +65,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activities.UsersActivity"></activity>
-        <activity android:name=".ui.activities.FriendsActivity"
-            android:theme="@style/NoActionBar"></activity>
+
+        <activity android:name=".ui.activities.UsersActivity" />
+        <activity android:name=".ui.activities.FriendsActivity" />
 
         <activity
             android:name=".ui.activities.ChatActivity"
@@ -79,7 +77,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainActivity" />
         </activity>
-        <activity android:name=".ui.activities.AttachmentImageActivity"></activity>
+        <activity android:name=".ui.activities.AttachmentImageActivity" />
         <activity android:name=".ui.activities.ChatInfoActivity" />
         <activity android:name=".ui.activities.SelectUsersActivity" />
 
@@ -92,6 +90,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
 
      	<activity android:name=".ui.activities.CallActivity" android:theme="@style/NoActionBar" />
              <activity android:name=".ui.activities.OpponentsActivity" />
@@ -108,24 +107,23 @@
             android:name="com.quickblox.messages.QB_ENVIRONMENT"
             android:value="PRODUCTION" />
 
-
         <service android:name=".notifications.NotificationsListener">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <service android:name="com.quickblox.messages.services.fcm.QBFcmPushInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
-        <receiver android:name=".fragments.DialogsFragment$PushBroadcastReceiver" >
+        <receiver android:name=".fragments.DialogsFragment$PushBroadcastReceiver">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </receiver>
+
 
         <service android:name=".services.CallService"/>
         <activity android:name=".ui.activities.PermissionsActivity"/>
@@ -135,6 +133,9 @@
             android:value="87963ed2b1ac264f9de64f4b04da2bec7299e91d"
             />
 
+
+
+        <activity android:name=".BlockingActivity"></activity>
 
     </application>
 

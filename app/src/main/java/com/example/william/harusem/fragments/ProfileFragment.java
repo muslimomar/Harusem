@@ -1,7 +1,6 @@
 package com.example.william.harusem.fragments;
 
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -26,16 +25,18 @@ import com.example.william.harusem.holder.QBFriendRequestsHolder;
 import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.helper.QBFriendListHelper;
 
+
+import com.example.william.harusem.BlockingActivity;
 import com.example.william.harusem.R;
+import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.holder.QBChatDialogHolder;
+import com.example.william.harusem.holder.QBFriendRequestsHolder;
+import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.ui.activities.AccountActivity;
 import com.example.william.harusem.ui.activities.FriendRequestsActivity;
 import com.example.william.harusem.ui.activities.FriendsActivity;
 import com.example.william.harusem.ui.activities.LoginActivity;
 import com.example.william.harusem.ui.activities.PasswordActivity;
-import com.example.william.harusem.helper.QBFriendListHelper;
-import com.example.william.harusem.holder.QBFriendRequestsHolder;
-import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.util.ChatHelper;
 import com.example.william.harusem.util.SharedPrefsHelper;
 import com.example.william.harusem.util.Utils;
@@ -102,6 +103,8 @@ public class ProfileFragment extends Fragment {
     RelativeLayout logOutLayout;
     @BindView(R.id.profile_loading_pb)
     ProgressBar profileLoadingPb;
+    @BindView(R.id.blocking_tv)
+    TextView blockingTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -224,10 +227,16 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void onSuccess(Void aVoid, Bundle bundle) {
                         hideProgressBar(logOutPb);
-
-                                SharedPrefsHelper.getInstance().removeQbUser();
-        ChatHelper.getInstance().destroy();
-        QBChatDialogHolder.getInstance().clear();
+//
+//<<<<<<< HEAD
+//                                SharedPrefsHelper.getInstance().removeQbUser();
+//        ChatHelper.getInstance().destroy();
+//        QBChatDialogHolder.getInstance().clear();
+//=======
+                        SharedPrefsHelper.getInstance().removeQbUser();
+                        ChatHelper.getInstance().destroy();
+                        QBChatDialogHolder.getInstance().clear();
+//>>>>>>> 6522502644b838f41db09ac11271158097869e83
 
 
                         Log.d(TAG, "onSuccess: logout success!");
@@ -395,6 +404,13 @@ public class ProfileFragment extends Fragment {
         Intent intent = new Intent(getActivity(), FriendRequestsActivity.class);
         getActivity().startActivity(intent);
     }
+
+    @OnClick(R.id.blocking_tv)
+    public void blockingTextView(View view) {
+        Intent intent = new Intent(getActivity(), BlockingActivity.class);
+        getActivity().startActivity(intent);
+    }
+
 
     public void hideLayout() {
         topLayout.setVisibility(View.GONE);

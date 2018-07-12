@@ -203,7 +203,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
 
         public MyViewHolder(View view) {
             super(view);
-            userDisplayName = (TextView) view.findViewById(R.id.user_display_name_tv);
+            userDisplayName = (TextView) view.findViewById(R.id.block_name_tv);
             userThumbIv = view.findViewById(R.id.image_user);
             button = view.findViewById(R.id.unfriend_btn);
         }

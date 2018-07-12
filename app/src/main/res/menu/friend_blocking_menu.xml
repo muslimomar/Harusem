@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/friend_blocking_icon"
-        android:icon="@drawable/ic_blocking"
-        android:title="Blocking"
-        app:showAsAction="ifRoom" />
+        android:title="Block"
+        app:showAsAction="never" />
 </menu>
