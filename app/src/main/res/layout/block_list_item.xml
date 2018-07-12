@@ -34,7 +34,8 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
             android:layout_toRightOf="@+id/block_image_user"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <TextView
                 android:id="@+id/block_name_tv"
@@ -54,21 +55,20 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/unblock_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="31dp"
-            android:background="#d14f4f"
-            android:padding="5dp"
-            android:text="Unblock"
-            android:textAllCaps="false"
-            android:layout_below="@id/message_btn"
-            android:textColor="@color/white"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="8dp"
-            android:visibility="visible" />
+            <Button
+                android:id="@+id/unblock_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="31dp"
+                android:background="#d14f4f"
+                android:padding="5dp"
+                android:text="Unblock"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                android:visibility="visible" />
 
-    </RelativeLayout>
+        </RelativeLayout>
 
 </android.support.v7.widget.CardView>

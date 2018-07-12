@@ -4,6 +4,7 @@ package com.example.william.harusem.ui.activities;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -174,6 +175,7 @@ public class FriendsActivity extends AppCompatActivity {
     private void configRecyclerView() {
         mLayoutManager = new LinearLayoutManager(this);
         friendsRecyclerView.setHasFixedSize(true);
+        friendsRecyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
         friendsRecyclerView.setLayoutManager(mLayoutManager);
     }
 
