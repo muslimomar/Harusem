@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.helper.QBFriendListHelper;
@@ -121,6 +122,13 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
             holder.userThumbIv.setImageResource(R.drawable.placeholder_user);
         }
 
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context, "" + position, Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 

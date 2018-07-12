@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:clipChildren="false"
-    android:clipToPadding="false"
-    android:divider="@android:color/transparent"
-    android:dividerHeight="0.0px"
-    card_view:cardElevation="0dp"
-    card_view:cardPreventCornerOverlap="false">
+    android:foreground="?attr/selectableItemBackgroundBorderless">
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="15dp"
-        android:paddingTop="15dp"
+        android:paddingTop="15dp">
 
-        >
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/image_user"
@@ -34,8 +27,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
             android:layout_toRightOf="@+id/image_user"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/block_name_tv"
@@ -55,36 +47,36 @@
 
         </LinearLayout>
 
-            <Button
-                android:id="@+id/unfriend_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="31dp"
-                android:background="#d14f4f"
-                android:padding="5dp"
-                android:text="Unfriend"
-                android:textAllCaps="false"
-                android:layout_below="@id/message_btn"
-                android:textColor="@color/white"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="8dp"
-                android:visibility="visible" />
+    </RelativeLayout>
 
-            <Button
-                android:id="@+id/message_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="31dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="16dp"
-                android:background="@color/colorPrimary"
-                android:padding="5dp"
-                android:text="Message"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:visibility="visible"
-                />
+    <Button
+        android:id="@+id/message_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="31dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/primary_button_radius"
+        android:padding="5dp"
+        android:text="Message"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:visibility="visible"
+        android:layout_marginTop="15dp"
+        />
+    <Button
+        android:id="@+id/unfriend_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="31dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/message_btn"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/secondary_button_radius"
+        android:padding="5dp"
+        android:text="Unfriend"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:visibility="visible" />
 
 
-        </RelativeLayout>
-
-</android.support.v7.widget.CardView>
+</RelativeLayout>
