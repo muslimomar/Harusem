@@ -278,6 +278,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         QBUser signInQbUser = QBUsersHolder.getInstance().getSignInQbUser();
         Log.i(TAG, "signInQbUser: " + signInQbUser);
 
+
     }
 
 
@@ -332,7 +333,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     }
 
     private void setButtonsVisibility(String s) {
-        if (s.isEmpty()) {
+        if (s.isEmpty() && attachmentPreviewAdapter.getUploadedAttachments().size() == 0) {
             sendTxtBtn.setVisibility(View.GONE);
             recordAudioBtn.setVisibility(View.VISIBLE);
         } else {
@@ -675,10 +676,8 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         QBChatMessage chatMessage = new QBChatMessage();
         if (attachment != null) {
             chatMessage.addAttachment(attachment);
-        } else {
-            chatMessage.setBody(text);
         }
-
+        chatMessage.setBody(text);
         chatMessage.setSaveToHistory(true);
         chatMessage.setDateSent(System.currentTimeMillis() / 1000);
         chatMessage.setMarkable(true);
@@ -1074,7 +1073,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         if (!uploadedAttachments.isEmpty()) {
             if (uploadedAttachments.size() == totalAttachmentsCount) {
                 for (QBAttachment attachment : uploadedAttachments) {
-                    sendChatMessage(null, attachment);
+                    sendChatMessage(getString(R.string.photo_attach), attachment);
                 }
             } else {
                 Toaster.shortToast(R.string.chat_wait);
@@ -1263,7 +1262,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     private void sendMessageWithAttachment(QBFile qbFile, String absolutePath) {
         QBAttachment audioAttachment = getAudioAttachment(qbFile, absolutePath);
 
-        QBChatMessage message = getQBChatMessage("Voice attachment");
+        QBChatMessage message = getQBChatMessage(getString(R.string.voice_attach));
         message.addAttachment(audioAttachment);
 
         sendMessage(message);

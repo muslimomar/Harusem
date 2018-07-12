@@ -139,7 +139,7 @@ public class CallService extends Service {
                 Log.d(TAG, "Ping chat server failed");
             }
         });
-    }
+        }
 
     private void initQBRTCClient() {
         rtcClient = QBRTCClient.getInstance(getApplicationContext());
@@ -147,6 +147,7 @@ public class CallService extends Service {
         chatService.getVideoChatWebRTCSignalingManager().addSignalingManagerListener(new QBVideoChatSignalingManagerListener() {
             @Override
             public void signalingCreated(QBSignaling qbSignaling, boolean createdLocally) {
+                Log.d(TAG, "signalingCreated: " + qbSignaling + " - " + createdLocally);
                 if (!createdLocally) {
                     rtcClient.addSignaling((QBWebRTCSignaling) qbSignaling);
                 }

@@ -165,7 +165,8 @@
     <string name="menu_select_people_done">Done</string>
     <string name="error_leave_chat">Error leaving room</string>
     <string name="reconnect_alert">Reconnecting in %s seconds</string>
-    <string name="chat_attachment">Photo</string>
+    <string name="photo_chat_attachment">Photo</string>
+    <string name="audio_chat_attachment">Audio Attachment</string>
     <string name="dialogs_creation_error">Dialog creation errors</string>
     <string name="create_chat">Creating chat…</string>
     <string name="placeholder_username_you">%s (you)</string>
@@ -252,6 +253,8 @@
     <string name="dlg_image_big">File mustn\u0027t be more than 10 MB</string>
     <string name="dlg_audio_video_big">File mustn\u0027t be more than 100 MB</string>
     <string name="dlg_fail_upload_attach">Errors occurred during loading file. Please, check your internet connection</string>
+    <string name="voice_attach">9099CryptoVoice attachment988</string>
+    <string name="photo_attach">9099CryptoPhoto988</string>
 
 
 </resources>
