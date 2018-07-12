@@ -91,13 +91,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
             }
         });
 
-        holder.messageBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createPrivateChatDialog(user);
 
-            }
-        });
 
         if (user.getFileId() != null) {
             int profilePicId = user.getFileId();
@@ -132,43 +126,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
 
     }
 
-    private void createPrivateChatDialog(final QBUser user) {
-        final ProgressDialog progressDialog = Utils.buildProgressDialog(context, "", "Loading...", false);
-        progressDialog.show();
-
-        QBChatDialog chatDialog = DialogUtils.buildPrivateDialog(user.getId());
-
-        QBRestChatService.createChatDialog(chatDialog).performAsync(new QBEntityCallback<QBChatDialog>() {
-            @Override
-            public void onSuccess(QBChatDialog qbChatDialog, Bundle bundle) {
-                // dismiss dialog
-                QBSystemMessagesManager systemMessagesManager = QBChatService.getInstance().getSystemMessagesManager();
-                QBChatMessage qbChatMessage = new QBChatMessage();
-                qbChatMessage.setRecipientId(user.getId());
-                qbChatMessage.setBody(qbChatDialog.getDialogId());
-
-                try {
-                    systemMessagesManager.sendSystemMessage(qbChatMessage);
-                } catch (SmackException.NotConnectedException e) {
-                    e.printStackTrace();
-                }
-
-                progressDialog.dismiss();
-
-                Intent intent = new Intent(context, ChatActivity.class);
-                intent.putExtra(EXTRA_DIALOG_ID, qbChatDialog);
-                context.startActivity(intent);
-                ((Activity) context).finish();
-            }
-
-            @Override
-            public void onError(QBResponseException e) {
-                progressDialog.dismiss();
-                Utils.buildAlertDialog("Error", e.getMessage(), true, context);
-            }
-        });
-    }
-
     @Override
     public int getItemCount() {
         return usersList.size();
@@ -185,14 +142,12 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
         public TextView userDisplayName;
         public CircleImageView userThumbIv;
         public Button unfriendBtn;
-        public Button messageBtn;
 
         public MyViewHolder(View view) {
             super(view);
             userDisplayName = (TextView) view.findViewById(R.id.block_name_tv);
             userThumbIv = view.findViewById(R.id.image_user);
             unfriendBtn = view.findViewById(R.id.unfriend_btn);
-            messageBtn = view.findViewById(R.id.message_btn);
         }
     }
 }

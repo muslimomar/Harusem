@@ -63,7 +63,6 @@
                 android:padding="5dp"
                 android:text="Unblock"
                 android:textAllCaps="false"
-                android:layout_below="@id/message_btn"
                 android:textColor="@color/white"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="16dp"
