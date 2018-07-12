@@ -75,7 +75,7 @@ public class OpponentsActivity extends BaseActivity {
         startLoadUsers();
 
         if (isRunForCall && webRtcSessionManager.getCurrentSession() != null) {
-           CallActivity.start(OpponentsActivity.this, true);
+            CallActivity.start(OpponentsActivity.this, true);
         }
 
         checker = new PermissionsChecker(getApplicationContext());
@@ -120,10 +120,10 @@ public class OpponentsActivity extends BaseActivity {
     }
 
     private void startLoadUsers() {
-     showProgressDialog(R.string.dlg_loading_opponents);
+        showProgressDialog(R.string.dlg_loading_opponents);
         //////NOT a room will be deleted
-      //String currentRoomName = SharedPrefsHelper.getInstance().get(Consts.PREF_CURREN_ROOM_NAME);
-       // String currentUserName=qbUsersHolder.getUserById()
+        //String currentRoomName = SharedPrefsHelper.getInstance().get(Consts.PREF_CURREN_ROOM_NAME);
+        // String currentUserName=qbUsersHolder.getUserById()
         ////////////////////////////////////////////////I changed it lately
         String currentUserName = SharedPrefsHelper.getInstance().get("QB_USER_FULL_NAME");
         requestExecutor.loadUsersByTag(currentUserName, new QBEntityCallback<ArrayList<QBUser>>() {

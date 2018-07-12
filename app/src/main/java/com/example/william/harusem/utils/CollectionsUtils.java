@@ -14,20 +14,20 @@ public class CollectionsUtils {
     public static String makeStringFromUsersFullNames(ArrayList<QBUser> allUsers) {
         StringifyArrayList<String> usersNames = new StringifyArrayList<>();
 
-            for (QBUser usr : allUsers) {
-                if (usr.getFullName() != null) {
-                    usersNames.add(usr.getFullName());
-                } else if (usr.getId() != null) {
-                    usersNames.add(String.valueOf(usr.getId()));
-                }
+        for (QBUser usr : allUsers) {
+            if (usr.getFullName() != null) {
+                usersNames.add(usr.getFullName());
+            } else if (usr.getId() != null) {
+                usersNames.add(String.valueOf(usr.getId()));
             }
-        return usersNames.getItemsAsString().replace(",",", ");
+        }
+        return usersNames.getItemsAsString().replace(",", ", ");
     }
 
-    public static ArrayList<Integer> getIdsSelectedOpponents(Collection<QBUser> selectedUsers){
+    public static ArrayList<Integer> getIdsSelectedOpponents(Collection<QBUser> selectedUsers) {
         ArrayList<Integer> opponentsIds = new ArrayList<>();
-        if (!selectedUsers.isEmpty()){
-            for (QBUser qbUser : selectedUsers){
+        if (!selectedUsers.isEmpty()) {
+            for (QBUser qbUser : selectedUsers) {
                 opponentsIds.add(qbUser.getId());
             }
         }

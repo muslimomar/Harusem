@@ -66,7 +66,7 @@ public class BlockingActivity extends AppCompatActivity {
     private void fillAdapter() {
         QBPrivacyList publicPrivacyList = getPublicPrivacyList();
 
-        if(publicPrivacyList != null ) {
+        if (publicPrivacyList != null) {
             getBlockedUsers(publicPrivacyList);
         }
 

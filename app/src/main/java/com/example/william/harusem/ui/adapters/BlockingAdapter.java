@@ -1,6 +1,5 @@
 package com.example.william.harusem.ui.adapters;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,11 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.william.harusem.BlockingActivity;
 import com.example.william.harusem.R;
-import com.example.william.harusem.helper.QBFriendListHelper;
 import com.quickblox.chat.QBPrivacyListsManager;
-import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBPrivacyList;
 import com.quickblox.chat.model.QBPrivacyListItem;
 import com.quickblox.content.QBContent;
@@ -43,7 +39,7 @@ public class BlockingAdapter extends RecyclerView.Adapter<BlockingAdapter.MyView
     private List<QBUser> usersList;
     private QBPrivacyListsManager privacyListsManager;
 
-    public BlockingAdapter( List<QBUser> user, QBPrivacyListsManager privacyListsManager) {
+    public BlockingAdapter(List<QBUser> user, QBPrivacyListsManager privacyListsManager) {
         this.usersList = user;
         this.privacyListsManager = privacyListsManager;
     }
@@ -59,20 +55,20 @@ public class BlockingAdapter extends RecyclerView.Adapter<BlockingAdapter.MyView
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
 
-            final QBUser user = usersList.get(position);
+        final QBUser user = usersList.get(position);
 
-            holder.blockUserNameTv.setText(user.getFullName());
-            holder.unBlockUserBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    unBlockUser(user.getId().toString());
-                    usersList.remove(usersList.indexOf(user));
-                    notifyItemRemoved(position);
+        holder.blockUserNameTv.setText(user.getFullName());
+        holder.unBlockUserBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                unBlockUser(user.getId().toString());
+                usersList.remove(usersList.indexOf(user));
+                notifyItemRemoved(position);
 
-                }
-            });
+            }
+        });
 
-            getUserImage(user, holder.userBlockingThumbIv);
+        getUserImage(user, holder.userBlockingThumbIv);
 
     }
 
@@ -176,7 +172,7 @@ public class BlockingAdapter extends RecyclerView.Adapter<BlockingAdapter.MyView
             e.printStackTrace();
         }
 
-        if(itemsSize > 0) {
+        if (itemsSize > 0) {
 
             try {
                 privacyListsManager.createPrivacyList(publicPrivacyList);
@@ -200,7 +196,7 @@ public class BlockingAdapter extends RecyclerView.Adapter<BlockingAdapter.MyView
                 Log.e(TAG, "blockUser: ", e);
                 e.printStackTrace();
             }
-        }else{
+        } else {
             try {
                 privacyListsManager.deletePrivacyList("public");
             } catch (SmackException.NotConnectedException e) {

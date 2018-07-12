@@ -17,8 +17,7 @@
         android:id="@+id/custom_msg_text_time_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="12:00"
-        />
+        tools:text="12:00" />
 
 
 </LinearLayout>

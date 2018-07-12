@@ -9,8 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 
 import com.example.william.harusem.R;
-import com.example.william.harusem.ui.adapters.FriendRequestsAdapter;
 import com.example.william.harusem.holder.QBFriendRequestsHolder;
+import com.example.william.harusem.ui.adapters.FriendRequestsAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,7 +73,6 @@ public class FriendRequestsActivity extends AppCompatActivity {
 
             }
         });
-
 
 
     }

@@ -16,8 +16,7 @@
             android:entryValues="@array/videoResolutionsValues"
             android:key="@string/pref_resolution_key"
             android:summary="%s"
-            android:title="@string/pref_resolution_title"
-            />
+            android:title="@string/pref_resolution_title" />
 
         <com.example.william.harusem.utils.view.SeekBarPreference
             android:defaultValue="@string/pref_startbitratevalue_default"
@@ -91,7 +90,6 @@
             android:defaultValue="@string/pref_hwcodec_default"
             android:key="@string/pref_hwcodec_key"
             android:title="@string/pref_hwcodec_title" />
-
 
 
         <CheckBoxPreference

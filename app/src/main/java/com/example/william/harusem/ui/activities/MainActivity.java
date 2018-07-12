@@ -8,10 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.AdapterView;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
@@ -19,18 +16,10 @@ import com.example.william.harusem.R;
 import com.example.william.harusem.fragments.DialogsFragment;
 import com.example.william.harusem.fragments.ProfileFragment;
 import com.example.william.harusem.fragments.SearchFragment;
-import com.example.william.harusem.holder.QBChatDialogHolder;
-import com.example.william.harusem.ui.adapters.DialogsAdapter;
-import com.example.william.harusem.util.ChatHelper;
 import com.quickblox.chat.model.QBChatDialog;
-import com.quickblox.core.request.QBRequestGetBuilder;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.app.PendingIntent.getActivity;
 
 public class MainActivity extends AppCompatActivity {
 

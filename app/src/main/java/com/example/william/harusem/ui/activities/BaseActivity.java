@@ -9,7 +9,6 @@ import android.view.View;
 
 import com.example.william.harusem.Harusem;
 import com.example.william.harusem.R;
-import com.example.william.harusem.ui.activities.CoreBaseActivity;
 import com.example.william.harusem.util.ErrorUtils;
 import com.example.william.harusem.util.QBResRequestExecutor;
 import com.example.william.harusem.util.SharedPrefsHelper;

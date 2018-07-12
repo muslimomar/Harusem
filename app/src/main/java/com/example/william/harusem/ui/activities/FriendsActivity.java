@@ -14,12 +14,9 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.example.william.harusem.R;
-import com.example.william.harusem.holder.QBUsersHolder;
-import com.example.william.harusem.ui.adapters.FriendsAdapter;
 import com.example.william.harusem.helper.QBFriendListHelper;
-import com.example.william.harusem.ui.adapters.UsersAdapter;
+import com.example.william.harusem.ui.adapters.FriendsAdapter;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
-import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.QBUsers;
@@ -77,7 +74,7 @@ public class FriendsActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(final String newText) {
                 //Do some magic
-                if(newText != null && !newText.isEmpty()){
+                if (newText != null && !newText.isEmpty()) {
 
 
                     progressBar.setVisibility(View.VISIBLE);
@@ -92,18 +89,18 @@ public class FriendsActivity extends AppCompatActivity {
 
 
                             ArrayList<QBUser> lstFound = new ArrayList<>();
-                            for(QBUser item:qbUsers){
-                                if(item.getFullName().toLowerCase().contains(newText.toLowerCase()))
+                            for (QBUser item : qbUsers) {
+                                if (item.getFullName().toLowerCase().contains(newText.toLowerCase()))
                                     lstFound.add(item);
 
                             }
 
 //                          UsersAdapter adapter = new UsersAdapter(getContext(),android.R.layout.simple_list_item_1,lstFound);
-                            FriendsAdapter adapter = new FriendsAdapter(lstFound,FriendsActivity.this);
+                            FriendsAdapter adapter = new FriendsAdapter(lstFound, FriendsActivity.this);
                             friendsRecyclerView.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
 
-                            if(mSwipeRefreshLayout.isRefreshing()) {
+                            if (mSwipeRefreshLayout.isRefreshing()) {
                                 mSwipeRefreshLayout.setRefreshing(false);
                             }
 
@@ -112,14 +109,12 @@ public class FriendsActivity extends AppCompatActivity {
                         @Override
                         public void onError(QBResponseException e) {
                             progressBar.setVisibility(View.GONE);
-                            Log.e(TAG, "onError: ",e );
+                            Log.e(TAG, "onError: ", e);
                         }
                     });
 
 
-                        }
-
-                else {
+                } else {
                     // if search text is null
                     // return default
 //                    FriendsAdapter adapter = new FriendsAdapter(qbFriendListHelper.getAllFriends(), FriendsActivity.this);
@@ -161,7 +156,7 @@ public class FriendsActivity extends AppCompatActivity {
                 adapter = new FriendsAdapter(qbUsers, FriendsActivity.this);
                 friendsRecyclerView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
-                if(mSwipeRefreshLayout.isRefreshing()) {
+                if (mSwipeRefreshLayout.isRefreshing()) {
                     mSwipeRefreshLayout.setRefreshing(false);
                 }
             }
@@ -169,12 +164,11 @@ public class FriendsActivity extends AppCompatActivity {
             @Override
             public void onError(QBResponseException e) {
                 progressBar.setVisibility(View.GONE);
-                Log.e(TAG, "onError: ",e );
+                Log.e(TAG, "onError: ", e);
             }
         });
 
     }
-
 
 
     private void configRecyclerView() {
@@ -202,7 +196,7 @@ public class FriendsActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.friends_search_menu_item,menu);
+        getMenuInflater().inflate(R.menu.friends_search_menu_item, menu);
         MenuItem item = menu.findItem(R.id.action_search_friends);
         searchView.setMenuItem(item);
 

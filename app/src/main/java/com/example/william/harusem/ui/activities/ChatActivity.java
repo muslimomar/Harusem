@@ -37,6 +37,7 @@ import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bhargavms.dotloader.DotLoader;
 import com.example.william.harusem.R;
@@ -97,16 +98,19 @@ import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 import com.squareup.picasso.Picasso;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
+
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.muc.DiscussionHistory;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -117,7 +121,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class ChatActivity extends AppCompatActivity implements OnImagePickedListener, PopupMenu.OnMenuItemClickListener {
     public static final String EXTRA_DIALOG_ID = "dialogId";
-    public static final String EXTRA_DIALOG="dialog";
+    public static final String EXTRA_DIALOG = "dialog";
     public static final String TAG = ChatActivity.class.getSimpleName();
     private static final int MESSAGE_ATTACHMENT = 1;
     private static final int REQUEST_CODE_ATTACHMENT = 721;
@@ -250,7 +254,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
     }
 
-    public void setupChat(){
+    public void setupChat() {
         initChatConnectionListener();
         initMessagesRecyclerView();
         initDialogForChat();
@@ -265,7 +269,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     private void setupEnvironment() {
         initAudioRecorder();
         initCustomListeners();
-        configureActionBar();
+        //configureActionBar();
         hideKeyboard();
         initViews();
         EdtTxtListener();
@@ -326,7 +330,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         qbChatDialog.initForChat(QBChatService.getInstance());
     }
 
-    private void getDialogFromPush ( final String dialogId){
+    private void getDialogFromPush(final String dialogId) {
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -350,7 +354,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         });
 
     }
-
 
 
     //not really sure about this one ask ask !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1135,7 +1138,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
         String text = messageInputEt.getText().toString().trim();
 
-        if(isUserBlocked(qbChatDialog.getRecipientId().toString())) {
+        if (isUserBlocked(qbChatDialog.getRecipientId().toString())) {
             Toast.makeText(this, "You can't send message to this user!", Toast.LENGTH_SHORT).show();
             messageInputEt.setText("");
             return;

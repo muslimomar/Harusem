@@ -74,7 +74,7 @@ public class ChatHelper {
 
     private static QBChatService.ConfigurationBuilder buildChatConfigs() {
         QBChatService.ConfigurationBuilder configurationBuilder = new QBChatService.ConfigurationBuilder();
-         configurationBuilder.setSocketTimeout(0);
+        configurationBuilder.setSocketTimeout(0);
         configurationBuilder.setKeepAlive(true);
 
         return configurationBuilder;
@@ -299,7 +299,7 @@ public class ChatHelper {
     private void getUsersFromDialogs(final ArrayList<QBChatDialog> dialogs,
                                      final QBEntityCallback<ArrayList<QBChatDialog>> callback) {
         List<Integer> userIds = new ArrayList<>();
-            for (QBChatDialog dialog : dialogs) {
+        for (QBChatDialog dialog : dialogs) {
             userIds.addAll(dialog.getOccupants());
             userIds.add(dialog.getLastMessageUserId());
         }

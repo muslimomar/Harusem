@@ -22,15 +22,15 @@ public class GcmPushListenerService extends GcmListenerService {
         Log.v(TAG, "Message: " + message);
 
 /////////////////////////////////////////////////////////////////// I used getBaseContext()
-         SharedPrefsHelper sharedPrefsHelper = SharedPrefsHelper.getInstance();
-          if (sharedPrefsHelper.hasQbUser()) {
+        SharedPrefsHelper sharedPrefsHelper = SharedPrefsHelper.getInstance();
+        if (sharedPrefsHelper.hasQbUser()) {
             Log.d(TAG, "App have logined user");
             QBUser qbUser = sharedPrefsHelper.getQbUser();
             startLoginService(qbUser);
         }
     }
 
-    private void startLoginService(QBUser qbUser){
+    private void startLoginService(QBUser qbUser) {
         CallService.start(this, qbUser);
     }
 }

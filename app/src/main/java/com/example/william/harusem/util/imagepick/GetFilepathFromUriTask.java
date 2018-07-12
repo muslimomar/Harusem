@@ -9,12 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
 
-//import com.quickblox.sample.core.CoreApp;
-//import com.quickblox.sample.core.async.BaseAsyncTask;
-//import com.quickblox.sample.core.ui.dialog.ProgressDialogFragment;
-//import com.quickblox.sample.core.utils.ImageUtils;
-//import com.quickblox.sample.core.utils.constant.SchemeType;
-
 import com.example.william.harusem.Harusem;
 import com.example.william.harusem.ui.dialog.ProgressDialogFragment;
 import com.example.william.harusem.util.ImageUtils;
@@ -24,6 +18,12 @@ import com.example.william.harusem.util.consts.SchemeType;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+
+//import com.quickblox.sample.core.CoreApp;
+//import com.quickblox.sample.core.async.BaseAsyncTask;
+//import com.quickblox.sample.core.ui.dialog.ProgressDialogFragment;
+//import com.quickblox.sample.core.utils.ImageUtils;
+//import com.quickblox.sample.core.utils.constant.SchemeType;
 
 public class GetFilepathFromUriTask extends BaseAsyncTask<Intent, Void, File> {
 

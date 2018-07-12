@@ -6,7 +6,6 @@
     <dimen name="space_between_options_profile">24dp</dimen>
 
 
-
     <!--Style Widget Dimens-->
 
     <dimen name="unread_counter_text_size">13sp</dimen>

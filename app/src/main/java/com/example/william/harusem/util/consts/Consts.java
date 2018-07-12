@@ -1,8 +1,8 @@
 package com.example.william.harusem.util.consts;
 
-import com.example.william.harusem.R;
 import android.Manifest;
 
+import com.example.william.harusem.R;
 import com.example.william.harusem.util.ResourceUtils;
 
 public interface Consts {
@@ -57,8 +57,6 @@ public interface Consts {
         INCOME_CALL_FOR_ACCEPTION,
         OUTCOME_CALL_MADE
     }
-
-
 
 
     public static final long MAX_IMAGE_SIZE = 10 * 1024 * 1024; //10Mb

@@ -145,7 +145,7 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
         connectionView = (LinearLayout) View.inflate(this, R.layout.connection_popup, null);
         checker = new PermissionsChecker(getApplicationContext());
 
-        if (!isInCommingCall){
+        if (!isInCommingCall) {
             startAudioManager();
             ringtonePlayer.play(true);
         }
@@ -163,7 +163,7 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
         });
     }
 
-    private void startScreenSharing(final Intent data){
+    private void startScreenSharing(final Intent data) {
         ScreenShareFragment screenShareFragment = ScreenShareFragment.newIntstance();
         ////////////////////////////fragment_container
         FragmentExecuotr.addFragmentWithBackStack(getSupportFragmentManager(), R.id.fragment_container, screenShareFragment, ScreenShareFragment.TAG);
@@ -179,14 +179,13 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode,final Intent data) {
-        Log.i(TAG, "onActivityResult requestCode="+requestCode +", resultCode= " + resultCode);
+    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
+        Log.i(TAG, "onActivityResult requestCode=" + requestCode + ", resultCode= " + resultCode);
         if (requestCode == QBRTCScreenCapturer.REQUEST_MEDIA_PROJECTION) {
             if (resultCode == Activity.RESULT_OK) {
                 startScreenSharing(data);
                 Log.i(TAG, "Starting screen capture");
-            }
-            else {
+            } else {
 
             }
         }
@@ -735,7 +734,7 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
 
     @Override
     public void onSwitchCamera(CameraVideoCapturer.CameraSwitchHandler cameraSwitchHandler) {
-        ((QBRTCCameraVideoCapturer)(currentSession.getMediaStreamManager().getVideoCapturer()))
+        ((QBRTCCameraVideoCapturer) (currentSession.getMediaStreamManager().getVideoCapturer()))
                 .switchCamera(cameraSwitchHandler);
     }
 
@@ -747,12 +746,12 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
     @Override
     public void onSwitchAudio() {
         Log.v(TAG, "onSwitchAudio(), SelectedAudioDevice() = " + audioManager.getSelectedAudioDevice());
-        if (audioManager.getSelectedAudioDevice() != AppRTCAudioManager.AudioDevice.SPEAKER_PHONE){
+        if (audioManager.getSelectedAudioDevice() != AppRTCAudioManager.AudioDevice.SPEAKER_PHONE) {
             audioManager.selectAudioDevice(AppRTCAudioManager.AudioDevice.SPEAKER_PHONE);
         } else {
-            if (audioManager.getAudioDevices().contains(AppRTCAudioManager.AudioDevice.BLUETOOTH)){
+            if (audioManager.getAudioDevices().contains(AppRTCAudioManager.AudioDevice.BLUETOOTH)) {
                 audioManager.selectAudioDevice(AppRTCAudioManager.AudioDevice.BLUETOOTH);
-            } else if (audioManager.getAudioDevices().contains(AppRTCAudioManager.AudioDevice.WIRED_HEADSET)){
+            } else if (audioManager.getAudioDevices().contains(AppRTCAudioManager.AudioDevice.WIRED_HEADSET)) {
                 audioManager.selectAudioDevice(AppRTCAudioManager.AudioDevice.WIRED_HEADSET);
             } else {
                 audioManager.selectAudioDevice(AppRTCAudioManager.AudioDevice.EARPIECE);

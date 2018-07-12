@@ -32,7 +32,7 @@ public class ScreenShareFragment extends BaseToolBarFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =  super.onCreateView(inflater, container, savedInstanceState);
+        View view = super.onCreateView(inflater, container, savedInstanceState);
 
         MyAdapter adapter = new MyAdapter(getChildFragmentManager());
 
@@ -75,7 +75,7 @@ public class ScreenShareFragment extends BaseToolBarFragment {
         onSharingEvents = null;
     }
 
-    public interface OnSharingEvents{
+    public interface OnSharingEvents {
         void onStopPreview();
     }
 

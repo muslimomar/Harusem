@@ -22,8 +22,8 @@ public class WebRtcSessionManager extends QBRTCClientSessionCallbacksImpl {
         this.context = context;
     }
 
-    public static WebRtcSessionManager getInstance(Context context){
-        if (instance == null){
+    public static WebRtcSessionManager getInstance(Context context) {
+        if (instance == null) {
             instance = new WebRtcSessionManager(context);
         }
 
@@ -42,7 +42,7 @@ public class WebRtcSessionManager extends QBRTCClientSessionCallbacksImpl {
     public void onReceiveNewSession(QBRTCSession session) {
         Log.d(TAG, "onReceiveNewSession to WebRtcSessionManager");
 
-        if (currentSession == null){
+        if (currentSession == null) {
             setCurrentSession(session);
             OpponentsActivity.start(context, true);
         }
@@ -52,7 +52,7 @@ public class WebRtcSessionManager extends QBRTCClientSessionCallbacksImpl {
     public void onSessionClosed(QBRTCSession session) {
         Log.d(TAG, "onSessionClosed WebRtcSessionManager");
 
-        if (session.equals(getCurrentSession())){
+        if (session.equals(getCurrentSession())) {
             setCurrentSession(null);
         }
     }

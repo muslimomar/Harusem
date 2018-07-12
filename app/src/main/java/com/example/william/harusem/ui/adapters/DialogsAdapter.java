@@ -3,7 +3,6 @@ package com.example.william.harusem.ui.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -28,7 +27,6 @@ import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.model.QBUser;
 import com.squareup.picasso.Picasso;
 
-import java.io.Serializable;
 import java.util.List;
 
 import static com.example.william.harusem.ui.activities.MessageActivity.TAG;
@@ -128,7 +126,7 @@ public class DialogsAdapter extends BaseSelectableListAdapter<QBChatDialog> {
 
                     Intent intent = new Intent(context, ProfileActivity.class);
                     Integer recipientId = dialog.getRecipientId();
-                    intent.putExtra("user_id","" +recipientId);
+                    intent.putExtra("user_id", "" + recipientId);
                     intent.putExtra("name", QbDialogUtils.getDialogName(dialog));
                     context.startActivity(intent);
 

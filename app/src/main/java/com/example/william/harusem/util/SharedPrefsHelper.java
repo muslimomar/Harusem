@@ -2,8 +2,8 @@ package com.example.william.harusem.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import com.example.william.harusem.Harusem;
 
+import com.example.william.harusem.Harusem;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.quickblox.core.helper.StringifyArrayList;
@@ -25,7 +25,7 @@ public class SharedPrefsHelper {
     private static final String QB_USER_CUSTOM_DATA = "qb_user_custom_data";
     private static final String QB_USER_EMAIL = "qb_user_email";
     private static final String MESSAGES_ARRAY = "messages_array";
-    public static final String  QB_USER_FULL_NAME_FOR_NOTIFICATIONS ="qb_user_full_name_for_notify";
+    public static final String QB_USER_FULL_NAME_FOR_NOTIFICATIONS = "qb_user_full_name_for_notify";
     private static SharedPrefsHelper instance;
 
     private Context cx;
@@ -67,7 +67,6 @@ public class SharedPrefsHelper {
     }
 
 
-
     public void savePushDialogId(String dialogId) {
         Set<String> dialogIdsSet = getPushDialogIds();
         if (dialogIdsSet == null) {
@@ -87,7 +86,6 @@ public class SharedPrefsHelper {
         editor.putStringSet(QB_PUSH_DIALOG_ID, dialogIds);
         editor.commit();
     }
-
 
 
     public void save(String key, Object value) {
@@ -188,10 +186,10 @@ public class SharedPrefsHelper {
     public void clearMessagesArray() {
         delete(MESSAGES_ARRAY);
     }
+
     public void clearPushDialogIds() {
         delete(QB_PUSH_DIALOG_ID);
     }
-
 
 
     private SharedPreferences.Editor getEditor() {

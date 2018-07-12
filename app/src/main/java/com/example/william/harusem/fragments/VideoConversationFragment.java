@@ -142,7 +142,8 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
 
         isPeerToPeerCall = opponents.size() == 1;
     }
-//Th
+
+    //Th
     @SuppressLint("StringFormatMatches")
     public void setDuringCallActionBar() {
         actionBar.setDisplayShowTitleEnabled(true);
@@ -249,20 +250,20 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
         Map<Integer, QBRTCVideoTrack> videoTrackMap = getVideoTrackMap();
         if (!videoTrackMap.isEmpty()) {
             for (final Iterator<Map.Entry<Integer, QBRTCVideoTrack>> entryIterator
-                 = videoTrackMap.entrySet().iterator(); entryIterator.hasNext();){
+                 = videoTrackMap.entrySet().iterator(); entryIterator.hasNext(); ) {
                 final Map.Entry<Integer, QBRTCVideoTrack> entry = entryIterator.next();
-                Log.d(TAG, "check ability to restoreSession for user:"+entry.getKey());
+                Log.d(TAG, "check ability to restoreSession for user:" + entry.getKey());
                 //if connection with peer wasn't closed do restore it otherwise remove from collection
-                if (currentSession.getPeerChannel(entry.getKey()).getState()!=
-                        QBRTCTypes.QBRTCConnectionState.QB_RTC_CONNECTION_CLOSED){
-                    Log.d(TAG, "execute restoreSession for user:"+entry.getKey());
+                if (currentSession.getPeerChannel(entry.getKey()).getState() !=
+                        QBRTCTypes.QBRTCConnectionState.QB_RTC_CONNECTION_CLOSED) {
+                    Log.d(TAG, "execute restoreSession for user:" + entry.getKey());
                     mainHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+                        @Override
+                        public void run() {
                             onConnectedToUser(currentSession, entry.getKey());
                             onRemoteVideoTrackReceive(currentSession, entry.getValue(), entry.getKey());
                         }
-                        }, LOCAL_TRACk_INITIALIZE_DELAY);
+                    }, LOCAL_TRACk_INITIALIZE_DELAY);
                 } else {
                     entryIterator.remove();
                 }
@@ -376,21 +377,21 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
         opponentViewHolders.clear();
     }
 
-    private void removeConnectionStateListeners(){
+    private void removeConnectionStateListeners() {
         conversationFragmentCallbackListener.removeRTCClientConnectionCallback(this);
         conversationFragmentCallbackListener.removeRTCSessionEventsCallback(this);
     }
 
     private void releaseViews() {
-        if (localVideoView != null){
+        if (localVideoView != null) {
             localVideoView.release();
         }
         if (remoteFullScreenVideoView != null) {
             remoteFullScreenVideoView.release();
         }
         remoteFullScreenVideoView = null;
-        if (!isPeerToPeerCall){
-           releseOpponentsViews();
+        if (!isPeerToPeerCall) {
+            releseOpponentsViews();
         }
     }
 
@@ -612,7 +613,7 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
     }
 
     private OpponentsFromCallAdapter.ViewHolder findHolder(Integer userID) {
-        Log.d(TAG, "findHolder for "+userID);
+        Log.d(TAG, "findHolder for " + userID);
         int childCount = recyclerView.getChildCount();
         for (int i = 0; i < childCount; i++) {
             View childView = recyclerView.getChildAt(i);
@@ -622,15 +623,17 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
             }
         }
         return null;
-    };
+    }
 
-    private void releseOpponentsViews(){
+    ;
+
+    private void releseOpponentsViews() {
         RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
         int childCount = layoutManager.getChildCount();
-        Log.d(TAG, " releseOpponentsViews for  "+childCount + " views");
+        Log.d(TAG, " releseOpponentsViews for  " + childCount + " views");
         for (int i = 0; i < childCount; i++) {
             View childView = layoutManager.getChildAt(i);
-            Log.d(TAG, " relese View for  " + i +", "+childView);
+            Log.d(TAG, " relese View for  " + i + ", " + childView);
             OpponentsFromCallAdapter.ViewHolder childViewHolder = (OpponentsFromCallAdapter.ViewHolder) recyclerView.getChildViewHolder(childView);
             childViewHolder.getOpponentView().release();
         }
@@ -653,7 +656,7 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
     }
 
     private void fillVideoView(QBRTCSurfaceView videoView, QBRTCVideoTrack videoTrack, boolean remoteRenderer) {
-       fillVideoView(0, videoView, videoTrack, remoteRenderer);
+        fillVideoView(0, videoView, videoTrack, remoteRenderer);
     }
 
     /**

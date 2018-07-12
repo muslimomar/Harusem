@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
 
     </style>
+
     <style name="CallerAvatar">
         <item name="android:layout_width">@dimen/call_avatar_diameter</item>
         <item name="android:layout_height">@dimen/call_avatar_diameter</item>
@@ -106,6 +107,7 @@
     <style name="TakeCallImageButton" parent="RoundedImageButton">
         <item name="android:background">@drawable/selector_call_take</item>
     </style>
+
     <style name="ToolbarStyleCall" parent="Widget.AppCompat.Toolbar">
         <item name="popupTheme">@style/ThemeOverlay.AppCompat</item>
         <item name="theme">@style/ThemeOverlay.AppCompat.ActionBar</item>

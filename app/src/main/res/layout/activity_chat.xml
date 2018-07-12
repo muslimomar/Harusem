@@ -264,7 +264,9 @@
             style="@style/MatchWidth" />
 
     </LinearLayout>
-    <include layout="@layout/chat_audio_attach_container"
+
+    <include
+        layout="@layout/chat_audio_attach_container"
         android:visibility="invisible" />
 
 </RelativeLayout>

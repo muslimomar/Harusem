@@ -44,9 +44,11 @@ public class DialogsUtils {
                 OPEN_APP_SETTINGS_DIALOG_DELAY);
     }
 
-    /**    logic for loading dialogs page by page from cache
-     *     return result perPage, startRow and needUpdate params by sendBroadcast
-     *     @param dialogsCount Amount of all dialogs.
+    /**
+     * logic for loading dialogs page by page from cache
+     * return result perPage, startRow and needUpdate params by sendBroadcast
+     *
+     * @param dialogsCount Amount of all dialogs.
      */
     public static void loadAllDialogsFromCacheByPagesTask(Context context, long dialogsCount, String resultAction) {
         boolean needToLoadMore;

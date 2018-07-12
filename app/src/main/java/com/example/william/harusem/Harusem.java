@@ -1,22 +1,19 @@
 package com.example.william.harusem;
 
 import android.app.Application;
+import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
-import com.example.william.harusem.util.ActivityLifecycle;
-import com.quickblox.auth.session.QBSettings;
-import com.quickblox.chat.QBChatService;
-import com.quickblox.chat.model.QBChatDialog;
-import com.quickblox.messages.services.QBPushManager;
 import com.crashlytics.android.Crashlytics;
 import com.example.william.harusem.models.QbConfigs;
+import com.example.william.harusem.util.ActivityLifecycle;
 import com.example.william.harusem.util.QBResRequestExecutor;
 import com.example.william.harusem.utils.CoreConfigUtils;
-import com.quickblox.auth.session.QBSession;
-import com.quickblox.auth.session.QBSessionManager;
-import com.quickblox.auth.session.QBSessionParameters;
-import android.text.TextUtils;
+import com.quickblox.auth.session.QBSettings;
 import com.quickblox.core.ServiceZone;
+import com.quickblox.messages.services.QBPushManager;
+
 import io.fabric.sdk.android.Fabric;
 
 import static com.example.william.harusem.common.Extras.ACCOUNT_KEY;
@@ -50,6 +47,22 @@ public class Harusem extends Application {
         initQbConfigs();
         initCredentials();
         ActivityLifecycle.init(this);
+        QBPushManager.getInstance().addListener(new QBPushManager.QBSubscribeListener() {
+            @Override
+            public void onSubscriptionCreated() {
+                Toast.makeText(Harusem.this, "Subscription Created!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSubscriptionError(Exception e, int i) {
+                Toast.makeText(Harusem.this, "Error Subscribing!" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSubscriptionDeleted(boolean b) {
+
+            }
+        });
     }
 
 
@@ -73,6 +86,7 @@ public class Harusem extends Application {
             }
         });
     }
+
     public synchronized QBResRequestExecutor getQbResRequestExecutor() {
         return qbResRequestExecutor == null
                 ? qbResRequestExecutor = new QBResRequestExecutor()
@@ -84,7 +98,7 @@ public class Harusem extends Application {
         qbConfigs = CoreConfigUtils.getCoreConfigsOrNull(getQbConfigFileName());
     }
 
-    public void initCredentials(){
+    public void initCredentials() {
         if (qbConfigs != null) {
 
             if (!TextUtils.isEmpty(qbConfigs.getApiDomain()) && !TextUtils.isEmpty(qbConfigs.getChatDomain())) {
@@ -94,10 +108,11 @@ public class Harusem extends Application {
         }
     }
 
-    public QbConfigs getQbConfigs(){
+    public QbConfigs getQbConfigs() {
         return qbConfigs;
     }
-    protected String getQbConfigFileName(){
+
+    protected String getQbConfigFileName() {
         return QB_CONFIG_DEFAULT_FILE_NAME;
     }
 }

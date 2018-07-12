@@ -5,10 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -57,7 +55,6 @@ public class LoginActivity extends AppCompatActivity {
     Button signupBtn;
     @BindView(R.id.forgot_pass_tv)
     TextView forgotPassTv;
-
 
 
     @Override
