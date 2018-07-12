@@ -31,11 +31,11 @@ public class DialogsManager {
 
     private Set<ManagingDialogsCallbacks> managingDialogsCallbackListener = new CopyOnWriteArraySet<>();
 
-    private boolean isMessageCreatingDialog(QBChatMessage systemMessage){
+    private boolean isMessageCreatingDialog(QBChatMessage systemMessage) {
         return CREATING_DIALOG.equals(systemMessage.getProperty(PROPERTY_NOTIFICATION_TYPE));
     }
 
-    private QBChatMessage buildSystemMessageAboutCreatingGroupDialog(QBChatDialog dialog){
+    private QBChatMessage buildSystemMessageAboutCreatingGroupDialog(QBChatDialog dialog) {
         QBChatMessage qbChatMessage = new QBChatMessage();
         qbChatMessage.setDialogId(dialog.getDialogId());
         qbChatMessage.setProperty(PROPERTY_OCCUPANTS_IDS, QbDialogUtils.getOccupantsIdsStringFromList(dialog.getOccupants()));
@@ -46,7 +46,7 @@ public class DialogsManager {
         return qbChatMessage;
     }
 
-    private QBChatDialog buildChatDialogFromSystemMessage(QBChatMessage qbChatMessage){
+    private QBChatDialog buildChatDialogFromSystemMessage(QBChatMessage qbChatMessage) {
         QBChatDialog chatDialog = new QBChatDialog();
         chatDialog.setDialogId(qbChatMessage.getDialogId());
         chatDialog.setOccupantsIds(QbDialogUtils.getOccupantsIdsListFromString((String) qbChatMessage.getProperty(PROPERTY_OCCUPANTS_IDS)));
@@ -72,12 +72,12 @@ public class DialogsManager {
         }
     }
 
-    private void loadUsersFromDialog(QBChatDialog chatDialog){
+    private void loadUsersFromDialog(QBChatDialog chatDialog) {
         ChatHelper.getInstance().getUsersFromDialog(chatDialog, new QbEntityCallbackImpl<ArrayList<QBUser>>());
     }
 
-    public void onGlobalMessageReceived(String dialogId, QBChatMessage chatMessage){
-        if ( (chatMessage.getBody() != null && chatMessage.isMarkable()) || (chatMessage.getAttachments() != null && chatMessage.getAttachments().size() > 0) ) { //for excluding status messages until will be released v.3.1
+    public void onGlobalMessageReceived(String dialogId, QBChatMessage chatMessage) {
+        if ((chatMessage.getBody() != null && chatMessage.isMarkable()) || (chatMessage.getAttachments() != null && chatMessage.getAttachments().size() > 0)) { //for excluding status messages until will be released v.3.1
             if (QBChatDialogHolder.getInstance().hasDialogWithId(dialogId)) {
                 QBChatDialogHolder.getInstance().updateDialog(dialogId, chatMessage);
                 notifyListenersDialogUpdated(dialogId);
@@ -95,7 +95,7 @@ public class DialogsManager {
 
     }
 
-    public void onSystemMessageReceived(QBChatMessage systemMessage){
+    public void onSystemMessageReceived(QBChatMessage systemMessage) {
         if (isMessageCreatingDialog(systemMessage)) {
             QBChatDialog chatDialog = buildChatDialogFromSystemMessage(systemMessage);
             chatDialog.initForChat(QBChatService.getInstance());
@@ -122,8 +122,8 @@ public class DialogsManager {
         }
     }
 
-    public void addManagingDialogsCallbackListener(ManagingDialogsCallbacks listener){
-        if (listener != null){
+    public void addManagingDialogsCallbackListener(ManagingDialogsCallbacks listener) {
+        if (listener != null) {
             managingDialogsCallbackListener.add(listener);
         }
     }
@@ -136,7 +136,7 @@ public class DialogsManager {
         return Collections.unmodifiableCollection(managingDialogsCallbackListener);
     }
 
-    public interface ManagingDialogsCallbacks{
+    public interface ManagingDialogsCallbacks {
 
         void onDialogCreated(QBChatDialog chatDialog);
 

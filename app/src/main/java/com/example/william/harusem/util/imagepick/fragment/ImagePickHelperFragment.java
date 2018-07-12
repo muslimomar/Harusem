@@ -56,7 +56,8 @@ public class ImagePickHelperFragment extends Fragment {
         }
     }
 
-    public ImagePickHelperFragment() {}
+    public ImagePickHelperFragment() {
+    }
 
     @Override
     public void onAttach(Context context) {

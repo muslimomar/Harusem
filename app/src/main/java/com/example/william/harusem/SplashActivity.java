@@ -15,15 +15,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.ui.activities.LoginActivity;
 import com.example.william.harusem.ui.activities.MainActivity;
-import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.ui.dialog.ProgressDialogFragment;
 import com.example.william.harusem.util.ChatHelper;
 import com.example.william.harusem.util.ErrorUtils;
 import com.example.william.harusem.util.SharedPrefsHelper;
 import com.quickblox.auth.session.QBSessionManager;
-import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.model.QBUser;
@@ -103,7 +102,7 @@ public class SplashActivity extends AppCompatActivity {
                 ProgressDialogFragment.hide(getSupportFragmentManager());
                 Log.e(TAG, "onError: ", e);
 
-                showErrorSnackbar( findViewById(R.id.lin_lay), R.string.error_recreate_session, e,
+                showErrorSnackbar(findViewById(R.id.lin_lay), R.string.error_recreate_session, e,
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -116,7 +115,7 @@ public class SplashActivity extends AppCompatActivity {
 
     }
 
-    protected Snackbar showErrorSnackbar(View chatListRecyclerView,@StringRes int resId, Exception e,
+    protected Snackbar showErrorSnackbar(View chatListRecyclerView, @StringRes int resId, Exception e,
                                          View.OnClickListener clickListener) {
         return ErrorUtils.showSnackbar(chatListRecyclerView, resId, e,
                 R.string.dlg_retry, clickListener);
@@ -155,7 +154,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private QBUser getUserFromSession() {
-        QBUser user = SharedPrefsHelper.getInstance(this).getQbUser();
+        QBUser user = SharedPrefsHelper.getInstance().getQbUser();
         user.setId(QBSessionManager.getInstance().getSessionParameters().getUserId());
         return user;
     }

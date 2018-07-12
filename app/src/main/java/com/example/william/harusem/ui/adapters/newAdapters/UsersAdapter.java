@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.util.ResourceUtils;
-import com.example.william.harusem.util.UiUtils;
 import com.example.william.harusem.util.baseAdapters.BaseListAdapter;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.content.QBContent;
@@ -84,11 +83,11 @@ public class UsersAdapter extends BaseListAdapter<QBUser> {
 
                 @Override
                 public void onError(QBResponseException e) {
-                    Log.e("FriendsAdapter", "onError: ",e );
+                    Log.e("FriendsAdapter", "onError: ", e);
                     userImageView.setImageResource(R.drawable.placeholder_user);
                 }
             });
-        }else{
+        } else {
             userImageView.setImageResource(R.drawable.placeholder_user);
         }
 

@@ -6,7 +6,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IntRange;
 
-
 import com.example.william.harusem.Harusem;
 import com.example.william.harusem.R;
 

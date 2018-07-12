@@ -13,8 +13,6 @@ import com.example.william.harusem.ui.dialog.OneButtonDialogFragment;
 import com.example.william.harusem.util.consts.Consts;
 import com.example.william.harusem.util.consts.MimeType;
 
-import com.quickblox.users.model.QBUser;
-
 import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

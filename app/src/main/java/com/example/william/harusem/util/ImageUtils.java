@@ -10,7 +10,6 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 
-
 import com.example.william.harusem.Harusem;
 import com.example.william.harusem.R;
 import com.example.william.harusem.util.consts.MimeType;

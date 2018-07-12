@@ -20,13 +20,6 @@ import com.quickblox.chat.model.QBAttachment;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.QBProgressCallback;
 import com.quickblox.core.exception.QBResponseException;
-//import com.quickblox.sample.chat.App;
-//import com.quickblox.sample.chat.R;
-//import com.quickblox.sample.chat.utils.chat.ChatHelper;
-//import com.quickblox.sample.core.ui.adapter.BaseListAdapter;
-//import com.quickblox.sample.core.utils.ResourceUtils;
-
-
 
 import java.io.File;
 import java.util.Collection;
@@ -34,6 +27,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+
+//import com.quickblox.sample.chat.App;
+//import com.quickblox.sample.chat.R;
+//import com.quickblox.sample.chat.utils.chat.ChatHelper;
+//import com.quickblox.sample.core.ui.adapter.BaseListAdapter;
+//import com.quickblox.sample.core.utils.ResourceUtils;
 
 public class AttachmentPreviewAdapter extends BaseListAdapter<File> {
 

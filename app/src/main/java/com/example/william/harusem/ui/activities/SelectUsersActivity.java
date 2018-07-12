@@ -141,7 +141,7 @@ public class SelectUsersActivity extends AppCompatActivity {
 
         Collection<Integer> friendsIds = qbFriendListHelper.getAllFriends();
 
-        QBUsers.getUsersByIDs(friendsIds,null).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
+        QBUsers.getUsersByIDs(friendsIds, null).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
             @Override
             public void onSuccess(ArrayList<QBUser> result, Bundle params) {
                 QBChatDialog dialog = (QBChatDialog) getIntent().getSerializableExtra(EXTRA_QB_DIALOG);

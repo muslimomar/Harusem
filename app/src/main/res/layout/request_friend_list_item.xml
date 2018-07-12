@@ -26,8 +26,7 @@
             android:layout_height="50dp"
             android:layout_marginLeft="16dp"
             android:layout_centerVertical="true"
-            tools:src="@drawable/ic_user_new"
-            />
+            tools:src="@drawable/ic_user_new" />
 
         <LinearLayout
             android:id="@+id/name_status_layout"
@@ -36,16 +35,14 @@
             android:orientation="vertical"
             android:layout_toRightOf="@+id/image_user"
             android:layout_marginLeft="16dp"
-            android:layout_centerVertical="true"
-            >
+            android:layout_centerVertical="true">
 
             <TextView
                 android:id="@+id/user_name_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                tools:text="Jamal"
-                />
+                tools:text="Jamal" />
 
             <TextView
                 android:id="@+id/status_tv"
@@ -54,8 +51,7 @@
                 tools:text="Status"
                 android:textSize="12.5sp"
                 android:layout_marginTop="6dp"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
 
         </LinearLayout>
 
@@ -66,8 +62,7 @@
             android:src="@drawable/online_icon"
             android:layout_toRightOf="@id/name_status_layout"
             android:layout_marginLeft="8dp"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/buttons_layout"
@@ -86,8 +81,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:layout_marginRight="15dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                />
+                android:background="?attr/selectableItemBackgroundBorderless" />
 
             <ImageView
                 android:id="@+id/accept_iv"
@@ -96,8 +90,7 @@
                 android:src="@drawable/ic_tick"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                />
+                android:background="?attr/selectableItemBackgroundBorderless" />
 
 
         </LinearLayout>

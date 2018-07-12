@@ -3,21 +3,8 @@ package com.example.william.harusem.util;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.os.Bundle;
-import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 
 import com.example.william.harusem.R;
-import com.example.william.harusem.util.qb.callback.QbEntityCallbackTwoTypeWrapper;
-import com.quickblox.chat.model.QBAttachment;
-import com.quickblox.content.QBContent;
-import com.quickblox.content.model.QBFile;
-import com.quickblox.core.QBEntityCallback;
-import com.quickblox.core.QBProgressCallback;
-
-import java.io.File;
 
 /**
  * Created by william on 5/27/2018.

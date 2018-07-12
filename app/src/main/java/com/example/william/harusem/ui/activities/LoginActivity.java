@@ -3,11 +3,10 @@ package com.example.william.harusem.ui.activities;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -58,13 +57,11 @@ public class LoginActivity extends AppCompatActivity {
     TextView forgotPassTv;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-
         requestPerms();
 //        initializeFramework();
 
@@ -143,10 +140,11 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Object o, Bundle bundle) {
                         dismissDialog(loadingPb);
-                        SharedPrefsHelper.getInstance(LoginActivity.this).saveQbUser(user);
+                        SharedPrefsHelper.getInstance().saveQbUser(user);
                         QBUsersHolder.getInstance().setSignInQbUser(user);
 
                         QBFriendListHelper friendListHelper = new QBFriendListHelper(LoginActivity.this);
+                        loadUserFullName();
                         redirectToMainActivity(email, pass);
                     }
 
@@ -221,6 +219,26 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+    }
+
+    private void loadUserFullName() {
+        QBUser currentUser = QBChatService.getInstance().getUser();
+        QBUsers.getUser(currentUser.getId()).performAsync(new QBEntityCallback<QBUser>() {
+            @Override
+            public void onSuccess(QBUser user, Bundle bundle) {
+                String fullName = user.getFullName();
+                SharedPreferences pref = getApplicationContext().getSharedPreferences("user_details", MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putString("QB_USER_FULL_NAME_FOR_NOTIFICATIONS", fullName);  // Saving string
+                editor.apply();
+                Toast.makeText(LoginActivity.this, "Save Success" + fullName, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Log.e(TAG, "onError: ", e);
+            }
+        });
     }
 }
 

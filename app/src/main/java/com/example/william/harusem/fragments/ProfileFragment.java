@@ -223,7 +223,7 @@ public class ProfileFragment extends Fragment {
                     public void onSuccess(Void aVoid, Bundle bundle) {
                         hideProgressBar(logOutPb);
 
-                        SharedPrefsHelper.getInstance(getActivity()).removeQbUser();
+                        SharedPrefsHelper.getInstance().removeQbUser();
                         ChatHelper.getInstance().destroy();
                         QBChatDialogHolder.getInstance().clear();
 

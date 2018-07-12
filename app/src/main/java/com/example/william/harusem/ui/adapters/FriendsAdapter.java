@@ -51,7 +51,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
         this.usersList = usersList;
         this.context = context;
     }
-    public FriendsAdapter(Collection<Integer> qbusers,Context context){
+
+    public FriendsAdapter(Collection<Integer> qbusers, Context context) {
         this.qbusers = qbusers;
         this.context = context;
     }
