@@ -1,7 +1,5 @@
 package com.example.william.harusem.ui.adapters;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,18 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.helper.QBFriendListHelper;
-import com.example.william.harusem.ui.activities.ChatActivity;
-import com.example.william.harusem.util.Utils;
-import com.quickblox.chat.QBChatService;
-import com.quickblox.chat.QBRestChatService;
-import com.quickblox.chat.QBSystemMessagesManager;
-import com.quickblox.chat.model.QBChatDialog;
-import com.quickblox.chat.model.QBChatMessage;
-import com.quickblox.chat.utils.DialogUtils;
+import com.example.william.harusem.ui.activities.ProfileActivity;
 import com.quickblox.content.QBContent;
 import com.quickblox.content.model.QBFile;
 import com.quickblox.core.QBEntityCallback;
@@ -32,29 +22,21 @@ import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.model.QBUser;
 import com.squareup.picasso.Picasso;
 
-import org.jivesoftware.smack.SmackException;
-
-import java.util.Collection;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHolder> {
-    public static final String EXTRA_DIALOG_ID = "dialogId";
 
     private List<QBUser> usersList;
     private Context context;
     private QBFriendListHelper friendListHelper;
-    private Collection<Integer> qbusers;
 
     public FriendsAdapter(List<QBUser> usersList, Context context) {
         this.usersList = usersList;
         this.context = context;
     }
-    public FriendsAdapter(Collection<Integer> qbusers,Context context){
-        this.qbusers = qbusers;
-        this.context = context;
-    }
+
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -92,7 +74,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
         });
 
 
-
         if (user.getFileId() != null) {
             int profilePicId = user.getFileId();
 
@@ -120,10 +101,17 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "" + position, Toast.LENGTH_SHORT).show();
+                redirectToProfileActivity(user);
             }
         });
 
+    }
+
+    private void redirectToProfileActivity(QBUser user) {
+        Intent intent = new Intent(context, ProfileActivity.class);
+        intent.putExtra("user_id", "" + user.getId());
+        intent.putExtra("name", user.getFullName());
+        context.startActivity(intent);
     }
 
     @Override
@@ -147,7 +135,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
             super(view);
             userDisplayName = (TextView) view.findViewById(R.id.block_name_tv);
             userThumbIv = view.findViewById(R.id.image_user);
-            unfriendBtn = view.findViewById(R.id.unfriend_btn);
+            unfriendBtn = view.findViewById(R.id.add_friend_btn);
         }
     }
 }

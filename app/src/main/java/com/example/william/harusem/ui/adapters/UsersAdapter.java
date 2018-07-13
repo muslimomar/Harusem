@@ -1,12 +1,14 @@
 package com.example.william.harusem.ui.adapters;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,15 @@ import android.widget.Toast;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.helper.QBFriendListHelper;
+import com.example.william.harusem.ui.activities.ChatActivity;
+import com.example.william.harusem.ui.activities.ProfileActivity;
+import com.example.william.harusem.util.Utils;
+import com.quickblox.chat.QBChatService;
+import com.quickblox.chat.QBRestChatService;
+import com.quickblox.chat.QBSystemMessagesManager;
+import com.quickblox.chat.model.QBChatDialog;
+import com.quickblox.chat.model.QBChatMessage;
+import com.quickblox.chat.utils.DialogUtils;
 import com.quickblox.content.QBContent;
 import com.quickblox.content.model.QBFile;
 import com.quickblox.core.QBEntityCallback;
@@ -24,17 +35,21 @@ import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.model.QBUser;
 import com.squareup.picasso.Picasso;
 
+import org.jivesoftware.smack.SmackException;
+
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder> {
 
+    public static final String EXTRA_DIALOG_ID = "dialogId";
     private static final String TAG = UsersAdapter.class.getSimpleName();
     private List<QBUser> usersList;
     private Context context;
     private QBFriendListHelper friendListHelper;
-    private @LayoutRes int resource;
+    private @LayoutRes
+    int resource;
 
 
     public UsersAdapter(List<QBUser> usersList, Context context) {
@@ -43,8 +58,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
 
     }
 
-    public UsersAdapter(Context context,@LayoutRes int resource ,List<QBUser> usersList){
-        this.resource = resource ;
+    public UsersAdapter(Context context, @LayoutRes int resource, List<QBUser> usersList) {
+        this.resource = resource;
         this.context = context;
         this.usersList = usersList;
 
@@ -97,12 +112,20 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
             public void onClick(View view) {
 
                 if (friendListHelper.isFriend(user.getId())) {
-                    deleteFriend(view, position, user, holder.button);
+                    createPrivateChatDialog(user);
 
                 } else if (!friendListHelper.isFriendRequestAlreadySent(user.getId()) && !friendListHelper.isFriend(user.getId())) {
                     sendRequest(user, view, position, holder.button);
                 }
 
+            }
+        });
+
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                redirectToProfileActivity(user);
             }
         });
     }
@@ -112,7 +135,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
             setRequestSentBtn(button);
 
         } else if (friendListHelper.isFriend(user.getId())) {
-            setUnfriendBtn(button);
+            setMessageBtn(button);
 
         } else if (!friendListHelper.isFriendRequestAlreadySent(user.getId()) &&
                 !friendListHelper.isFriend(user.getId())) {
@@ -123,17 +146,20 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
 
     private void setAddFriendBtn(Button button) {
         button.setText("Add Friend");
-        button.setBackgroundColor(Color.parseColor("#239ab6"));
+        button.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+        button.setBackgroundResource(R.drawable.border_radius);
     }
 
-    private void setUnfriendBtn(Button button) {
-        button.setText("Unfriend");
-        button.setBackgroundColor(Color.parseColor("#d14f4f"));
+    private void setMessageBtn(Button button) {
+        button.setText("Message");
+        button.setTextColor(Color.WHITE);
+        button.setBackgroundResource(R.drawable.primary_button_radius);
     }
 
     private void setRequestSentBtn(Button button) {
         button.setText("Request Sent");
-        button.setBackgroundColor(Color.parseColor("#d14f4f"));
+        button.setTextColor(Color.WHITE);
+        button.setBackgroundResource(R.drawable.red_button_radius);
         button.setEnabled(false);
     }
 
@@ -196,6 +222,50 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
         snackbar.show();
     }
 
+    private void redirectToProfileActivity(QBUser user) {
+        Intent intent = new Intent(context, ProfileActivity.class);
+        intent.putExtra("user_id", "" + user.getId());
+        intent.putExtra("name", user.getFullName());
+        context.startActivity(intent);
+    }
+
+    private void createPrivateChatDialog(final QBUser user) {
+        final ProgressDialog progressDialog = Utils.buildProgressDialog(context, "", "Loading...", false);
+        progressDialog.show();
+
+        QBChatDialog chatDialog = DialogUtils.buildPrivateDialog(user.getId());
+
+        QBRestChatService.createChatDialog(chatDialog).performAsync(new QBEntityCallback<QBChatDialog>() {
+            @Override
+            public void onSuccess(QBChatDialog qbChatDialog, Bundle bundle) {
+                // dismiss dialog
+                QBSystemMessagesManager systemMessagesManager = QBChatService.getInstance().getSystemMessagesManager();
+                QBChatMessage qbChatMessage = new QBChatMessage();
+                qbChatMessage.setRecipientId(user.getId());
+                qbChatMessage.setBody(qbChatDialog.getDialogId());
+
+                try {
+                    systemMessagesManager.sendSystemMessage(qbChatMessage);
+                } catch (SmackException.NotConnectedException e) {
+                    e.printStackTrace();
+                }
+
+                progressDialog.dismiss();
+
+                Intent intent = new Intent(context, ChatActivity.class);
+                intent.putExtra(EXTRA_DIALOG_ID, qbChatDialog);
+                context.startActivity(intent);
+                ((Activity) context).finish();
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                progressDialog.dismiss();
+                Utils.buildAlertDialog("Error", e.getMessage(), true, context);
+            }
+        });
+    }
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView userDisplayName;
         public CircleImageView userThumbIv;
@@ -205,10 +275,9 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
             super(view);
             userDisplayName = (TextView) view.findViewById(R.id.block_name_tv);
             userThumbIv = view.findViewById(R.id.image_user);
-            button = view.findViewById(R.id.unfriend_btn);
+            button = view.findViewById(R.id.add_friend_btn);
         }
 
     }
-
 
 }

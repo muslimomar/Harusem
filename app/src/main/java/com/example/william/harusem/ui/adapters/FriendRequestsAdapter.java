@@ -1,6 +1,7 @@
 package com.example.william.harusem.ui.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.example.william.harusem.R;
 import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.holder.QBFriendRequestsHolder;
+import com.example.william.harusem.ui.activities.ProfileActivity;
 import com.example.william.harusem.util.qb.callback.QbEntityCallbackImpl;
 import com.quickblox.content.QBContent;
 import com.quickblox.content.model.QBFile;
@@ -96,10 +98,22 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
             }
         });
 
-        getUserImage(user,holder.userThumbIv);
+        getUserImage(user, holder.userThumbIv);
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                redirectToProfileActivity(user);
+            }
+        });
     }
 
+    private void redirectToProfileActivity(QBUser user) {
+        Intent intent = new Intent(context, ProfileActivity.class);
+        intent.putExtra("user_id", "" + user.getId());
+        intent.putExtra("name", user.getFullName());
+        context.startActivity(intent);
+    }
 
     private void getUserImage(QBUser user, final CircleImageView userThumbIv) {
         if (user.getFileId() != null) {
@@ -117,11 +131,11 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
 
                 @Override
                 public void onError(QBResponseException e) {
-                    Log.e("FriendsAdapter", "onError: ",e );
+                    Log.e("FriendsAdapter", "onError: ", e);
                     userThumbIv.setImageResource(R.drawable.placeholder_user);
                 }
             });
-        }else{
+        } else {
             userThumbIv.setImageResource(R.drawable.placeholder_user);
         }
 

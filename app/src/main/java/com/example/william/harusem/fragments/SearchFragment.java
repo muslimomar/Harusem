@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -46,7 +47,6 @@ public class SearchFragment extends Fragment {
     @BindView(R.id.toolbar_search) Toolbar toolbar;
     @BindView(R.id.search_recyclerview)
     RecyclerView recyclerView;
-
 
     private static ArrayList<QBUser> qbUserWithoutCurrent = new ArrayList<>();
 
@@ -224,6 +224,7 @@ public class SearchFragment extends Fragment {
     private void configRecyclerView() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setHasFixedSize(true);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
         recyclerView.setLayoutManager(mLayoutManager);
     }
 

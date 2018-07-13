@@ -150,17 +150,6 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
         searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
             @Override
             public void onSearchViewShown() {
@@ -243,10 +232,6 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
             }
         });
 
-
-
-
-
         return view;
     }
 
@@ -265,7 +250,10 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
             case R.id.action_search_dialog:
 //                Toast.makeText(getActivity(), "Add Users", Toast.LENGTH_SHORT).show();
                 searchView.setMenuItem(item);
-                return true;
+            break;
+            case R.id.new_group_item:
+                Toast.makeText(getActivity(), "group", Toast.LENGTH_SHORT).show();
+            break;
         }
 
         return super.onOptionsItemSelected(item);

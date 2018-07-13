@@ -81,6 +81,7 @@
     <string name="dlg_image_big">File mustn\u0027t be more than 10 MB</string>
     <string name="dlg_audio_video_big">File mustn\u0027t be more than 100 MB</string>
     <string name="dlg_fail_upload_attach">Errors occurred during loading file. Please, check your internet connection</string>
+    <string name="unfriend">Unfriend</string>
 
 
 </resources>

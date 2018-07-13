@@ -14,7 +14,6 @@ import com.example.william.harusem.R;
 import com.example.william.harusem.fragments.DialogsFragment;
 import com.example.william.harusem.fragments.ProfileFragment;
 import com.example.william.harusem.fragments.SearchFragment;
-import com.example.william.harusem.notifications.NotificationsListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigation.setDefaultBackgroundColor(Color.WHITE);
         bottomNavigation.setAccentColor(getResources().getColor(R.color.colorPrimary));
-
         bottomNavigation.setNotificationBackgroundColor(Color.parseColor("#F63D2B"));
 
         bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
