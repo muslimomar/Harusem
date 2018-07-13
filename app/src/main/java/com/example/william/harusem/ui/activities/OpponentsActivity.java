@@ -52,7 +52,7 @@ public class OpponentsActivity extends BaseActivity {
     private boolean isRunForCall;
     private WebRtcSessionManager webRtcSessionManager;
     private PermissionsChecker checker;
-
+//////////////////////////////////////////////////////////
     public static void start(Context context, boolean isRunForCall) {
         Intent intent = new Intent(context, OpponentsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -138,12 +138,12 @@ public class OpponentsActivity extends BaseActivity {
             @Override
             public void onError(QBResponseException responseException) {
                 hideProgressDialog();
-                showErrorSnackbar(R.string.loading_users_error, responseException, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startLoadUsers();
-                    }
-                });
+//                showErrorSnackbar(R.string.loading_users_error, responseException, new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        startLoadUsers();
+//                    }
+//                });
             }
         });
 
@@ -276,7 +276,7 @@ public class OpponentsActivity extends BaseActivity {
 
         WebRtcSessionManager.getInstance(this).setCurrentSession(newQbRtcSession);
 
-        PushNotificationSender.sendPushMessage(opponentsList, currentUser.getFullName());
+        //PushNotificationSender.sendPushMessage(opponentsList, currentUser.getFullName());
 
         CallActivity.start(this, false);
         Log.d(TAG, "conferenceType = " + conferenceType);

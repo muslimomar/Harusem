@@ -96,5 +96,3 @@ public abstract class BaseActivity extends CoreBaseActivity {
 }
 
 
-
-

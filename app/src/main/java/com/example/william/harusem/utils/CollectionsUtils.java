@@ -21,7 +21,9 @@ public class CollectionsUtils {
                 usersNames.add(String.valueOf(usr.getId()));
             }
         }
+
         return usersNames.getItemsAsString().replace(",", ", ");
+
     }
 
     public static ArrayList<Integer> getIdsSelectedOpponents(Collection<QBUser> selectedUsers) {

@@ -8,9 +8,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
 
@@ -91,10 +89,17 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
+<<<<<<< HEAD
         <activity
             android:name=".ui.activities.CallActivity"
             android:theme="@style/NoActionBar" />
         <activity android:name=".ui.activities.OpponentsActivity" />
+=======
+
+     	<activity android:name=".ui.activities.CallActivity" android:theme="@style/NoActionBar" />
+             <activity android:name=".ui.activities.OpponentsActivity" />
+
+>>>>>>> video_call
 
 
         <meta-data
@@ -120,8 +125,14 @@
             </intent-filter>
         </receiver>
 
+<<<<<<< HEAD
         <service android:name=".services.CallService" />
         <activity android:name=".ui.activities.PermissionsActivity" />
+=======
+
+        <service android:name=".services.CallService"/>
+        <activity android:name=".ui.activities.PermissionsActivity"/>
+>>>>>>> video_call
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -134,9 +145,14 @@
         </service>
 
 
+<<<<<<< HEAD
         <activity android:name=".BlockingActivity">
 
         </activity>
+=======
+        <activity android:name=".BlockingActivity"></activity>
+
+>>>>>>> video_call
     </application>
 
 </manifest>

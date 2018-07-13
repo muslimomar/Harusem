@@ -20,6 +20,8 @@ import static com.example.william.harusem.common.Extras.ACCOUNT_KEY;
 import static com.example.william.harusem.common.Extras.APP_ID;
 import static com.example.william.harusem.common.Extras.AUTH_KEY;
 import static com.example.william.harusem.common.Extras.AUTH_SECRET;
+import static com.quickblox.core.QBSettingsSaver.API_DOMAIN;
+import static com.quickblox.core.QBSettingsSaver.CHAT_DOMAIN;
 
 /**
  * Created by william on 6/1/2018.
@@ -30,9 +32,10 @@ public class Harusem extends Application {
     public static final String TAG = Harusem.class.getSimpleName();
 
     private static Harusem instance;
-    private QBResRequestExecutor qbResRequestExecutor;
-    private static final String QB_CONFIG_DEFAULT_FILE_NAME = "qb_config.json";
     protected QbConfigs qbConfigs;
+    private QBResRequestExecutor qbResRequestExecutor;
+
+    private static final String QB_CONFIG_DEFAULT_FILE_NAME = "qb_config.json";
 
     public static synchronized Harusem getInstance() {
         return instance;
@@ -44,6 +47,7 @@ public class Harusem extends Application {
         instance = this;
         initializeFramework();
         Fabric.with(this, new Crashlytics());
+
         initQbConfigs();
         initCredentials();
         ActivityLifecycle.init(this);
@@ -60,6 +64,7 @@ public class Harusem extends Application {
 
             @Override
             public void onSubscriptionDeleted(boolean b) {
+
 
             }
         });

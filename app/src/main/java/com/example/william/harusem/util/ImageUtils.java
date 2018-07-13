@@ -98,7 +98,10 @@ public class ImageUtils {
 
         File photoFile = getTemporaryCameraFile();
         intent.putExtra(MediaStore.EXTRA_OUTPUT, getValidUri(photoFile, fragment.getContext()));
+
+
         fragment.startActivityForResult(intent, CAMERA_REQUEST_CODE);
+
     }
 
     public static File getTemporaryCameraFile() {

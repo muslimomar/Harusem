@@ -141,7 +141,7 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
         initAudioManager();
         initWiFiManagerListener();
 
-        ringtonePlayer = new RingtonePlayer(this, R.raw.meant_to_be);
+        ringtonePlayer = new RingtonePlayer(this, R.raw.old_phone_ringing);
         connectionView = (LinearLayout) View.inflate(this, R.layout.connection_popup, null);
         checker = new PermissionsChecker(getApplicationContext());
 

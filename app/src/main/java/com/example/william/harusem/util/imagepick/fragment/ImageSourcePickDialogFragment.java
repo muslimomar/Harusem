@@ -97,13 +97,31 @@ public class ImageSourcePickDialogFragment extends DialogFragment {
                     }
                     break;
                 case CAMERA:
-                    if (fragment != null) {
-                        ImageUtils.startCameraForResult(fragment);
-                    } else {
-                        ImageUtils.startCameraForResult(activity);
+                    if(checkCameraPermission()) {
+                        startCameraForResult();
                     }
+
                     break;
             }
         }
+
+        private void startCameraForResult() {
+            if (fragment != null) {
+                ImageUtils.startCameraForResult(fragment);
+            } else {
+                ImageUtils.startCameraForResult(activity);
+            }
+        }
+
+        private boolean checkCameraPermission() {
+            if (systemPermissionHelper.isCameraPermissionGranted()) {
+                return true;
+            } else {
+                systemPermissionHelper.requestPermissionsTakePhoto();
+                return false;
+            }
+        }
+
+
     }
 }

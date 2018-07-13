@@ -16,16 +16,32 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.example.william.harusem.helper.QBFriendListHelper;
+
+import com.example.william.harusem.services.CallService;
+
 import com.example.william.harusem.ui.activities.LoginActivity;
 import com.example.william.harusem.ui.activities.MainActivity;
 import com.example.william.harusem.ui.dialog.ProgressDialogFragment;
 import com.example.william.harusem.util.ChatHelper;
+import com.example.william.harusem.util.ChatPingAlarmManager;
 import com.example.william.harusem.util.ErrorUtils;
 import com.example.william.harusem.util.SharedPrefsHelper;
+import com.example.william.harusem.utils.SettingsUtil;
+import com.example.william.harusem.utils.WebRtcSessionManager;
 import com.quickblox.auth.session.QBSessionManager;
+
+import com.quickblox.chat.QBChatService;
+import com.quickblox.chat.QBSignaling;
+import com.quickblox.chat.QBWebRTCSignaling;
+import com.quickblox.chat.listeners.QBVideoChatSignalingManagerListener;
+
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.model.QBUser;
+import com.quickblox.videochat.webrtc.QBRTCClient;
+import com.quickblox.videochat.webrtc.QBRTCConfig;
+
+import org.jivesoftware.smackx.ping.PingFailedListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,13 +52,16 @@ public class SplashActivity extends AppCompatActivity {
     private final int SPLASH_DISPLAY_TIMER = 2000;
     @BindView(R.id.image_view)
     ImageView imageView;
-
+    private QBRTCClient rtcClient;
+    private QBChatService chatService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
+        chatService = QBChatService.getInstance();
+        rtcClient = QBRTCClient.getInstance(this);
 
         startSplash();
     }
@@ -89,6 +108,8 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void aVoid, Bundle bundle) {
                 // dismiss dialog
+                initPingListener();
+                initQBRTCClient();
 
                 ProgressDialogFragment.hide(getSupportFragmentManager());
                 QBFriendListHelper friendListHelper = new QBFriendListHelper(SplashActivity.this);
@@ -157,6 +178,37 @@ public class SplashActivity extends AppCompatActivity {
         QBUser user = SharedPrefsHelper.getInstance().getQbUser();
         user.setId(QBSessionManager.getInstance().getSessionParameters().getUserId());
         return user;
+    }
+
+    private void initPingListener() {
+        ChatPingAlarmManager.onCreate(this);
+        ChatPingAlarmManager.getInstanceFor().addPingListener(new PingFailedListener() {
+            @Override
+            public void pingFailed() {
+                Log.d(TAG, "Ping chat server failed");
+            }
+        });
+    }
+
+    private void initQBRTCClient() {
+        rtcClient = QBRTCClient.getInstance(getApplicationContext());
+        // Add signalling manager
+        chatService.getVideoChatWebRTCSignalingManager().addSignalingManagerListener(new QBVideoChatSignalingManagerListener() {
+            @Override
+            public void signalingCreated(QBSignaling qbSignaling, boolean createdLocally) {
+                if (!createdLocally) {
+                    rtcClient.addSignaling((QBWebRTCSignaling) qbSignaling);
+                }
+            }
+        });
+
+        // Configure
+        QBRTCConfig.setDebugEnabled(true);
+        SettingsUtil.configRTCTimers(this);
+
+        // Add service as callback to RTCClient
+        rtcClient.addSessionCallbacksListener(WebRtcSessionManager.getInstance(this));
+        rtcClient.prepareToProcessCalls();
     }
 
 }
