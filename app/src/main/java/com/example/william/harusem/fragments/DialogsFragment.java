@@ -23,23 +23,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import com.example.william.harusem.util.qb.QbDialogUtils;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.holder.QBChatDialogHolder;
-import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.manager.DialogsManager;
 import com.example.william.harusem.ui.activities.ChatActivity;
-import com.example.william.harusem.ui.activities.MainActivity;
+import com.example.william.harusem.ui.activities.CreateGroupActivity;
 import com.example.william.harusem.ui.activities.SelectUsersActivity;
-import com.example.william.harusem.ui.adapters.DialogsAdapter;
-import com.example.william.harusem.ui.adapters.UsersAdapter;
+import com.example.william.harusem.ui.adapters.GroupUsersAdapter;
 import com.example.william.harusem.ui.dialog.ProgressDialogFragment;
 import com.example.william.harusem.util.ChatHelper;
 import com.example.william.harusem.util.ErrorUtils;
@@ -59,7 +55,6 @@ import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.core.request.QBRequestGetBuilder;
-import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
 import java.util.ArrayList;
@@ -77,7 +72,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     private static final String TAG = DialogFragment.class.getSimpleName();
     private static final int REQUEST_SELECT_PEOPLE = 174;
     private static final int REQUEST_DIALOG_ID_FOR_UPDATE = 165;
-
+    private static ArrayList<QBChatDialog> qbUserWithoutCurrent = new ArrayList<>();
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
     @BindView(R.id.swipe_refresh)
@@ -100,15 +95,13 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     private boolean isProcessingResultInProgress;
     private BroadcastReceiver pushBroadcastReceiver;
     private GooglePlayServicesHelper googlePlayServicesHelper;
-    private DialogsAdapter dialogsAdapter;
+    private GroupUsersAdapter groupUsersAdapter;
     private QBChatDialogMessageListener allDialogsMessagesListener;
     private SystemMessagesListener systemMessagesListener;
     private QBSystemMessagesManager systemMessagesManager;
     private QBIncomingMessagesManager incomingMessagesManager;
     private DialogsManager dialogsManager;
     private QBUser currentUser;
-
-    private static ArrayList<QBChatDialog> qbUserWithoutCurrent = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -155,7 +148,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
             public void onSearchViewShown() {
 
                 qbUserWithoutCurrent = new ArrayList<QBChatDialog>(QBChatDialogHolder.getInstance().getDialogs().values());
-                DialogsAdapter adapter = new DialogsAdapter(getContext(),qbUserWithoutCurrent);
+                GroupUsersAdapter adapter = new GroupUsersAdapter(getContext(), qbUserWithoutCurrent);
                 dialogsListView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
 
@@ -165,7 +158,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
             public void onSearchViewClosed() {
 
                 qbUserWithoutCurrent = new ArrayList<QBChatDialog>(QBChatDialogHolder.getInstance().getDialogs().values());
-                DialogsAdapter adapter = new DialogsAdapter(getContext(),qbUserWithoutCurrent);
+                GroupUsersAdapter adapter = new GroupUsersAdapter(getContext(), qbUserWithoutCurrent);
                 dialogsListView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }
@@ -175,27 +168,26 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if(query != null && !query.isEmpty()){
+                if (query != null && !query.isEmpty()) {
 
                     qbUserWithoutCurrent = new ArrayList<QBChatDialog>(QBChatDialogHolder.getInstance().getDialogs().values());
 
                     ArrayList<QBChatDialog> lstFound = new ArrayList<>();
-                    for(QBChatDialog item:qbUserWithoutCurrent){
-                        if(item.getName().toLowerCase().contains(query.toLowerCase()))
+                    for (QBChatDialog item : qbUserWithoutCurrent) {
+                        if (item.getName().toLowerCase().contains(query.toLowerCase()))
                             lstFound.add(item);
 
                     }
 
-                    DialogsAdapter adapter = new DialogsAdapter(getContext(),lstFound);
+                    GroupUsersAdapter adapter = new GroupUsersAdapter(getContext(), lstFound);
                     dialogsListView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
 
 
-                }
-                else {
+                } else {
                     // if search text is null
                     // return default
-                    DialogsAdapter adapter = new DialogsAdapter(getContext(),qbUserWithoutCurrent);
+                    GroupUsersAdapter adapter = new GroupUsersAdapter(getContext(), qbUserWithoutCurrent);
                     dialogsListView.setAdapter(adapter);
                 }
 
@@ -205,27 +197,26 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
             @Override
             public boolean onQueryTextChange(final String newText) {
 
-                if(newText != null && !newText.isEmpty()){
+                if (newText != null && !newText.isEmpty()) {
 
                     qbUserWithoutCurrent = new ArrayList<QBChatDialog>(QBChatDialogHolder.getInstance().getDialogs().values());
 
                     ArrayList<QBChatDialog> lstFound = new ArrayList<>();
-                    for(QBChatDialog item:qbUserWithoutCurrent){
-                        if(item.getName().toLowerCase().contains(newText.toLowerCase()))
+                    for (QBChatDialog item : qbUserWithoutCurrent) {
+                        if (item.getName().toLowerCase().contains(newText.toLowerCase()))
                             lstFound.add(item);
 
                     }
 
-                    DialogsAdapter adapter = new DialogsAdapter(getContext(),lstFound);
+                    GroupUsersAdapter adapter = new GroupUsersAdapter(getContext(), lstFound);
                     dialogsListView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
 
 
-                }
-                else {
+                } else {
                     // if search text is null
                     // return default
-                    DialogsAdapter adapter = new DialogsAdapter(getContext(),qbUserWithoutCurrent);
+                    GroupUsersAdapter adapter = new GroupUsersAdapter(getContext(), qbUserWithoutCurrent);
                     dialogsListView.setAdapter(adapter);
                 }
                 return true;
@@ -234,7 +225,6 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
 
         return view;
     }
-
 
 
     @Override
@@ -248,12 +238,11 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_search_dialog:
-//                Toast.makeText(getActivity(), "Add Users", Toast.LENGTH_SHORT).show();
                 searchView.setMenuItem(item);
-            break;
+                break;
             case R.id.new_group_item:
-                Toast.makeText(getActivity(), "group", Toast.LENGTH_SHORT).show();
-            break;
+                startActivity(new Intent(getActivity(),CreateGroupActivity.class));
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -403,10 +392,10 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
 
     private void initUi() {
 
-        dialogsAdapter = new DialogsAdapter(getActivity(),
+        groupUsersAdapter = new GroupUsersAdapter(getActivity(),
                 new ArrayList<QBChatDialog>(QBChatDialogHolder.getInstance().getDialogs().values()));
 
-        dialogsListView.setAdapter(dialogsAdapter);
+        dialogsListView.setAdapter(groupUsersAdapter);
         dialogsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -516,7 +505,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     }
 
     private void updateDialogsAdapter() {
-        dialogsAdapter.updateList(new ArrayList<>(QBChatDialogHolder.getInstance().getDialogs().values()));
+        groupUsersAdapter.updateList(new ArrayList<>(QBChatDialogHolder.getInstance().getDialogs().values()));
     }
 
     @Override

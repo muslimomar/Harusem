@@ -58,10 +58,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".ui.activities.UsersActivity" />
-        <activity android:name=".ui.activities.FriendsActivity" android:theme="@style/NoActionBar" />
-
+        <activity
+            android:name=".ui.activities.FriendsActivity"
+            android:theme="@style/NoActionBar" />
         <activity
             android:name=".ui.activities.ChatActivity"
             android:parentActivityName=".ui.activities.MainActivity"
@@ -111,7 +111,8 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".BlockingActivity"></activity>
+        <activity android:name=".BlockingActivity" />
+        <activity android:name=".ui.activities.CreateGroupActivity"></activity>
     </application>
 
 </manifest>
