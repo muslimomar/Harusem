@@ -139,7 +139,7 @@ public class CallService extends Service {
                 Log.d(TAG, "Ping chat server failed");
             }
         });
-        }
+    }
 
     private void initQBRTCClient() {
         rtcClient = QBRTCClient.getInstance(getApplicationContext());

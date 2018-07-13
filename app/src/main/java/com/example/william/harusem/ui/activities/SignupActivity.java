@@ -1,5 +1,3 @@
-// signup
-
 package com.example.william.harusem.ui.activities;
 
 import android.app.ProgressDialog;

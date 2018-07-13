@@ -9,8 +9,13 @@ import android.os.Handler;
 import android.os.PersistableBundle;
 import android.os.SystemClock;
 import android.os.Vibrator;
-import com.example.william.harusem.services.CallService;
+
+import com.example.william.harusem.Harusem;
+import com.example.william.harusem.ui.adapters.UsersAdapter;
+import com.example.william.harusem.util.QBResRequestExecutor;
 import com.example.william.harusem.util.SharedPrefsHelper;
+import com.crashlytics.android.Crashlytics;
+import com.example.william.harusem.services.CallService;
 import com.example.william.harusem.util.consts.Consts;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
@@ -67,9 +72,13 @@ import com.example.william.harusem.util.qb.PaginationHistoryListener;
 import com.example.william.harusem.util.qb.QbChatDialogMessageListenerImp;
 import com.example.william.harusem.util.qb.QbDialogUtils;
 import com.example.william.harusem.util.qb.VerboseQbChatConnectionListener;
+import com.example.william.harusem.utils.CollectionsUtils;
+import com.example.william.harusem.utils.PermissionsChecker;
+import com.example.william.harusem.utils.PushNotificationSender;
+import com.example.william.harusem.utils.UsersUtils;
+import com.example.william.harusem.utils.WebRtcSessionManager;
 import com.example.william.harusem.widget.AttachmentPreviewAdapterView;
 import com.quickblox.chat.QBChatService;
-import com.quickblox.chat.QBPrivacyListsManager;
 import com.quickblox.chat.QBRoster;
 import com.quickblox.chat.listeners.QBChatDialogTypingListener;
 import com.quickblox.chat.listeners.QBRosterListener;
@@ -78,8 +87,6 @@ import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.chat.model.QBDialogType;
 import com.quickblox.chat.model.QBPresence;
-import com.quickblox.chat.model.QBPrivacyList;
-import com.quickblox.chat.model.QBPrivacyListItem;
 import com.quickblox.content.QBContent;
 import com.quickblox.content.model.QBFile;
 import com.quickblox.core.QBEntityCallback;
@@ -89,6 +96,7 @@ import com.quickblox.messages.QBPushNotifications;
 import com.quickblox.messages.model.QBEnvironment;
 import com.quickblox.messages.model.QBEvent;
 import com.quickblox.messages.model.QBNotificationType;
+import com.quickblox.messages.services.SubscribeService;
 import com.quickblox.ui.kit.chatmessage.adapter.listeners.QBChatAttachClickListener;
 import com.quickblox.ui.kit.chatmessage.adapter.media.SingleMediaManager;
 import com.quickblox.ui.kit.chatmessage.adapter.media.recorder.AudioRecorder;
@@ -97,6 +105,9 @@ import com.quickblox.ui.kit.chatmessage.adapter.media.recorder.listeners.QBMedia
 import com.quickblox.ui.kit.chatmessage.adapter.media.recorder.view.QBRecordAudioButton;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
+import com.quickblox.videochat.webrtc.QBRTCClient;
+import com.quickblox.videochat.webrtc.QBRTCSession;
+import com.quickblox.videochat.webrtc.QBRTCTypes;
 import com.squareup.picasso.Picasso;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
@@ -118,11 +129,19 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+////////For call
+
+import java.util.concurrent.TimeUnit;
+
+import io.fabric.sdk.android.Fabric;
+
 /**
  * Created by william on 6/10/2018.
  */
 public class ChatActivity extends AppCompatActivity implements OnImagePickedListener, PopupMenu.OnMenuItemClickListener {
     public static final String EXTRA_DIALOG_ID = "dialogId";
+
+    private static final long ON_ITEM_CLICK_DELAY = TimeUnit.SECONDS.toMillis(10);
     public static final String TAG = ChatActivity.class.getSimpleName();
     private static final int MESSAGE_ATTACHMENT = 1;
     private static final int REQUEST_CODE_ATTACHMENT = 721;
@@ -134,7 +153,15 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     private static final int CHRONOMETER_ALARM_SECOND = 27;
     protected List<QBChatMessage> messagesList;
     protected AudioRecorder audioRecorder;
-    private QBUser userForSave;
+    private boolean isRunForCall;
+    private QBUsersHolder qbUsersHolder;
+
+    SharedPrefsHelper sharedPrefsHelper;
+
+
+    private WebRtcSessionManager webRtcSessionManager;
+    private PermissionsChecker checker;
+    private QBUser currentUser;
     @BindView(R.id.audio_call_img_btn)
     ImageButton audioCallBtn;
     long TYPING_TIME = 2000;
@@ -182,10 +209,12 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     ImageView bucketView;
     QBFriendListHelper qbFriendListHelper;
     QBChatDialogTypingListener typingListener;
+    protected QBResRequestExecutor requestExecutor;
     private QBMediaRecordListenerImpl recordListener;
     private AttachmentPreviewAdapter attachmentPreviewAdapter;
     private Snackbar snackbar;
     private ChatAdapter chatAdapter;
+    private UsersAdapter usersAdapter;
     private ConnectionListener chatConnectionListener;
     private ImageAttachClickListener imageAttachClickListener;
     private QBChatDialog qbChatDialog;
@@ -202,6 +231,11 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Fabric.with(this, new Crashlytics());
+
+        requestExecutor = Harusem.getInstance().getQbResRequestExecutor();
+        initFieldsFromOppononet();
         setContentView(R.layout.activity_chat);
         ButterKnife.bind(this);
         hideKeyboard();
@@ -267,8 +301,8 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         audioCallBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                startCall();
+//
+//                startCall();
 
                 //Intent intent= new Intent(ChatActivity.this,CallActivity.class);
                 //startActivity(intent);
@@ -278,15 +312,149 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         QBUser signInQbUser = QBUsersHolder.getInstance().getSignInQbUser();
         Log.i(TAG, "signInQbUser: " + signInQbUser);
 
+        String currentUserName = SharedPrefsHelper.getInstance().get("QB_USER_FULL_NAME");
+
+        if (isRunForCall && webRtcSessionManager.getCurrentSession() != null) {
+            CallActivity.start(ChatActivity.this, true);
+        }
+
+        checker = new PermissionsChecker(getApplicationContext());
+
 
     }
+    //new
+    private void startPermissionsActivity(boolean checkOnlyAudio) {
+        PermissionsActivity.startActivity(this, checkOnlyAudio, Consts.PERMISSIONS);
+    }
+   //new
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (SharedPrefsHelper.getInstance().getQbUser()!=null) {
+            getMenuInflater().inflate(R.menu.activity_selected_opponents, menu);
+        }
+
+        return super.onCreateOptionsMenu(menu);
+    }
+    //new
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.log_out:
+                logOut();
+                return true;
+
+            case R.id.start_video_call:
+                if (isLoggedInChat()) {
+                    startCall(true);
+                }
+                if (checker.lacksPermissions(Consts.PERMISSIONS)) {
+                    startPermissionsActivity(false);
+                }
+                return true;
+
+            case R.id.start_audio_call:
+                if (isLoggedInChat()) {
+                    startCall(false);
+                }
+                if (checker.lacksPermissions(Consts.PERMISSIONS[1])) {
+                    startPermissionsActivity(true);
+                }
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void logOut() {
+        unsubscribeFromPushes();
+        startLogoutCommand();
+        removeAllUserData();
+    }
+
+    private void startLogoutCommand() {
+
+        CallService.logout(this);
+    }
+
+    private void unsubscribeFromPushes() {
+
+        SubscribeService.unSubscribeFromPushes(this);
+
+    }
+
+    private void startCall(boolean isVideoCall) {
+        QBRTCTypes.QBConferenceType conferenceType = isVideoCall
+                ? QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO
+                : QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_AUDIO;
+
+        //ArrayList<Integer> opponentsList = CollectionsUtils.getIdsSelectedOpponents(usersAdapter.);
+
+        QBRTCClient qbrtcClient = QBRTCClient.getInstance(getApplicationContext());
+        // the casting wouldd do shitty thing and I know it but  ta da
+        List<Integer> occupants = qbChatDialog.getOccupants();
+        occupants.remove(SharedPrefsHelper.getInstance().getQbUser().getId());
+        QBRTCSession newQbRtcSession = qbrtcClient.createNewSessionWithOpponents(occupants, conferenceType);
+
+        WebRtcSessionManager.getInstance(this).setCurrentSession(newQbRtcSession);
+
+        PushNotificationSender.sendPushMessage(occupants, currentUser.getFullName());
+
+        CallActivity.start(this, false);
+        Log.d(TAG, "conferenceType = " + conferenceType);
+    }
+
+    //new
+    private boolean isLoggedInChat() {
+        if (!QBChatService.getInstance().isLoggedIn()) {
+            Toaster.shortToast(R.string.dlg_signal_error);
+            tryReLoginToChat();
+            return false;
+        }
+        return true;
+    }
+
+    private void tryReLoginToChat() {
+        if (sharedPrefsHelper.hasQbUser()) {
+            QBUser qbUser = sharedPrefsHelper.getQbUser();
+            CallService.start(this, qbUser);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent.getExtras() != null) {
+            isRunForCall = intent.getExtras().getBoolean(Consts.EXTRA_IS_STARTED_FOR_CALL);
+            if (isRunForCall && webRtcSessionManager.getCurrentSession() != null) {
+                CallActivity.start(ChatActivity.this, true);
+            }
+        }
+    }
+
+    private void initFieldsFromOppononet() {
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            isRunForCall = extras.getBoolean(Consts.EXTRA_IS_STARTED_FOR_CALL);
+        }
+
+        currentUser = sharedPrefsHelper.getQbUser();
+        //////////////////////////////////////////////////////
+        qbUsersHolder = QBUsersHolder.getInstance();
+        webRtcSessionManager = WebRtcSessionManager.getInstance(getApplicationContext());
+    }
+
+
 
 
     //not really sure about this one ask ask !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    private void startCall() {
-        QBUser current = SharedPrefsHelper.getInstance().getQbUser();
-        startLoginService(current);
-    }
+//    private void startCall() {
+//        QBUser current = SharedPrefsHelper.getInstance().getQbUser();
+//        startLoginService(current);
+//    }
 
     // private void loginToChat(final ArrayList<QBUser> qbUser) {
     //qbUser.setPassword(Consts.DEFAULT_USER_PASSWORD);
@@ -301,13 +469,13 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         PendingIntent pendingIntent = createPendingResult(Consts.EXTRA_LOGIN_RESULT_CODE, tempIntent, 0);
         CallService.start(this, qbUser, pendingIntent);
         /////////////// where do we really change the intent
-        startOpponentsActivity();
+//        startOpponentsActivity();
     }
 
-    private void startOpponentsActivity() {
-        OpponentsActivity.start(ChatActivity.this, false);
-        finish();
-    }
+//    private void startOpponentsActivity() {
+//        OpponentsActivity.start(ChatActivity.this, false);
+//        finish();
+//    }
 
 
     private void initCustomListeners() {
@@ -332,6 +500,9 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         mediaManager = chatAdapter.getMediaManagerInstance();
     }
 
+
+
+
     private void setButtonsVisibility(String s) {
         if (s.isEmpty() && attachmentPreviewAdapter.getUploadedAttachments().size() == 0) {
             sendTxtBtn.setVisibility(View.GONE);
@@ -340,30 +511,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             sendTxtBtn.setVisibility(View.VISIBLE);
             recordAudioBtn.setVisibility(View.GONE);
         }
-    }
-
-    // user blocking metod
-    boolean isUserBlocked(String userID) {
-        QBPrivacyListsManager privacyListsManager = QBChatService.getInstance().getPrivacyListsManager();
-
-        List<QBPrivacyList> lists = null;
-        try {
-            lists = privacyListsManager.getPrivacyLists();
-            for (QBPrivacyList qbPrivacyList : lists) {
-                if (qbPrivacyList.getName().equals("public")) {
-
-                    for (QBPrivacyListItem item : qbPrivacyList.getItems()) {
-                        if (item.getValueForType().contains(userID)) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        } catch (SmackException.NotConnectedException | SmackException.NoResponseException | XMPPException.XMPPErrorException e) {
-            e.printStackTrace();
-        }
-        return false;
-
     }
 
     private void initIsTypingListener() {
@@ -424,6 +571,22 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         if (supportActionBar != null) {
 //            supportActionBar.setDisplayHomeAsUpEnabled(true);
         }
+    }
+    private void removeAllUserData() {
+
+        //it has getApplicationContext() inside it////////////////////////////////////////////////////////////
+        UsersUtils.removeUserData();
+        requestExecutor.deleteCurrentUser(currentUser.getId(), new QBEntityCallback<Void>() {
+            @Override
+            public void onSuccess(Void aVoid, Bundle bundle) {
+                Log.d(TAG, "Current user was deleted from QB");
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Log.e(TAG, "Current user wasn't deleted from QB " + e);
+            }
+        });
     }
 
     @Override
@@ -1081,13 +1244,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         }
 
         String text = messageInputEt.getText().toString().trim();
-
-        if(isUserBlocked(qbChatDialog.getRecipientId().toString())) {
-            Toast.makeText(this, "You can't send message to this user!", Toast.LENGTH_SHORT).show();
-            messageInputEt.setText("");
-            return;
-        }
-
         if (!TextUtils.isEmpty(text)) {
             sendChatMessage(text, null);
         }

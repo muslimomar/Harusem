@@ -142,7 +142,7 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
 
         isPeerToPeerCall = opponents.size() == 1;
     }
-//Th
+    //Th
     @SuppressLint("StringFormatMatches")
     public void setDuringCallActionBar() {
         actionBar.setDisplayShowTitleEnabled(true);
@@ -257,12 +257,12 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
                         QBRTCTypes.QBRTCConnectionState.QB_RTC_CONNECTION_CLOSED){
                     Log.d(TAG, "execute restoreSession for user:"+entry.getKey());
                     mainHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+                        @Override
+                        public void run() {
                             onConnectedToUser(currentSession, entry.getKey());
                             onRemoteVideoTrackReceive(currentSession, entry.getValue(), entry.getKey());
                         }
-                        }, LOCAL_TRACk_INITIALIZE_DELAY);
+                    }, LOCAL_TRACk_INITIALIZE_DELAY);
                 } else {
                     entryIterator.remove();
                 }
@@ -390,7 +390,7 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
         }
         remoteFullScreenVideoView = null;
         if (!isPeerToPeerCall){
-           releseOpponentsViews();
+            releseOpponentsViews();
         }
     }
 
@@ -653,7 +653,7 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
     }
 
     private void fillVideoView(QBRTCSurfaceView videoView, QBRTCVideoTrack videoTrack, boolean remoteRenderer) {
-       fillVideoView(0, videoView, videoTrack, remoteRenderer);
+        fillVideoView(0, videoView, videoTrack, remoteRenderer);
     }
 
     /**
@@ -964,5 +964,3 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
         }
     }
 }
-
-

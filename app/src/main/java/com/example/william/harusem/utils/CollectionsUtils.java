@@ -14,13 +14,13 @@ public class CollectionsUtils {
     public static String makeStringFromUsersFullNames(ArrayList<QBUser> allUsers) {
         StringifyArrayList<String> usersNames = new StringifyArrayList<>();
 
-            for (QBUser usr : allUsers) {
-                if (usr.getFullName() != null) {
-                    usersNames.add(usr.getFullName());
-                } else if (usr.getId() != null) {
-                    usersNames.add(String.valueOf(usr.getId()));
-                }
+        for (QBUser usr : allUsers) {
+            if (usr.getFullName() != null) {
+                usersNames.add(usr.getFullName());
+            } else if (usr.getId() != null) {
+                usersNames.add(String.valueOf(usr.getId()));
             }
+        }
         return usersNames.getItemsAsString().replace(",",", ");
     }
 

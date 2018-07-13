@@ -52,7 +52,7 @@ public class OpponentsActivity extends BaseActivity {
     private boolean isRunForCall;
     private WebRtcSessionManager webRtcSessionManager;
     private PermissionsChecker checker;
-
+//////////////////////////////////////////////////////////
     public static void start(Context context, boolean isRunForCall) {
         Intent intent = new Intent(context, OpponentsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -75,7 +75,7 @@ public class OpponentsActivity extends BaseActivity {
         startLoadUsers();
 
         if (isRunForCall && webRtcSessionManager.getCurrentSession() != null) {
-           CallActivity.start(OpponentsActivity.this, true);
+            CallActivity.start(OpponentsActivity.this, true);
         }
 
         checker = new PermissionsChecker(getApplicationContext());
@@ -120,10 +120,10 @@ public class OpponentsActivity extends BaseActivity {
     }
 
     private void startLoadUsers() {
-     showProgressDialog(R.string.dlg_loading_opponents);
+        showProgressDialog(R.string.dlg_loading_opponents);
         //////NOT a room will be deleted
-      //String currentRoomName = SharedPrefsHelper.getInstance().get(Consts.PREF_CURREN_ROOM_NAME);
-       // String currentUserName=qbUsersHolder.getUserById()
+        //String currentRoomName = SharedPrefsHelper.getInstance().get(Consts.PREF_CURREN_ROOM_NAME);
+        // String currentUserName=qbUsersHolder.getUserById()
         ////////////////////////////////////////////////I changed it lately
         String currentUserName = SharedPrefsHelper.getInstance().get("QB_USER_FULL_NAME");
         requestExecutor.loadUsersByTag(currentUserName, new QBEntityCallback<ArrayList<QBUser>>() {
@@ -276,7 +276,7 @@ public class OpponentsActivity extends BaseActivity {
 
         WebRtcSessionManager.getInstance(this).setCurrentSession(newQbRtcSession);
 
-        PushNotificationSender.sendPushMessage(opponentsList, currentUser.getFullName());
+        //PushNotificationSender.sendPushMessage(opponentsList, currentUser.getFullName());
 
         CallActivity.start(this, false);
         Log.d(TAG, "conferenceType = " + conferenceType);

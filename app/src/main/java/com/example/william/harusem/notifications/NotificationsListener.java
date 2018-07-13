@@ -39,13 +39,10 @@ public class NotificationsListener extends QBFcmPushListenerService {
         //How you get NPE while you already got the message data!
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         Map<String, String> data = remoteMessage.getData();
-
-
         //Custom params receiver from Push notifications
         userName = data.get("user_name");
         message = data.get("message");
         sendNotification();
-
         */
 
     }

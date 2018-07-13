@@ -61,7 +61,7 @@ public class UsersUtils {
 
         return idsNotLoadedUsers;
     }
-//////////////Context context
+    //////////////Context context
     public static void removeUserData() {
         if (sharedPrefsHelper == null) {
             sharedPrefsHelper = SharedPrefsHelper.getInstance();

@@ -184,12 +184,12 @@ public abstract class BaseConversationFragment extends BaseToolBarFragment imple
         handUpVideoCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    actionButtonsEnabled(false);
-                    handUpVideoCall.setEnabled(false);
-                    handUpVideoCall.setActivated(false);
+                actionButtonsEnabled(false);
+                handUpVideoCall.setEnabled(false);
+                handUpVideoCall.setActivated(false);
 
-                    conversationFragmentCallbackListener.onHangUpCurrentSession();
-                    Log.d(TAG, "Call is stopped");
+                conversationFragmentCallbackListener.onHangUpCurrentSession();
+                Log.d(TAG, "Call is stopped");
             }
         });
     }

@@ -4,7 +4,7 @@
     <item
         android:id="@+id/stop_screen_share"
         android:checkable="true"
-        android:icon="@drawable/ic_action_sstop_creen_share"
+        android:icon="@drawable/ic_action_sstop_creen_sharing"
         android:title="@string/stop_share"
         app:showAsAction="ifRoom" />
 
