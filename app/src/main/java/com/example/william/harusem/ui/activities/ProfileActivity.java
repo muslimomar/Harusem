@@ -271,7 +271,6 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-
     private QBPrivacyList getPublicPrivacyList() {
 
         QBPrivacyList publicList = null;
