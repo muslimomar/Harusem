@@ -142,10 +142,7 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
 
         isPeerToPeerCall = opponents.size() == 1;
     }
-<<<<<<< HEAD
 
-=======
->>>>>>> video_call
     //Th
     @SuppressLint("StringFormatMatches")
     public void setDuringCallActionBar() {
@@ -393,11 +390,7 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
             remoteFullScreenVideoView.release();
         }
         remoteFullScreenVideoView = null;
-<<<<<<< HEAD
-        if (!isPeerToPeerCall) {
-=======
         if (!isPeerToPeerCall){
->>>>>>> video_call
             releseOpponentsViews();
         }
     }

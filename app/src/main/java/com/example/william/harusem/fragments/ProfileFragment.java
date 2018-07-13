@@ -21,15 +21,11 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-<<<<<<< HEAD
 import com.example.william.harusem.BlockingActivity;
-=======
 import com.example.william.harusem.holder.QBFriendRequestsHolder;
 import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.helper.QBFriendListHelper;
 
->>>>>>> video_call
 import com.example.william.harusem.R;
 import com.example.william.harusem.holder.QBChatDialogHolder;
 import com.example.william.harusem.ui.activities.AccountActivity;

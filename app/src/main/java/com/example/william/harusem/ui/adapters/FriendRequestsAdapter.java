@@ -17,11 +17,8 @@ import com.example.william.harusem.R;
 import com.example.william.harusem.fcm.NotificationHelper;
 import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.holder.QBFriendRequestsHolder;
-<<<<<<< HEAD
 import com.example.william.harusem.ui.activities.ProfileActivity;
-=======
 import com.example.william.harusem.holder.QBUsersHolder;
->>>>>>> 3ed5a87c9563b294443ed98a0aed5887803bcd90
 import com.example.william.harusem.util.qb.callback.QbEntityCallbackImpl;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.content.QBContent;
@@ -109,13 +106,13 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
         });
 
         getUserImage(user, holder.userThumbIv);
-<<<<<<< HEAD
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 redirectToProfileActivity(user);
-=======
+            }
+        });
 
     }
 
@@ -137,7 +134,6 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
             public void onError(QBResponseException e) {
                 Log.e(TAG, "QBPushNotifications error!: FriendRequest Back Not Sent ERROR!", e);
                 Toast.makeText(context, "FriendRequest Back Not QBPushNotifications error!!!!" + e.getMessage(), Toast.LENGTH_SHORT).show();
->>>>>>> 3ed5a87c9563b294443ed98a0aed5887803bcd90
             }
         });
     }
