@@ -13,33 +13,41 @@
         android:layout_height="210dp"
         android:background="@color/colorPrimary" />
 
-    <android.support.v7.widget.CardView
+    <LinearLayout
         android:id="@+id/card_view_friend_information"
         android:layout_width="match_parent"
-        android:layout_height="220dp"
+        android:layout_height="210dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="105dp"
-        card_view:cardCornerRadius="3dp"
-        card_view:contentPadding="7dp">
+        android:layout_marginTop="85dp"
+        android:background="@color/white"
+        android:orientation="vertical">
 
-        <LinearLayout
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <ImageView
+            <View
+                android:id="@+id/top_user_view"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@color/colorPrimary" />
 
+            <ImageView
                 android:id="@+id/friend_detail_image_view"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:layout_gravity="center_horizontal"
+                android:layout_centerHorizontal="true"
                 android:src="@drawable/ic_user_new" />
 
             <TextView
                 android:id="@+id/friend_name_friend_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/friend_detail_image_view"
+                android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="7dp"
                 android:text="Isim Soyisim"
@@ -48,8 +56,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:orientation="horizontal">
+                android:layout_below="@+id/friend_name_friend_detail"
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal"
+                android:padding="7dp">
 
 
                 <LinearLayout
@@ -65,14 +75,14 @@
                         android:text="English"
                         android:textColor="#000" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <ProgressBar
+                        android:id="@+id/english_progress_bar"
+                        style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal"
+                        android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="10dp"
-                        android:text="intermediate"
-                        android:textColor="#000"
-                        android:textSize="12dp" />
+                        android:background="@drawable/progress_style" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -85,17 +95,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:text="English"
+                        android:text="Tukish"
                         android:textColor="#000" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <ProgressBar
+                        android:id="@+id/turkish_progress_bar"
+                        style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal"
+                        android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="10dp"
-                        android:text="intermediate"
-                        android:textColor="#000"
-                        android:textSize="12dp" />
+                        android:background="@drawable/progress_style" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -108,22 +118,24 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:text="English"
+                        android:text="Arabic"
                         android:textColor="#000" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <ProgressBar
+                        android:id="@+id/arabic_progress_bar"
+                        style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal"
+                        android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="10dp"
-                        android:text="intermediate"
-                        android:textColor="#000"
-                        android:textSize="12dp" />
+                        android:background="@drawable/progress_style" />
                 </LinearLayout>
             </LinearLayout>
 
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
+        </RelativeLayout>
+
+
+    </LinearLayout>
 
     <android.support.v7.widget.CardView
         android:id="@+id/card_view_friend_country"
@@ -137,7 +149,6 @@
         card_view:contentPadding="7dp">
 
         <LinearLayout
-
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
@@ -148,9 +159,10 @@
                 android:layout_gravity="center_vertical">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/ic_tick" />
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:padding="2dp"
+                    android:src="@drawable/ic_flag" />
             </LinearLayout>
 
             <LinearLayout
