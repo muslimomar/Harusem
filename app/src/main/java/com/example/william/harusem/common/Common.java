@@ -32,6 +32,4 @@ public class Common {
 
         return name.toString();
     }
-
-
 }

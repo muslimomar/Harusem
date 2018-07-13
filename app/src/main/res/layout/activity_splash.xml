@@ -12,7 +12,6 @@
         android:layout_width="205dp"
         android:layout_height="242dp"
         android:layout_centerInParent="true"
-        android:src="@drawable/harusem_logo"
-        />
+        android:src="@drawable/harusem_logo" />
 
 </RelativeLayout>

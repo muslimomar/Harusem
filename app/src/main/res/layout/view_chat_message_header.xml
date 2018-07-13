@@ -2,13 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/MatchWidth"
-    android:gravity="center"
-    >
+    android:gravity="center">
 
     <TextView
         android:id="@+id/header_date_textview"
         style="@style/ListDateHeaderStyle"
-        tools:text="MARCH 06"
-        />
+        tools:text="MARCH 06" />
 
 </LinearLayout>

@@ -1,6 +1,5 @@
 package com.example.william.harusem.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -15,9 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.holder.QBUsersHolder;
@@ -34,7 +30,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 
@@ -43,8 +38,10 @@ public class SearchFragment extends Fragment {
     private static final String TAG = UsersActivity.class.getSimpleName();
 
     Unbinder unbinder;
-    @BindView(R.id.search_view) MaterialSearchView searchView;
-    @BindView(R.id.toolbar_search) Toolbar toolbar;
+    @BindView(R.id.search_view)
+    MaterialSearchView searchView;
+    @BindView(R.id.toolbar_search)
+    Toolbar toolbar;
     @BindView(R.id.search_recyclerview)
     RecyclerView recyclerView;
 
@@ -83,8 +80,8 @@ public class SearchFragment extends Fragment {
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if(query != null && !query.isEmpty()){
-                    QBUsers.getUsersByFullName(query,null).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
+                if (query != null && !query.isEmpty()) {
+                    QBUsers.getUsersByFullName(query, null).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
                         @Override
                         public void onSuccess(ArrayList<QBUser> qbUsers, Bundle bundle) {
 
@@ -110,8 +107,7 @@ public class SearchFragment extends Fragment {
                         }
                     });
 
-                }
-                else {
+                } else {
                     // if search text is null
                     // return default
                     UsersAdapter adapter = new UsersAdapter(qbUserWithoutCurrent, getContext());
@@ -123,8 +119,8 @@ public class SearchFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(final String newText) {
 
-                if(newText != null && !newText.isEmpty()){
-                    QBUsers.getUsersByFullName(newText,null).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
+                if (newText != null && !newText.isEmpty()) {
+                    QBUsers.getUsersByFullName(newText, null).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
                         @Override
                         public void onSuccess(ArrayList<QBUser> qbUsers, Bundle bundle) {
 
@@ -150,8 +146,7 @@ public class SearchFragment extends Fragment {
                         }
                     });
 
-                }
-                else {
+                } else {
                     // if search text is null
                     // return default
                     UsersAdapter adapter = new UsersAdapter(qbUserWithoutCurrent, getContext());
@@ -190,7 +185,6 @@ public class SearchFragment extends Fragment {
 
         return super.onOptionsItemSelected(item);
     }
-
 
 
     public void retrieveAllUser() {

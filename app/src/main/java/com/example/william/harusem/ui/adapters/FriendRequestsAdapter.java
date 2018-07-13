@@ -11,16 +11,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.william.harusem.R;
+import com.example.william.harusem.fcm.NotificationHelper;
 import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.holder.QBFriendRequestsHolder;
+<<<<<<< HEAD
 import com.example.william.harusem.ui.activities.ProfileActivity;
+=======
+import com.example.william.harusem.holder.QBUsersHolder;
+>>>>>>> 3ed5a87c9563b294443ed98a0aed5887803bcd90
 import com.example.william.harusem.util.qb.callback.QbEntityCallbackImpl;
+import com.quickblox.chat.QBChatService;
 import com.quickblox.content.QBContent;
 import com.quickblox.content.model.QBFile;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.helper.StringifyArrayList;
+import com.quickblox.messages.QBPushNotifications;
+import com.quickblox.messages.model.QBEvent;
 import com.quickblox.users.model.QBUser;
 import com.squareup.picasso.Picasso;
 
@@ -65,7 +75,7 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
                         usersList.remove(user);
                         notifyItemRemoved(usersList.indexOf(user));
                         showSnackBar(view, "Request Accepted");
-
+                        sendNotification(user, view, position);
                     }
 
                     @Override
@@ -99,11 +109,35 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
         });
 
         getUserImage(user, holder.userThumbIv);
+<<<<<<< HEAD
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 redirectToProfileActivity(user);
+=======
+
+    }
+
+
+    private void sendNotification(final QBUser user, final View view, final int position) {
+        QBUser currentUser = QBUsersHolder.getInstance().getUserById(QBChatService.getInstance().getUser().getId());
+        String currentt = currentUser.getFullName();
+        StringifyArrayList<Integer> userIds = new StringifyArrayList<Integer>();
+        userIds.add(user.getId());
+        QBEvent messageEvent = NotificationHelper.acceptedYourRequestPushEvent(userIds, currentt);
+
+        QBPushNotifications.createEvent(messageEvent).performAsync(new QBEntityCallback<QBEvent>() {
+            @Override
+            public void onSuccess(QBEvent qbEvent, Bundle bundle) {
+                Log.i(TAG, "QBPushNotifications onSucces!: FriendRequest Back Sent!!" + qbEvent + "\n bundle" + bundle);
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Log.e(TAG, "QBPushNotifications error!: FriendRequest Back Not Sent ERROR!", e);
+                Toast.makeText(context, "FriendRequest Back Not QBPushNotifications error!!!!" + e.getMessage(), Toast.LENGTH_SHORT).show();
+>>>>>>> 3ed5a87c9563b294443ed98a0aed5887803bcd90
             }
         });
     }

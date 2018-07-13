@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.ListView;
 
 import com.example.william.harusem.R;
@@ -16,11 +15,12 @@ import com.quickblox.users.model.QBUser;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 //import com.quickblox.sample.chat.R;
 //import com.quickblox.sample.chat.ui.adapter.UsersAdapter;
 //import com.quickblox.sample.chat.utils.qb.QbUsersHolder;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class ChatInfoActivity extends AppCompatActivity {
     private static final String EXTRA_DIALOG = "dialog";

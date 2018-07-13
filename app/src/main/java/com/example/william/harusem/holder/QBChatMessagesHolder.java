@@ -17,10 +17,10 @@ public class QBChatMessagesHolder {
 
     public static synchronized QBChatMessagesHolder getInstance() {
         QBChatMessagesHolder qbChatMessagesHolder;
-        synchronized (QBChatMessagesHolder.class){
+        synchronized (QBChatMessagesHolder.class) {
             if (instance == null)
                 instance = new QBChatMessagesHolder();
-                qbChatMessagesHolder = instance;
+            qbChatMessagesHolder = instance;
         }
         return qbChatMessagesHolder;
     }
@@ -31,7 +31,7 @@ public class QBChatMessagesHolder {
 
 
     public void putMessages(String dialogId, ArrayList<QBChatMessage> qbChatMessages) {
-        this.qbChatMessageArray.put(dialogId,qbChatMessages);
+        this.qbChatMessageArray.put(dialogId, qbChatMessages);
     }
 
     public void putMessage(String dialogId, QBChatMessage qbChatMessage) {
@@ -41,7 +41,7 @@ public class QBChatMessagesHolder {
         ArrayList<QBChatMessage> firstAdded = new ArrayList(firstResult.size());
         firstAdded.addAll(firstResult);
 
-        putMessages(dialogId,firstAdded);
+        putMessages(dialogId, firstAdded);
 
     }
 

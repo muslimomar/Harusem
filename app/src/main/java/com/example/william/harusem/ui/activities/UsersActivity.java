@@ -34,9 +34,7 @@ public class UsersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users);
         ButterKnife.bind(this);
-
         configRecyclerView();
-
         retrieveAllUser();
         swipeLayoutRefresh();
     }

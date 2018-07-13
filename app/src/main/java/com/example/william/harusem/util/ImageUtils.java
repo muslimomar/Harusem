@@ -10,7 +10,6 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 
-
 import com.example.william.harusem.Harusem;
 import com.example.william.harusem.R;
 import com.example.william.harusem.util.consts.MimeType;
@@ -99,7 +98,10 @@ public class ImageUtils {
 
         File photoFile = getTemporaryCameraFile();
         intent.putExtra(MediaStore.EXTRA_OUTPUT, getValidUri(photoFile, fragment.getContext()));
+
+
         fragment.startActivityForResult(intent, CAMERA_REQUEST_CODE);
+
     }
 
     public static File getTemporaryCameraFile() {

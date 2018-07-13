@@ -60,12 +60,11 @@ public class QBUsersHolder {
         return qbUser;
     }
 
-
     public ArrayList<QBUser> getAllUsers() {
         ArrayList<QBUser> result = new ArrayList<>();
         for (int i = 0; i < qbUserSparseArray.size(); i++)
             result.add(qbUserSparseArray.valueAt(i));
-            return result;
+        return result;
     }
 
 

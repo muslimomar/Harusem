@@ -59,5 +59,4 @@ public class MaterialIntroActivity extends agency.tango.materialintroscreen.Mate
     }
 
 
-
 }

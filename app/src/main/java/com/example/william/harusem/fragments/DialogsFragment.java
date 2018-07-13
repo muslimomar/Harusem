@@ -23,23 +23,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import com.example.william.harusem.util.qb.QbDialogUtils;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.holder.QBChatDialogHolder;
-import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.manager.DialogsManager;
 import com.example.william.harusem.ui.activities.ChatActivity;
-import com.example.william.harusem.ui.activities.MainActivity;
 import com.example.william.harusem.ui.activities.SelectUsersActivity;
 import com.example.william.harusem.ui.adapters.DialogsAdapter;
-import com.example.william.harusem.ui.adapters.UsersAdapter;
 import com.example.william.harusem.ui.dialog.ProgressDialogFragment;
 import com.example.william.harusem.util.ChatHelper;
 import com.example.william.harusem.util.ErrorUtils;
@@ -59,7 +54,6 @@ import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.core.request.QBRequestGetBuilder;
-import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
 import java.util.ArrayList;
@@ -155,7 +149,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
             public void onSearchViewShown() {
 
                 qbUserWithoutCurrent = new ArrayList<QBChatDialog>(QBChatDialogHolder.getInstance().getDialogs().values());
-                DialogsAdapter adapter = new DialogsAdapter(getContext(),qbUserWithoutCurrent);
+                DialogsAdapter adapter = new DialogsAdapter(getContext(), qbUserWithoutCurrent);
                 dialogsListView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
 
@@ -165,7 +159,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
             public void onSearchViewClosed() {
 
                 qbUserWithoutCurrent = new ArrayList<QBChatDialog>(QBChatDialogHolder.getInstance().getDialogs().values());
-                DialogsAdapter adapter = new DialogsAdapter(getContext(),qbUserWithoutCurrent);
+                DialogsAdapter adapter = new DialogsAdapter(getContext(), qbUserWithoutCurrent);
                 dialogsListView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }
@@ -175,27 +169,26 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if(query != null && !query.isEmpty()){
+                if (query != null && !query.isEmpty()) {
 
                     qbUserWithoutCurrent = new ArrayList<QBChatDialog>(QBChatDialogHolder.getInstance().getDialogs().values());
 
                     ArrayList<QBChatDialog> lstFound = new ArrayList<>();
-                    for(QBChatDialog item:qbUserWithoutCurrent){
-                        if(item.getName().toLowerCase().contains(query.toLowerCase()))
+                    for (QBChatDialog item : qbUserWithoutCurrent) {
+                        if (item.getName().toLowerCase().contains(query.toLowerCase()))
                             lstFound.add(item);
 
                     }
 
-                    DialogsAdapter adapter = new DialogsAdapter(getContext(),lstFound);
+                    DialogsAdapter adapter = new DialogsAdapter(getContext(), lstFound);
                     dialogsListView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
 
 
-                }
-                else {
+                } else {
                     // if search text is null
                     // return default
-                    DialogsAdapter adapter = new DialogsAdapter(getContext(),qbUserWithoutCurrent);
+                    DialogsAdapter adapter = new DialogsAdapter(getContext(), qbUserWithoutCurrent);
                     dialogsListView.setAdapter(adapter);
                 }
 
@@ -205,27 +198,26 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
             @Override
             public boolean onQueryTextChange(final String newText) {
 
-                if(newText != null && !newText.isEmpty()){
+                if (newText != null && !newText.isEmpty()) {
 
                     qbUserWithoutCurrent = new ArrayList<QBChatDialog>(QBChatDialogHolder.getInstance().getDialogs().values());
 
                     ArrayList<QBChatDialog> lstFound = new ArrayList<>();
-                    for(QBChatDialog item:qbUserWithoutCurrent){
-                        if(item.getName().toLowerCase().contains(newText.toLowerCase()))
+                    for (QBChatDialog item : qbUserWithoutCurrent) {
+                        if (item.getName().toLowerCase().contains(newText.toLowerCase()))
                             lstFound.add(item);
 
                     }
 
-                    DialogsAdapter adapter = new DialogsAdapter(getContext(),lstFound);
+                    DialogsAdapter adapter = new DialogsAdapter(getContext(), lstFound);
                     dialogsListView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
 
 
-                }
-                else {
+                } else {
                     // if search text is null
                     // return default
-                    DialogsAdapter adapter = new DialogsAdapter(getContext(),qbUserWithoutCurrent);
+                    DialogsAdapter adapter = new DialogsAdapter(getContext(), qbUserWithoutCurrent);
                     dialogsListView.setAdapter(adapter);
                 }
                 return true;
@@ -234,7 +226,6 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
 
         return view;
     }
-
 
 
     @Override
@@ -549,7 +540,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
 
     public void startForResult(Activity activity, int code, QBChatDialog dialogId) {
         Intent intent = new Intent(activity, ChatActivity.class);
-        intent.putExtra(ChatActivity.EXTRA_DIALOG_ID, dialogId);
+        intent.putExtra(ChatActivity.EXTRA_DIALOG, dialogId);
         startActivityForResult(intent, code);
     }
 

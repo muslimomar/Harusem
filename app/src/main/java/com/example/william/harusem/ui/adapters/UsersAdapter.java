@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.william.harusem.R;
+import com.example.william.harusem.fcm.NotificationHelper;
 import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.ui.activities.ChatActivity;
 import com.example.william.harusem.ui.activities.ProfileActivity;
@@ -28,10 +29,15 @@ import com.quickblox.chat.QBSystemMessagesManager;
 import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.chat.utils.DialogUtils;
+import com.example.william.harusem.holder.QBUsersHolder;
+import com.quickblox.chat.QBChatService;
 import com.quickblox.content.QBContent;
 import com.quickblox.content.model.QBFile;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.helper.StringifyArrayList;
+import com.quickblox.messages.QBPushNotifications;
+import com.quickblox.messages.model.QBEvent;
 import com.quickblox.users.model.QBUser;
 import com.squareup.picasso.Picasso;
 
@@ -116,6 +122,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
 
                 } else if (!friendListHelper.isFriendRequestAlreadySent(user.getId()) && !friendListHelper.isFriend(user.getId())) {
                     sendRequest(user, view, position, holder.button);
+                    sendNotification(user, view, position, holder.button);
                 }
 
             }
@@ -126,6 +133,27 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
             @Override
             public void onClick(View view) {
                 redirectToProfileActivity(user);
+            }
+        });
+    }
+
+    private void sendNotification(final QBUser user, final View view, final int position, Button button) {
+        QBUser currentUser = QBUsersHolder.getInstance().getUserById(QBChatService.getInstance().getUser().getId());
+        String currentt = currentUser.getFullName();
+        StringifyArrayList<Integer> userIds = new StringifyArrayList<Integer>();
+        userIds.add(user.getId());
+        QBEvent messageEvent = NotificationHelper.friendRequestPushEvent(userIds, currentt);
+
+        QBPushNotifications.createEvent(messageEvent).performAsync(new QBEntityCallback<QBEvent>() {
+            @Override
+            public void onSuccess(QBEvent qbEvent, Bundle bundle) {
+                Log.i(TAG, "QBPushNotifications onSuccess: Friend Request Sent!" + qbEvent + "\n bundle" + bundle);
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                Log.e(TAG, "QBPushNotifications error!: Friend Request Sent", e);
+                Toast.makeText(context, "QBPushNotifications error!!!!" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -199,6 +227,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
             @Override
             public void onSuccess(Void aVoid, Bundle bundle) {
                 setRequestSentBtn(addFriendBtn);
+
                 showSnackBar(view, "Request Sent");
             }
 

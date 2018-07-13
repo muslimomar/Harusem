@@ -1,7 +1,9 @@
 package com.example.william.harusem.ui.activities;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +16,7 @@ import com.example.william.harusem.R;
 import com.example.william.harusem.fragments.DialogsFragment;
 import com.example.william.harusem.fragments.ProfileFragment;
 import com.example.william.harusem.fragments.SearchFragment;
+import com.quickblox.chat.model.QBChatDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setupBottomNavigation();
+        switchFromNotification();
     }
-
 
     private void setupBottomNavigation() {
 
@@ -85,5 +88,30 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+    public void switchFromNotification() {
 
+        String fragmentDialog = getIntent().getStringExtra("fragmentName");
+
+        if (fragmentDialog != null) {
+            switch (fragmentDialog) {
+                case "chatsDialog":
+                    //FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    //DialogsFragment dialogsFragment = new DialogsFragment();
+                    //fragmentTransaction.replace(R.id.frame_container, dialogsFragment).commit();
+                case "dialog":
+                    //Intent intent = new Intent(this, ChatActivity.class);
+                    //intent.putExtra(ChatActivity.EXTRA_DIALOG_ID, dialogId);
+                    //startActivityForResult(intent, code);
+                    break;
+            }
+        }
+
+
+    }
+
+    public void startForResult(Activity activity, int code, QBChatDialog dialogId) {
+        Intent intent = new Intent(activity, ChatActivity.class);
+        intent.putExtra(ChatActivity.EXTRA_DIALOG_ID, dialogId);
+        startActivityForResult(intent, code);
+    }
 }

@@ -4,16 +4,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.example.william.harusem.R;
 import com.example.william.harusem.holder.QBFriendRequestsHolder;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBRoster;
-import com.quickblox.chat.listeners.QBRosterListener;
 import com.quickblox.chat.listeners.QBSubscriptionListener;
 import com.quickblox.chat.model.QBPresence;
 import com.quickblox.chat.model.QBRosterEntry;
-import com.quickblox.content.QBContent;
-import com.quickblox.content.model.QBFile;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.QBUsers;
@@ -21,7 +17,6 @@ import com.quickblox.users.model.QBUser;
 
 import org.jivesoftware.smack.roster.packet.RosterPacket;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 

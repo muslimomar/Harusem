@@ -3,8 +3,7 @@ package com.example.william.harusem.ui.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.text.TextUtils;
+
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +27,6 @@ import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.model.QBUser;
 import com.squareup.picasso.Picasso;
 
-import java.io.Serializable;
 import java.util.List;
 
 import static com.example.william.harusem.ui.activities.MessageActivity.TAG;
@@ -103,7 +101,13 @@ public class DialogsAdapter extends BaseSelectableListAdapter<QBChatDialog> {
 
 
         holder.nameTextView.setText(QbDialogUtils.getDialogName(dialog));
-        prepareTextLastMessage(dialog, holder.lastMessageTextView);
+
+        if (dialog.getLastMessage() == null) {
+            holder.lastMessageTextView.setVisibility(View.GONE);
+        } else {
+            holder.lastMessageTextView.setVisibility(View.VISIBLE);
+            prepareTextLastMessage(dialog, holder.lastMessageTextView);
+        }
 
         holder.lastMessageTimeTv.setText(TimeUtils.getTime(dialog.getLastMessageDateSent() * 1000));
 
@@ -128,7 +132,7 @@ public class DialogsAdapter extends BaseSelectableListAdapter<QBChatDialog> {
 
                     Intent intent = new Intent(context, ProfileActivity.class);
                     Integer recipientId = dialog.getRecipientId();
-                    intent.putExtra("user_id","" +recipientId);
+                    intent.putExtra("user_id", "" + recipientId);
                     intent.putExtra("name", QbDialogUtils.getDialogName(dialog));
                     context.startActivity(intent);
 
@@ -189,21 +193,38 @@ public class DialogsAdapter extends BaseSelectableListAdapter<QBChatDialog> {
         }
     }
 
-    private boolean isLastMessageAttachment(QBChatDialog dialog) {
+    private boolean isLastMessagePhotoAttachment(QBChatDialog dialog) {
         String lastMessage = dialog.getLastMessage();
         Integer lastMessageSenderId = dialog.getLastMessageUserId();
-        return TextUtils.isEmpty(lastMessage) && lastMessageSenderId != null;
+        return lastMessage.equals(context.getResources().getString(R.string.photo_attach)) && lastMessageSenderId != null;
     }
 
+    private boolean isLastMessageAudioAttachment(QBChatDialog dialog) {
+        String lastMessage = dialog.getLastMessage();
+        Integer lastMessageSenderId = dialog.getLastMessageUserId();
+        return lastMessage.equals(context.getResources().getString(R.string.voice_attach)) && lastMessageSenderId != null;
+    }
+
+
     private void prepareTextLastMessage(QBChatDialog chatDialog, TextView lastMessageTextView) {
-        if (isLastMessageAttachment(chatDialog)) {
-            lastMessageTextView.setText(context.getString(R.string.chat_attachment));
-            lastMessageTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_photo_camera_black_24dp, 0, 0, 0);
-            lastMessageTextView.setCompoundDrawablePadding(context.getResources().getDimensionPixelOffset(R.dimen.photo_icon_padding));
+        if (chatDialog.getLastMessage().isEmpty()) {
+            lastMessageTextView.setVisibility(View.GONE);
         } else {
-            lastMessageTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-            lastMessageTextView.setText(chatDialog.getLastMessage());
+            lastMessageTextView.setVisibility(View.VISIBLE);
+            if (isLastMessagePhotoAttachment(chatDialog)) {
+                lastMessageTextView.setText(context.getString(R.string.photo_chat_attachment));
+                lastMessageTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_photo_camera_black_24dp, 0, 0, 0);
+                lastMessageTextView.setCompoundDrawablePadding(context.getResources().getDimensionPixelOffset(R.dimen.photo_icon_padding));
+            } else if (isLastMessageAudioAttachment(chatDialog)) {
+                lastMessageTextView.setText(context.getString(R.string.audio_chat_attachment));
+                lastMessageTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_mic_black_24dp, 0, 0, 0);
+                lastMessageTextView.setCompoundDrawablePadding(context.getResources().getDimensionPixelOffset(R.dimen.photo_icon_padding));
+            } else {
+                lastMessageTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                lastMessageTextView.setText(chatDialog.getLastMessage());
+            }
         }
+
     }
 
     private static class ViewHolder {

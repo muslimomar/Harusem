@@ -16,5 +16,4 @@ public interface MimeType {
     String AUDIO_MIME_EXTENSION_MP3 = "mp3";
 
 
-
 }

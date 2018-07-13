@@ -3,7 +3,6 @@ package com.example.william.harusem.util.gcm;
 import android.app.Activity;
 import android.util.Log;
 
-
 import com.example.william.harusem.Harusem;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;

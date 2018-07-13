@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.william.harusem.ui.adapters.newAdapters.UsersAdapter;
 import com.quickblox.users.model.QBUser;
 
 import java.util.ArrayList;
