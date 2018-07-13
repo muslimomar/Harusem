@@ -114,4 +114,7 @@
     </style>
 
 
+    <dimen name="call_avatar_diameter">78dp</dimen>
+    <dimen name="call_buttons_diameter">64dp</dimen>
+    <dimen name="call_buttons_padding">16dp</dimen>
 </resources>
