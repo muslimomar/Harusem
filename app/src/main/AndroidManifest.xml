@@ -21,7 +21,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.activities.MainActivity"
-            android:theme="@style/NoActionBar" />
+            android:theme="@style/NoActionBar"
+            />
         <activity
             android:name=".slides.MaterialIntroActivity"
             android:theme="@style/NoActionBar" />
@@ -133,6 +134,7 @@
             </intent-filter>
         </service>
         <activity android:name=".BlockingActivity"></activity>
+        <activity android:name=".ui.activities.CreateGroupActivity" />
 
     </application>
 

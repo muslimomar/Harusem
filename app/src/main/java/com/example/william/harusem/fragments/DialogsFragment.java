@@ -33,6 +33,7 @@ import com.example.william.harusem.R;
 import com.example.william.harusem.holder.QBChatDialogHolder;
 import com.example.william.harusem.manager.DialogsManager;
 import com.example.william.harusem.ui.activities.ChatActivity;
+import com.example.william.harusem.ui.activities.CreateGroupActivity;
 import com.example.william.harusem.ui.activities.SelectUsersActivity;
 import com.example.william.harusem.ui.adapters.DialogsAdapter;
 import com.example.william.harusem.ui.dialog.ProgressDialogFragment;
@@ -243,7 +244,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
                 searchView.setMenuItem(item);
             break;
             case R.id.new_group_item:
-                Toast.makeText(getActivity(), "group", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getActivity(), CreateGroupActivity.class));
             break;
         }
 

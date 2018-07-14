@@ -260,5 +260,8 @@
     <string name="voice_attach">9099CryptoVoice attachment988</string>
     <string name="photo_attach">9099CryptoPhoto988</string>
 
+    <string name="participants">Participants: %d</string>
+    <string name="group_name">Group Name</string>
+
 
 </resources>

@@ -240,6 +240,8 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        sharedPrefsHelper = SharedPrefsHelper.getInstance();
+
         Fabric.with(this, new Crashlytics());
 
         requestExecutor = Harusem.getInstance().getQbResRequestExecutor();

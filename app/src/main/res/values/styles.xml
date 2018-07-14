@@ -55,6 +55,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
+        <item name="android:textColorSecondary">@color/white</item>
         <!--<item name="colorControlHighlight">@color/colorPrimary</item>-->
     </style>
 
