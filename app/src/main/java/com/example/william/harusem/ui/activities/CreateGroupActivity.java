@@ -3,6 +3,8 @@ package com.example.william.harusem.ui.activities;
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
@@ -41,6 +43,14 @@ public class CreateGroupActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         configureActionBar();
 
+
+        fillParticipants();
+
+
+    }
+
+    private void fillParticipants() {
+
         QBUsers.getUsers(null).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
             @Override
             public void onSuccess(ArrayList<QBUser> qbUsers, Bundle bundle) {
@@ -64,5 +74,28 @@ public class CreateGroupActivity extends AppCompatActivity {
         setTitle("New Group");
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_selected_opponents, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.create_action:
+                onGroupCreate();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void onGroupCreate() {
+
+    }
 }
+
