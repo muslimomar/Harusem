@@ -85,7 +85,6 @@ public class SearchFragment extends Fragment {
                         @Override
                         public void onSuccess(ArrayList<QBUser> qbUsers, Bundle bundle) {
 
-
                             QBUsersHolder.getInstance().putUsers(qbUsers);
 
                             ArrayList<QBUser> qbUserWithoutCurrent = new ArrayList<>();

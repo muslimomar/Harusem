@@ -9,15 +9,6 @@ import android.os.Handler;
 import android.os.PersistableBundle;
 import android.os.SystemClock;
 import android.os.Vibrator;
-
-import com.example.william.harusem.Harusem;
-import com.example.william.harusem.ui.adapters.UsersAdapter;
-import com.example.william.harusem.util.QBResRequestExecutor;
-import com.example.william.harusem.util.SharedPrefsHelper;
-import com.crashlytics.android.Crashlytics;
-import com.example.william.harusem.services.CallService;
-import com.example.william.harusem.util.consts.Consts;
-
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -49,6 +40,8 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bhargavms.dotloader.DotLoader;
+import com.crashlytics.android.Crashlytics;
+import com.example.william.harusem.Harusem;
 import com.example.william.harusem.R;
 import com.example.william.harusem.fcm.NotificationHelper;
 import com.example.william.harusem.helper.QBFriendListHelper;
@@ -58,12 +51,14 @@ import com.example.william.harusem.models.Attachment;
 import com.example.william.harusem.services.CallService;
 import com.example.william.harusem.ui.adapters.AttachmentPreviewAdapter;
 import com.example.william.harusem.ui.adapters.ChatAdapter;
+import com.example.william.harusem.ui.adapters.UsersAdapter;
 import com.example.william.harusem.ui.dialog.ProgressDialogFragment;
 import com.example.william.harusem.ui.dialog.TwoButtonsDialogFragment;
 import com.example.william.harusem.util.ChatHelper;
 import com.example.william.harusem.util.ErrorUtils;
 import com.example.william.harusem.util.MediaUtils;
 import com.example.william.harusem.util.MimeTypeAttach;
+import com.example.william.harusem.util.QBResRequestExecutor;
 import com.example.william.harusem.util.SharedPrefsHelper;
 import com.example.william.harusem.util.StringUtils;
 import com.example.william.harusem.util.SystemPermissionHelper;
@@ -77,7 +72,6 @@ import com.example.william.harusem.util.qb.PaginationHistoryListener;
 import com.example.william.harusem.util.qb.QbChatDialogMessageListenerImp;
 import com.example.william.harusem.util.qb.QbDialogUtils;
 import com.example.william.harusem.util.qb.VerboseQbChatConnectionListener;
-import com.example.william.harusem.utils.CollectionsUtils;
 import com.example.william.harusem.utils.PermissionsChecker;
 import com.example.william.harusem.utils.PushNotificationSender;
 import com.example.william.harusem.utils.UsersUtils;
@@ -102,10 +96,7 @@ import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.core.helper.StringifyArrayList;
 import com.quickblox.messages.QBPushNotifications;
 import com.quickblox.messages.model.QBEvent;
-
-import com.quickblox.messages.model.QBNotificationType;
 import com.quickblox.messages.services.SubscribeService;
-
 import com.quickblox.ui.kit.chatmessage.adapter.listeners.QBChatAttachClickListener;
 import com.quickblox.ui.kit.chatmessage.adapter.media.SingleMediaManager;
 import com.quickblox.ui.kit.chatmessage.adapter.media.recorder.AudioRecorder;
@@ -123,7 +114,6 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.chat.ChatMessageListener;
 import org.jivesoftware.smackx.muc.DiscussionHistory;
 
 import java.io.File;
@@ -137,12 +127,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.fabric.sdk.android.Fabric;
 
 ////////For call
-
-import java.util.concurrent.TimeUnit;
-
-import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by william on 6/10/2018.
@@ -151,11 +138,8 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     public static final String EXTRA_DIALOG_ID = "dialogId";
 
     public static final String EXTRA_DIALOG = "dialog";
-
-
-    private static final long ON_ITEM_CLICK_DELAY = TimeUnit.SECONDS.toMillis(10);
-
     public static final String TAG = ChatActivity.class.getSimpleName();
+    private static final long ON_ITEM_CLICK_DELAY = TimeUnit.SECONDS.toMillis(10);
     private static final int MESSAGE_ATTACHMENT = 1;
     private static final int REQUEST_CODE_ATTACHMENT = 721;
     private static final int REQUEST_CODE_SELECT_PEOPLE = 752;
@@ -166,12 +150,9 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     private static final int CHRONOMETER_ALARM_SECOND = 27;
     protected List<QBChatMessage> messagesList;
     protected AudioRecorder audioRecorder;
-    private boolean isRunForCall;
-    private QBUsersHolder qbUsersHolder;
+    protected QBResRequestExecutor requestExecutor;
+    protected SingleMediaManager mediaManager;
     SharedPrefsHelper sharedPrefsHelper;
-    private WebRtcSessionManager webRtcSessionManager;
-    private PermissionsChecker checker;
-    private QBUser currentUser;
     long TYPING_TIME = 2000;
     @BindView(R.id.attach_iv)
     ImageView attachIv;
@@ -217,7 +198,11 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     ImageView bucketView;
     QBFriendListHelper qbFriendListHelper;
     QBChatDialogTypingListener typingListener;
-    protected QBResRequestExecutor requestExecutor;
+    private boolean isRunForCall;
+    private QBUsersHolder qbUsersHolder;
+    private WebRtcSessionManager webRtcSessionManager;
+    private PermissionsChecker checker;
+    private QBUser currentUser;
     private QBMediaRecordListenerImpl recordListener;
     private AttachmentPreviewAdapter attachmentPreviewAdapter;
     private Snackbar snackbar;
@@ -233,8 +218,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     private String fullName;
     private SystemPermissionHelper systemPermissionHelper;
     private Vibrator vibrator;
-    protected SingleMediaManager mediaManager;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -416,19 +399,22 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
 
     }
+
     //new
     private void startPermissionsActivity(boolean checkOnlyAudio) {
         PermissionsActivity.startActivity(this, checkOnlyAudio, Consts.PERMISSIONS);
     }
-   //new
+
+    //new
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (SharedPrefsHelper.getInstance().getQbUser()!=null) {
+        if (SharedPrefsHelper.getInstance().getQbUser() != null) {
             getMenuInflater().inflate(R.menu.activity_selected_opponents, menu);
         }
 
         return super.onCreateOptionsMenu(menu);
     }
+
     //new
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -542,8 +528,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     }
 
 
-
-
     //not really sure about this one ask ask !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //    private void startCall() {
 //        QBUser current = SharedPrefsHelper.getInstance().getQbUser();
@@ -593,8 +577,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         recordListener = new QBMediaRecordListenerImpl();
         mediaManager = chatAdapter.getMediaManagerInstance();
     }
-
-
 
 
     private void setButtonsVisibility(String s) {
@@ -666,6 +648,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             supportActionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
+
     private void removeAllUserData() {
 
         //it has getApplicationContext() inside it////////////////////////////////////////////////////////////
@@ -728,15 +711,15 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     }
 
     private void addRosterListener() {
-        if (qbChatDialog.getType() == QBDialogType.PRIVATE) {
-
-            QBRoster roster = QBChatService.getInstance().getRoster();
-
-            if (roster != null) {
-                roster.addRosterListener(new RosterListener());
+        if(qbChatDialog!=null) {
+            if (qbChatDialog.getType() == QBDialogType.PRIVATE) {
+                QBRoster roster = QBChatService.getInstance().getRoster();
+                if (roster != null) {
+                    roster.addRosterListener(new RosterListener());
+                }
             }
-
         }
+
     }
 
     @Override
@@ -1264,12 +1247,15 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     }
 
     private void addChatMessagesAdapterListeners() {
-        chatAdapter.setAttachImageClickListener(imageAttachClickListener);
+        if (chatAdapter != null) {
+            chatAdapter.setAttachImageClickListener(imageAttachClickListener);
+        }
     }
 
     private void removeChatMessagesAdapterListeners() {
-        chatAdapter.removeAttachImageClickListener(imageAttachClickListener);
-
+        if (chatAdapter != null) {
+            chatAdapter.removeAttachImageClickListener(imageAttachClickListener);
+        }
     }
 
     private void hideKeyboard() {
