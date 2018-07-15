@@ -74,7 +74,6 @@ import com.example.william.harusem.util.qb.QbDialogUtils;
 import com.example.william.harusem.util.qb.VerboseQbChatConnectionListener;
 import com.example.william.harusem.utils.PermissionsChecker;
 import com.example.william.harusem.utils.PushNotificationSender;
-import com.example.william.harusem.utils.UsersUtils;
 import com.example.william.harusem.utils.WebRtcSessionManager;
 import com.example.william.harusem.widget.AttachmentPreviewAdapterView;
 import com.quickblox.chat.QBChatService;
@@ -96,7 +95,6 @@ import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.core.helper.StringifyArrayList;
 import com.quickblox.messages.QBPushNotifications;
 import com.quickblox.messages.model.QBEvent;
-import com.quickblox.messages.services.SubscribeService;
 import com.quickblox.ui.kit.chatmessage.adapter.listeners.QBChatAttachClickListener;
 import com.quickblox.ui.kit.chatmessage.adapter.media.SingleMediaManager;
 import com.quickblox.ui.kit.chatmessage.adapter.media.recorder.AudioRecorder;
@@ -228,7 +226,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         super.onCreate(savedInstanceState);
 
         sharedPrefsHelper = SharedPrefsHelper.getInstance();
-
         Fabric.with(this, new Crashlytics());
 
         requestExecutor = Harusem.getInstance().getQbResRequestExecutor();

@@ -76,7 +76,7 @@
                     android:layout_marginLeft="12dp"
                     android:layout_toLeftOf="@id/more_iv"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_action_audio_call"
+                    android:src="@drawable/ic_call_black_24dp"
                     android:padding="3dp"
                     android:visibility="visible" />
 
@@ -88,7 +88,7 @@
                     android:layout_marginLeft="12dp"
                     android:layout_toLeftOf="@id/audio_call_img_btn"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_action_video"
+                    android:src="@drawable/ic_videocam_black_24dp"
                     android:padding="3dp"
                     android:visibility="visible" />
 
