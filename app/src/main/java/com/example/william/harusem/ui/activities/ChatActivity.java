@@ -427,18 +427,12 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         PermissionsActivity.startActivity(this, checkOnlyAudio, Consts.PERMISSIONS);
     }
 
-
-
     //new
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.log_out:
-                logOut();
-                return true;
-
             case R.id.start_video_call:
                 if (isLoggedInChat()) {
                     startCall(true);
@@ -462,22 +456,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         }
     }
 
-    private void logOut() {
-        unsubscribeFromPushes();
-        startLogoutCommand();
-        removeAllUserData();
-    }
 
-    private void startLogoutCommand() {
-
-        CallService.logout(this);
-    }
-
-    private void unsubscribeFromPushes() {
-
-        SubscribeService.unSubscribeFromPushes(this);
-
-    }
 
     private void startCall(boolean isVideoCall) {
         QBRTCTypes.QBConferenceType conferenceType = isVideoCall
@@ -666,23 +645,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         if (supportActionBar != null) {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
         }
-    }
-
-    private void removeAllUserData() {
-
-        //it has getApplicationContext() inside it////////////////////////////////////////////////////////////
-        UsersUtils.removeUserData();
-        requestExecutor.deleteCurrentUser(currentUser.getId(), new QBEntityCallback<Void>() {
-            @Override
-            public void onSuccess(Void aVoid, Bundle bundle) {
-                Log.d(TAG, "Current user was deleted from QB");
-            }
-
-            @Override
-            public void onError(QBResponseException e) {
-                Log.e(TAG, "Current user wasn't deleted from QB " + e);
-            }
-        });
     }
 
     @Override
@@ -1223,7 +1185,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             @Override
             public void onSuccess(Void aVoid, Bundle bundle) {
                 setResult(RESULT_OK);
-
                 finish();
             }
 
@@ -1388,10 +1349,19 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             case R.id.menu_chat_action_delete:
                 deleteChat();
                 return true;
+            case R.id.menu_chat_action_view_profile:
+                    redirectToProfileActivity();
             default:
                 return true;
         }
 
+    }
+
+    private void redirectToProfileActivity() {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra("user_id", "" + qbChatDialog.getRecipientId());
+        intent.putExtra("name", QbDialogUtils.getDialogName(qbChatDialog));
+        startActivity(intent);
     }
 
     @OnClick(R.id.arrow_iv)

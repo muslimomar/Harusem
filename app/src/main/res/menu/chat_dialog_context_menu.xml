@@ -5,5 +5,9 @@
         android:id="@+id/context_delete_dialog"
         android:title="Delete" />
 
+    <item
+        android:id="@+id/context_view_contact"
+        android:title="View Profile" />
+
 
 </menu>
