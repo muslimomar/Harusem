@@ -304,7 +304,7 @@ public class ProfileFragment extends Fragment {
 
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
-                final ProgressDialog progressDialog = Utils.buildProgressDialog(getActivity(), "", "Please Wait...", false);
+                final ProgressDialog progressDialog = Utils.buildProgressDialog(getActivity(), "", getString(R.string.please_wait), false);
                 progressDialog.show();
 
                 Uri imageUri = result.getUri();
@@ -323,7 +323,7 @@ public class ProfileFragment extends Fragment {
                     // Get file size
                     int imageSizeKB = (int) (file.length() / 1024);
                     if (imageSizeKB >= (1024 * 100)) {
-                        Toast.makeText(getActivity(), "Error, selected image is too large", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.img_large, Toast.LENGTH_SHORT).show();
                     }
 
                     QBContent.uploadFileTask(file, true, null).performAsync(new QBEntityCallback<QBFile>() {

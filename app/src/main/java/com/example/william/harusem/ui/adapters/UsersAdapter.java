@@ -174,19 +174,19 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
     }
 
     private void setAddFriendBtn(Button button) {
-        button.setText("Add Friend");
+        button.setText(R.string.add_friend);
         button.setTextColor(context.getResources().getColor(R.color.colorPrimary));
         button.setBackgroundResource(R.drawable.border_radius);
     }
 
     private void setMessageBtn(Button button) {
-        button.setText("Message");
+        button.setText(R.string.msg_user);
         button.setTextColor(Color.WHITE);
         button.setBackgroundResource(R.drawable.primary_button_radius);
     }
 
     private void setRequestSentBtn(Button button) {
-        button.setText("Request Sent");
+        button.setText(R.string.request_sent);
         button.setTextColor(Color.WHITE);
         button.setBackgroundResource(R.drawable.red_button_radius);
         button.setEnabled(false);
@@ -260,7 +260,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
     }
 
     private void createPrivateChatDialog(final QBUser user) {
-        final ProgressDialog progressDialog = Utils.buildProgressDialog(context, "", "Loading...", false);
+        final ProgressDialog progressDialog = Utils.buildProgressDialog(context, "", context.getString(R.string.loading_load), false);
         progressDialog.show();
 
         QBChatDialog chatDialog = DialogUtils.buildPrivateDialog(user.getId());

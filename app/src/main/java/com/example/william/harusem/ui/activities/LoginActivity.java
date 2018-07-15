@@ -127,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login(final String email, final String pass) {
-        loadingPb = buildProgressDialog(this, "Please Wait..", "Loading........", false);
+        loadingPb = buildProgressDialog(this, getString(R.string.please_wait), getString(R.string.dlg_loading), false);
         loadingPb.show();
 
         final QBUser user = new QBUser(email, pass);

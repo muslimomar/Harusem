@@ -252,7 +252,6 @@
     <string name="dlg_image_big">File mustn\u0027t be more than 10 MB</string>
     <string name="dlg_audio_video_big">File mustn\u0027t be more than 100 MB</string>
     <string name="dlg_fail_upload_attach">Errors occurred during loading file. Please, check your internet connection</string>
-    <string name="unfriend">Unfriend</string>
 
     <string name="message_size">(%d messages)</string>
     <string name="dialogs_size">You have (%d conversations)</string>
@@ -261,17 +260,105 @@
     <string name="photo_attach">9099CryptoPhoto988</string>
 
     <string-array name="spinner_array">
-        <item>Beginning</item>
+        <item>Beginner</item>
         <item>Intermediate</item>
         <item>Advanced</item>
     </string-array>
 
     <string name="participants">Participants: %d</string>
-    <string name="group_name">Group Name</string>
     <string name="select_users">Select Users</string>
 
     <string name="error_creating_group">Error creating group!</string>
     <string name="error_update_group_photo">Error updating group photo</string>
+    <string name="login">LOGIN</string>
+    <string name="signup">SIGNUP</string>
+    <string name="forgot_your_password">Forgot your password?</string>
+    <string name="click_here">Click Here</string>
 
+    <string name="password">Password</string>
+    <string name="_12345678">12345678</string>
+
+    <string name="beginner">Beginner</string>
+    <string name="turkish">Turkish</string>
+
+
+    <!-- Bottom Navigation Drawer. -->
+    <string name="chats_nav_item">Chats</string>
+    <string name="search_nav_item">Search</string>
+    <string name="account_nav_item">Account</string>
+    <string name="conversations">Conversations</string>
+    <string name="add">Add</string>
+    <string name="next">NEXT</string>
+    <string name="delete">Delete</string>
+    <string name="edit_group_name">Edit Group Name</string>
+    <string name="add_user">Add User</string>
+    <string name="remove_user">Remove User</string>
+    <string name="create">CREATE</string>
+    <string name="create_group">Create Group</string>
+    <string name="block">Block</string>
+    <string name="save">SAVE</string>
+    <string name="write_a_message">Write a Message</string>
+    <string name="full_name">Full Name</string>
+    <string name="email">Email</string>
+    <string name="country">Country</string>
+    <string name="friends">Friends</string>
+    <string name="points">Points</string>
+    <string name="account">Account</string>
+    <string name="friend_requests">Friend Requests</string>
+    <string name="blocking_list">Blocking List</string>
+    <string name="logout">Logout</string>
+    <string name="err_enter_name">Please enter a valid name!</string>
+    <string name="err_enter_email">Please enter a valid email address!</string>
+    <string name="old_password">Old Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="unblock">Unblock</string>
+    <string name="unfriend">Unfriend</string>
+    <string name="user_full_name">Mahmoud ALMuhammed</string>
+    <string name="english">English</string>
+    <string name="tukish">Tukish</string>
+    <string name="arabic">Arabic</string>
+    <string name="turkey">Turkey</string>
+    <string name="group_name">Group Name</string>
+    <string name="submit">SUBMIT</string>
+    <string name="instant_chat">Instant Chat</string>
+    <string name="learn_and_teach_by_chatting_with_friends">Learn and teach by chatting with friends</string>
+    <string name="bot_chat">Bot Chat</string>
+    <string name="microphone_access">Microphone Access</string>
+    <string name="harusem_needs_the_microphone_to_record_your_voice">Harusem needs the microphone to record your voice</string>
+    <string name="acc_update_profile_dialog">Updating Profile...</string>
+    <string name="block_activity_block_list">Block List</string>
+    <string name="call_audio_switched">Audio device switched to</string>
+    <string name="call_no_camera">Error: device doesn\'t have camera</string>
+    <string name="call_headset">Headset</string>
+    <string name="plugged">plugged</string>
+    <string name="unpluged">unplugged</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="connected">connected</string>
+    <string name="call_disconnected">disconnected</string>
+    <string name="camera_error">Camera error:</string>
+    <string name="camera_disconnected">Camera onCameraDisconnected:</string>
+    <string name="camera_freezed">Camera freezed:</string>
+    <string name="camera_opening">Opening Camera:</string>
+    <string name="internet_con">Internet connection</string>
+    <string name="available_">available</string>
+    <string name="unavailable">unavailable_</string>
+    <string name="still_joining_group">You\'re still joining a group chat, please wait a bit</string>
+    <string name="cant_send_message_not_connected">Can\'t send a message, You are not connected to chat</string>
+    <string name="cant_send_blocked">You can\'t send message to this user!</string>
+    <string name="new_group">New Group</string>
+    <string name="type_group_name">Please type a name for the group!</string>
+    <string name="please_wait_2">Please Wait...</string>
+    <string name="img_large">Error, selected image is too large</string>
+    <string name="select_img">Select a Picture</string>
+    <string name="err_connection">Connection failed. Please check your internet connection.</string>
+    <string name="err_no_response">No response received within reply timeout.</string>
+    <string name="stars_hint">******</string>
+    <string name="add_friend">Add Friend</string>
+    <string name="msg_user">Message</string>
+    <string name="request_sent">Request Sent</string>
+    <string name="loading_load">Loading...</string>
+    <string name="accept">Accept</string>
+    <string name="decline">Decline</string>
 
 </resources>

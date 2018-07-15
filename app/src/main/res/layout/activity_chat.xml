@@ -190,7 +190,7 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:gravity="center_vertical"
-            android:hint="Write a Message"
+            android:hint="@string/write_a_message"
             android:textSize="20sp" />
 
         <ImageButton

@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
             android:background="@color/colorPrimary"
-            app:title="Conversations"
+            app:title="@string/conversations"
             app:titleTextColor="@color/white" />
 
 
@@ -51,7 +51,6 @@
                 android:id="@+id/list_chat_dialogs"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
 
         </android.support.v4.widget.SwipeRefreshLayout>

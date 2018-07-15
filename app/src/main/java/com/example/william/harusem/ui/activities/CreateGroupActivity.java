@@ -112,7 +112,7 @@ public class CreateGroupActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        setTitle("New Group");
+        setTitle(getString(R.string.new_group));
     }
 
     @Override
@@ -138,7 +138,7 @@ public class CreateGroupActivity extends AppCompatActivity {
     private void onGroupCreate() {
         String groupName = groupNameEt.getText().toString().trim();
         if (groupName.isEmpty()) {
-            Toaster.shortToast("Please type a name for the group!");
+            Toaster.shortToast(R.string.type_group_name);
             return;
         }
 
@@ -151,7 +151,7 @@ public class CreateGroupActivity extends AppCompatActivity {
     }
 
     private void createDialog(final ArrayList<QBUser> selectedUsers, String groupName) {
-        ProgressDialog progressDialog = Utils.buildProgressDialog(this, "", "Please Wait...", false);
+        ProgressDialog progressDialog = Utils.buildProgressDialog(this, "", getString(R.string.please_wait_2), false);
         progressDialog.show();
 
         ChatHelper.getInstance().createDialogWithSelectedUsers(selectedUsers, new QBEntityCallback<QBChatDialog>() {
@@ -177,7 +177,7 @@ public class CreateGroupActivity extends AppCompatActivity {
     }
 
     private void createDialogWithPhoto(final ArrayList<QBUser> selectedUsers, String groupName) {
-        ProgressDialog progressDialog = Utils.buildProgressDialog(this, "", "Please Wait...", false);
+        ProgressDialog progressDialog = Utils.buildProgressDialog(this, "", getString(R.string.please_wait), false);
         progressDialog.show();
 
         QBContent.uploadFileTask(photoFile, true, null).performAsync(new QBEntityCallback<QBFile>() {
@@ -279,7 +279,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                     // Get file size
                     int imageSizeKB = (int) (file.length() / 1024);
                     if (imageSizeKB >= (1024 * 100)) {
-                        Toast.makeText(this, "Error, selected image is too large", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, R.string.img_large, Toast.LENGTH_SHORT).show();
                     }
 
                     photoFile = file;
@@ -307,7 +307,7 @@ public class CreateGroupActivity extends AppCompatActivity {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
 
-        startActivityForResult(Intent.createChooser(intent, "Select a Picture"), REQUEST_CODE);
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.select_img)), REQUEST_CODE);
     }
 
 }

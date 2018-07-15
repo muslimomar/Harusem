@@ -12,13 +12,13 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@android:color/tab_indicator_text"
-        android:text="Group Name" />
+        android:text="@string/group_name" />
 
     <EditText
         android:id="@+id/group_name_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Group Name"
+        android:hint="@string/group_name"
         android:layout_marginTop="8dp">
 
         <requestFocus />

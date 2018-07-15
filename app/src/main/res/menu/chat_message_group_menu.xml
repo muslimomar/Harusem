@@ -6,19 +6,19 @@
     <item
         android:id="@+id/chat_group_edit_name"
         android:icon="@drawable/ic_edit_black_24dp"
-        android:title="Edit Group Name"
+        android:title="@string/edit_group_name"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/chat_group_add_user"
         android:icon="@drawable/ic_add_black_24dp"
-        android:title="Add User"
+        android:title="@string/add_user"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/chat_group_remove_user"
         android:icon="@drawable/ic_remove_black_24dp"
-        android:title="Remove User"
+        android:title="@string/remove_user"
         app:showAsAction="ifRoom" />
 
 

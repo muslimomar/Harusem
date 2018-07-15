@@ -923,7 +923,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         chatMessage.setMarkable(true);
 
         if (!QBDialogType.PRIVATE.equals(qbChatDialog.getType()) && !qbChatDialog.isJoined()) {
-            Toaster.shortToast("You're still joining a group chat, please wait a bit");
+            Toaster.shortToast(R.string.still_joining_group);
             return;
         }
 
@@ -959,7 +959,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             }
         } catch (SmackException.NotConnectedException e) {
             Log.e(TAG, "sendChatMessage: ", e);
-            Toaster.shortToast("Can't send a message, You are not connected to chat");
+            Toaster.shortToast(R.string.cant_send_message_not_connected);
         }
 
         sendTxtBtn.setVisibility(View.GONE);
@@ -971,6 +971,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         if (signInQbUser == null) {
             SharedPrefsHelper.getInstance().getQbUser();
         }
+        else
         fullName = signInQbUser.getFullName();
     }
 
@@ -1300,7 +1301,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
 
         if (isUserBlocked(qbChatDialog.getRecipientId().toString())) {
-            Toast.makeText(this, "You can't send message to this user!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.cant_send_blocked, Toast.LENGTH_SHORT).show();
             messageInputEt.setText("");
             return;
         }
