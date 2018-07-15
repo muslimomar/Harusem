@@ -11,7 +11,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +51,14 @@ public class SignupActivity extends AppCompatActivity {
     @BindView(R.id.name_et)
     EditText nameEt;
 
+    @BindView(R.id.language_english_tv)
+    Spinner englishLanguageTv;
+    @BindView(R.id.language_turkish_tv)
+    Spinner turkishLanguageTv;
+    @BindView(R.id.language_arabic_tv)
+    Spinner arabicLanguageTv;
+
+
     public static String getEditTextString(EditText editText) {
         return editText.getText().toString().trim();
     }
@@ -60,7 +70,40 @@ public class SignupActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         hideSoftKeyboard();
+        spinnerArabic();
+        spinnerEnglish();
+        spinnerTurkish();
 
+    }
+
+    public void spinnerEnglish() {
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.spinner_array, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        englishLanguageTv.setAdapter(adapter);
+    }
+
+    public void spinnerTurkish() {
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.spinner_array, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        turkishLanguageTv.setAdapter(adapter);
+    }
+
+    public void spinnerArabic() {
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.spinner_array, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        arabicLanguageTv.setAdapter(adapter);
     }
 
     private void onSignup() {
@@ -209,4 +252,5 @@ public class SignupActivity extends AppCompatActivity {
     boolean isEmailValid(CharSequence email) {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
+
 }

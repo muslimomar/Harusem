@@ -47,9 +47,10 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.example.william.harusem.ui.activities.ChatActivity.EXTRA_DIALOG;
+
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder> {
 
-    public static final String EXTRA_DIALOG_ID = "dialogId";
     private static final String TAG = UsersAdapter.class.getSimpleName();
     private List<QBUser> usersList;
     private Context context;
@@ -282,7 +283,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
                 progressDialog.dismiss();
 
                 Intent intent = new Intent(context, ChatActivity.class);
-                intent.putExtra(EXTRA_DIALOG_ID, qbChatDialog);
+                intent.putExtra(EXTRA_DIALOG, qbChatDialog);
                 context.startActivity(intent);
                 ((Activity) context).finish();
             }

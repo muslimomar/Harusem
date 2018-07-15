@@ -273,6 +273,20 @@ public class ChatHelper {
                     }
                 });
     }
+    public void createDialogWithSelectedUsers(final List<QBUser> users,
+                                              final QBEntityCallback<QBChatDialog> callback, String groupName, String photoId) {
+
+
+        QBRestChatService.createChatDialog(QbDialogUtils.createGroupDialogWithPhoto(users, groupName,photoId)).performAsync(
+                new QbEntityCallbackWrapper<QBChatDialog>(callback) {
+                    @Override
+                    public void onSuccess(QBChatDialog dialog, Bundle args) {
+                        QBChatDialogHolder.getInstance().putDialog(dialog);
+                        QBUsersHolder.getInstance().putUsers(users);
+                        super.onSuccess(dialog, args);
+                    }
+                });
+    }
 
     public void getDialogs(QBRequestGetBuilder customObjectRequestBuilder, final QBEntityCallback<ArrayList<QBChatDialog>> callback) {
         customObjectRequestBuilder.setLimit(DIALOG_ITEMS_PER_PAGE);

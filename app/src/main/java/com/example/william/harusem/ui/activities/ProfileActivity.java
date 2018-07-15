@@ -2,20 +2,36 @@ package com.example.william.harusem.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.william.harusem.R;
+import com.mukesh.countrypicker.Country;
+import com.mukesh.countrypicker.CountryPicker;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBPrivacyListsManager;
 import com.quickblox.chat.listeners.QBPrivacyListListener;
 import com.quickblox.chat.model.QBPrivacyList;
 import com.quickblox.chat.model.QBPrivacyListItem;
+import com.quickblox.content.QBContent;
+import com.quickblox.content.model.QBFile;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.users.QBUsers;
+import com.quickblox.users.model.QBUser;
+import com.squareup.picasso.Picasso;
 
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
@@ -25,14 +41,26 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private static final String TAG = ProfileActivity.class.getSimpleName();
-
     @BindView(R.id.friend_name_friend_detail)
     TextView nameTV;
+    @BindView(R.id.country_tv)
+    TextView countryTv;
+    @BindView(R.id.friend_detail_image_view)
+    CircleImageView userImageView;
+    @BindView(R.id.flag)
+    ImageView flagIv;
+    @BindView(R.id.fragment_activity_tab_layout)
+    LinearLayout linearLayout;
+    @BindView(R.id.card_view_friend_country)
+    CardView cardView;
+    @BindView(R.id.profile_activity_loading_pb)
+    ProgressBar progressBar;
 
+    private static final String TAG = ProfileActivity.class.getSimpleName();
     QBPrivacyListsManager privacyListsManager;
     QBPrivacyListListener privacyListListener;
 
@@ -40,12 +68,20 @@ public class ProfileActivity extends AppCompatActivity {
     String friendUserName;
     private Menu menu;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         ButterKnife.bind(this);
+
+        showProgressBar(progressBar);
+        hideLayout();
+
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+            supportActionBar.setElevation(0);
+        }
 
         privacyListsManager = QBChatService.getInstance().getPrivacyListsManager();
 
@@ -59,6 +95,8 @@ public class ProfileActivity extends AppCompatActivity {
         Log.v("emine", "eee" + userID);
 
         initPrivacyListListener();
+
+        getUserImageView(userImageView);
 
     }
 
@@ -129,6 +167,9 @@ public class ProfileActivity extends AppCompatActivity {
                     item.setTitle("Block");
                 }
                 break;
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                finish();
         }
         return true;
     }
@@ -246,7 +287,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         } else {
             try {
-                privacyListsManager.deletePrivacyList("public");
+                privacyListsManager.deletePrivacyList("public ");
             } catch (SmackException.NotConnectedException e) {
                 e.printStackTrace();
             } catch (XMPPException.XMPPErrorException e) {
@@ -317,6 +358,7 @@ public class ProfileActivity extends AppCompatActivity {
 //    }
 //
 
+
     boolean isUserBlocked(String userID) {
 
         QBPrivacyList list = null;
@@ -334,6 +376,95 @@ public class ProfileActivity extends AppCompatActivity {
         return false;
 
     }
+
+    public void getUserImageView(CircleImageView userThumbIv) {
+
+        QBUsers.getUser(Integer.parseInt(userID)).performAsync(new QBEntityCallback<QBUser>() {
+            @Override
+            public void onSuccess(QBUser user, Bundle bundle) {
+                if (user.getFileId() != null) {
+                    int profilePicId = user.getFileId();
+
+                    QBContent.getFile(profilePicId).performAsync(new QBEntityCallback<QBFile>() {
+                        @Override
+                        public void onSuccess(QBFile qbFile, Bundle bundle) {
+                            Picasso.get()
+                                    .load(qbFile.getPublicUrl())
+                                    .resize(50, 50)
+                                    .centerCrop()
+                                    .into(userThumbIv);
+
+                            getUserCountry(user);
+
+                            // hide the progess bar and show the layout
+                            hideProgressBar(progressBar);
+                            showLayout();
+                        }
+
+                        @Override
+                        public void onError(QBResponseException e) {
+                            Log.e("Profile Activity", "onError: ", e);
+                            userThumbIv.setImageResource(R.drawable.placeholder_user);
+                        }
+                    });
+                } else {
+                    userThumbIv.setImageResource(R.drawable.placeholder_user);
+                }
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+
+            }
+        });
+
+    }
+
+    private void getUserCountry(QBUser user) {
+        String country = user.getCustomData();
+
+        countryTv.setText(country);
+
+        CountryPicker countryPicker =
+                new CountryPicker.Builder().with(this).build();
+
+        List<Country> allCountries = countryPicker.getAllCountries();
+        int id = 0;
+        for (Country c : allCountries) {
+            if (c.getName().equalsIgnoreCase(country))
+                id = c.getFlag();
+        }
+
+        flagIv.setImageResource(id);
+
+    }
+
+    private void showProgressBar(ProgressBar progressBar) {
+        if (ProfileActivity.this != null) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideProgressBar(ProgressBar progressBar) {
+        if (ProfileActivity.this != null) {
+            if (progressBar.getVisibility() == View.VISIBLE) {
+                progressBar.setVisibility(View.GONE);
+            }
+        }
+
+    }
+
+    public void hideLayout() {
+        linearLayout.setVisibility(View.GONE);
+        cardView.setVisibility(View.GONE);
+    }
+
+    public void showLayout() {
+        linearLayout.setVisibility(View.VISIBLE);
+        cardView.setVisibility(View.VISIBLE);
+
+    }
+
 
 //    private static class blockTask extends AsyncTask<Void, Void, Void> {
 //        ProgressDialog progressDialog;
