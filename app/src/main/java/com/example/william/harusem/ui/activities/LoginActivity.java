@@ -176,7 +176,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.forgot_pass_tv)
     public void onPassReset(View view) {
-        Toast.makeText(this, "reset password", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, ForgotPasswordActivity.class));
     }
 
     @OnClick(R.id.signup_btn)

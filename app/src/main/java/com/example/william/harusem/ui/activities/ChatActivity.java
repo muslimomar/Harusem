@@ -294,6 +294,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         initFields();
     }
 
+
     private void setupEnvironment() {
         initAudioRecorder();
         initCustomListeners();
@@ -712,7 +713,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     }
 
     private void addRosterListener() {
-        if(qbChatDialog!=null) {
+        if (qbChatDialog != null) {
             if (qbChatDialog.getType() == QBDialogType.PRIVATE) {
                 QBRoster roster = QBChatService.getInstance().getRoster();
                 if (roster != null) {
@@ -1737,7 +1738,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         }
 
     }
-
 
 
 }
