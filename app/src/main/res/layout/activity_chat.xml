@@ -53,7 +53,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="@drawable/circle_ripple"
-                    android:src="@drawable/profile_placeholder" />
+                    tools:src="@drawable/ic_user_new" />
 
                 <ImageButton
                     android:id="@+id/more_iv"
@@ -67,6 +67,29 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:padding="5dp"
                     android:src="@drawable/ic_more_vert_black_24dp"
+                    android:visibility="visible" />
+                <ImageButton
+                    android:id="@+id/audio_call_img_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="12dp"
+                    android:layout_toLeftOf="@id/more_iv"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_call_black_24dp"
+                    android:padding="3dp"
+                    android:visibility="visible" />
+
+                <ImageButton
+                    android:id="@+id/video_call_img_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="12dp"
+                    android:layout_toLeftOf="@id/audio_call_img_btn"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_videocam_black_24dp"
+                    android:padding="3dp"
                     android:visibility="visible" />
 
             </RelativeLayout>
@@ -108,6 +131,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_toRightOf="@id/opponent_name_tv"
                     android:src="@drawable/circle_shape_red" />
+
 
             </RelativeLayout>
 

@@ -143,6 +143,7 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
         isPeerToPeerCall = opponents.size() == 1;
     }
 
+
     //Th
     @SuppressLint("StringFormatMatches")
     public void setDuringCallActionBar() {
@@ -965,5 +966,8 @@ public class VideoConversationFragment extends BaseConversationFragment implemen
 
             recyclerView.setLayoutParams(params);
         }
+
+
     }
+
 }

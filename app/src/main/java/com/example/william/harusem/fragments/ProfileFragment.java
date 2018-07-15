@@ -1,7 +1,6 @@
 package com.example.william.harusem.fragments;
 
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -21,32 +20,32 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.example.william.harusem.BlockingActivity;
-import com.example.william.harusem.holder.QBFriendRequestsHolder;
-import com.example.william.harusem.holder.QBUsersHolder;
-import com.example.william.harusem.helper.QBFriendListHelper;
 
 import com.example.william.harusem.R;
+import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.holder.QBChatDialogHolder;
+import com.example.william.harusem.holder.QBFriendRequestsHolder;
+import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.ui.activities.AccountActivity;
 import com.example.william.harusem.ui.activities.FriendRequestsActivity;
 import com.example.william.harusem.ui.activities.FriendsActivity;
 import com.example.william.harusem.ui.activities.LoginActivity;
 import com.example.william.harusem.ui.activities.PasswordActivity;
-import com.example.william.harusem.helper.QBFriendListHelper;
-import com.example.william.harusem.holder.QBFriendRequestsHolder;
-import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.util.ChatHelper;
+import com.example.william.harusem.util.ChatPingAlarmManager;
 import com.example.william.harusem.util.SharedPrefsHelper;
 import com.example.william.harusem.util.Utils;
+import com.example.william.harusem.utils.UsersUtils;
 import com.nex3z.notificationbadge.NotificationBadge;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.content.QBContent;
 import com.quickblox.content.model.QBFile;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.messages.services.SubscribeService;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
+import com.quickblox.videochat.webrtc.QBRTCClient;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -212,6 +211,37 @@ public class ProfileFragment extends Fragment {
         startActivity(intent);
     }
 
+    private void unsubscribeFromPushes() {
+        SubscribeService.unSubscribeFromPushes(getActivity());
+
+    }
+
+    private void destroyRtcClientAndChat() {
+        QBRTCClient rtcClient = QBRTCClient.getInstance(getActivity());
+        QBChatService chatService = QBChatService.getInstance();
+        if (rtcClient != null) {
+            rtcClient.destroy();
+        }
+        ChatPingAlarmManager.onDestroy();
+        if (chatService != null) {
+            chatService.logout(new QBEntityCallback<Void>() {
+                @Override
+                public void onSuccess(Void aVoid, Bundle bundle) {
+                    if (getActivity() != null && isAdded()) {
+                        UsersUtils.removeUserData();
+                        chatService.destroy();
+                    }
+                }
+
+                @Override
+                public void onError(QBResponseException e) {
+                    Log.d(TAG, "logout onError " + e.getMessage());
+                    chatService.destroy();
+                }
+            });
+        }
+    }
+
     @OnClick(R.id.log_out_layout)
     public void setLogOutTv(View view) {
         disableUserInteraction();
@@ -223,6 +253,11 @@ public class ProfileFragment extends Fragment {
                 QBChatService.getInstance().logout(new QBEntityCallback<Void>() {
                     @Override
                     public void onSuccess(Void aVoid, Bundle bundle) {
+                        if (getActivity() != null && isAdded()) {
+                            unsubscribeFromPushes();
+                            destroyRtcClientAndChat();
+                        }
+
                         hideProgressBar(logOutPb);
 
                         SharedPrefsHelper.getInstance().removeQbUser();

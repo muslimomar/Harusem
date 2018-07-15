@@ -217,4 +217,18 @@
     <string name="add_friend">اضافة كصديق</string>
     <string name="msg_user">دردشة</string>
     <string name="request_sent">تم ارسال الطلب</string>
+    <string name="loading_load">يتم التحميل</string>
+    <string name="accept">قبول</string>
+    <string name="decline">رفض</string>
+    <string name="error_uploading_photo">خطأ في رفع الصورة</string>
+    <string name="password_reset_string">نحتاج إلى بريدك الإلكتروني لإعادة تعيين كلمة السر</string>
+    <string name="error_resetting_password">خطأ في اعادة تعيين كلمة السر</string>
+    <string name="you_unblocked_user">لقد قمت بالغاء حظر المستخدم</string>
+    <string name="you_blocked_user">لقد قٌمت بحظر المستخدم</string>
+    <string name="file_size_err">خطأ في الحجم</string>
+    <string name="signup_failed">خطأ في انشاء الحساب</string>
+    <string name="cant_send_msg_blocked">لا تستطيع مراسلة هذا المستخدم</string>
+    <string name="img_too_big">خطأ حجم الصورة كبير للغاية</string>
+    <string name="push_accepted">وافق على طلب الصداقة الخاص بك</string>
+    <string name="push_wants_friend">يرغب باضافتك كصديق</string>
 </resources>

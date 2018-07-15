@@ -194,7 +194,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         checkBlockingStatus();
 
-        Toast.makeText(this, friendUserName + "  You have unblocked your user", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, friendUserName + getString(R.string.you_unblocked_user), Toast.LENGTH_SHORT).show();
 
     }
 
@@ -222,7 +222,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             createPublicPrivacyList(list);
 
-            Toast.makeText(this, friendUserName + "  you have blocked the user", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, friendUserName + getString(R.string.you_blocked_user), Toast.LENGTH_SHORT).show();
 
         } else {
             ArrayList<QBPrivacyListItem> items = new ArrayList<QBPrivacyListItem>();
@@ -328,35 +328,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         return publicList;
     }
-    //private void sendPushNotification() {
-//        StringifyArrayList<Integer> userIds = new StringifyArrayList<Integer>();
-//        userIds.add(Integer.valueOf(loginUserId));
-//        userIds.add(Integer.valueOf(userID));
-//
-//        QBEvent event = new QBEvent();
-//        event.setUserIds(userIds);
-//        event.setEnvironment(QBEnvironment.DEVELOPMENT);
-//        event.setNotificationType(QBNotificationType.PUSH);
-//        event.setPushType(QBPushType.GCM);
-//        HashMap<String, String> data = new HashMap<String, String>();
-//        data.put("data.message", "Hello");
-//        data.put("data.type", "welcome message");
-//        event.setMessage(String.valueOf(data));
-//
-//        QBPushNotifications.createEvent(event).performAsync(new QBEntityCallback<QBEvent>() {
-//            @Override
-//            public void onSuccess(QBEvent qbEvent, Bundle bundle) {
-//                Toast.makeText(ProfileActivity.this, "You can not send message", Toast.LENGTH_SHORT);
-//                //sent
-//            }
-//
-//            @Override
-//            public void onError(QBResponseException e) {
-//
-//            }
-//        });
-//    }
-//
 
 
     boolean isUserBlocked(String userID) {

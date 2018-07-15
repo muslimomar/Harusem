@@ -176,7 +176,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.forgot_pass_tv)
     public void onPassReset(View view) {
-        Toast.makeText(this, "reset password", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, ForgotPasswordActivity.class));
     }
 
     @OnClick(R.id.signup_btn)
@@ -231,7 +231,6 @@ public class LoginActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = pref.edit();
                 editor.putString("QB_USER_FULL_NAME_FOR_NOTIFICATIONS", fullName);  // Saving string
                 editor.apply();
-                Toast.makeText(LoginActivity.this, "Save Success" + fullName, Toast.LENGTH_SHORT).show();
             }
 
             @Override

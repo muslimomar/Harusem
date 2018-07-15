@@ -71,7 +71,7 @@ public class NotificationUtils {
         return new NotificationCompat.Builder(context, CHANNEL_ONE_ID)
                 .setSmallIcon(icon)
                 .setContentTitle("HARUSEM")
-                .setContentText(friendName + " has accepted your friend request")
+                .setContentText(friendName + context.getString(R.string.push_accepted))
                 .setAutoCancel(true)
                 .setSound(defaultSoundsUri)
                 .setColor(context.getResources().getColor(R.color.colorAccent))
@@ -116,7 +116,7 @@ public class NotificationUtils {
 
         String newline = System.getProperty("line.separator");
 
-        String message = "Wants to be your friend";
+        String message = context.getString(R.string.push_wants_friend);
 
         return new NotificationCompat.Builder(context, CHANNEL_ONE_ID)
                 .setSmallIcon(icon)

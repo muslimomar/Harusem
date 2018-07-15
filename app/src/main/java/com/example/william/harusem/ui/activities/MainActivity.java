@@ -1,7 +1,6 @@
 package com.example.william.harusem.ui.activities;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -22,12 +21,28 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
+    public static final int REQUEST_DIALOG = 43;
 
     @BindView(R.id.bottom_navigation)
     AHBottomNavigation bottomNavigation;
-    BroadcastReceiver pushBroadcastReceiver;
-    Context context;
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_DIALOG && resultCode == RESULT_OK) {
+            String dialogId = data.getStringExtra(ChatActivity.EXTRA_DIALOG_ID);
+
+            Bundle bundle = new Bundle();
+            bundle.putString(ChatActivity.EXTRA_DIALOG_ID,dialogId);
+            DialogsFragment fragment = new DialogsFragment();
+            fragment.setArguments(bundle);
+            switchFragment(fragment);
+
+
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
     private void switchFragment(Fragment selectedFragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.frame_container, selectedFragment);
-        fragmentTransaction.commit();
+        fragmentTransaction.commitAllowingStateLoss();
     }
 
     public void switchFromNotification() {

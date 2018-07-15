@@ -259,8 +259,8 @@ public class ChatHelper {
         QBRestChatService.getChatDialogById(dialogId).performAsync(callback);
     }
 
-    public void createDialogWithSelectedUsers(final List<QBUser> users,
-                                              final QBEntityCallback<QBChatDialog> callback) {
+    public void createDialogWithSelectedUsersWithPhoto(final List<QBUser> users,
+                                                       final QBEntityCallback<QBChatDialog> callback) {
 
 
         QBRestChatService.createChatDialog(QbDialogUtils.createDialog(users)).performAsync(
@@ -273,8 +273,8 @@ public class ChatHelper {
                     }
                 });
     }
-    public void createDialogWithSelectedUsers(final List<QBUser> users,
-                                              final QBEntityCallback<QBChatDialog> callback, String groupName, String photoId) {
+    public void createDialogWithSelectedUsersWithPhoto(final List<QBUser> users,
+                                                       final QBEntityCallback<QBChatDialog> callback, String groupName, String photoId) {
 
 
         QBRestChatService.createChatDialog(QbDialogUtils.createGroupDialogWithPhoto(users, groupName,photoId)).performAsync(
