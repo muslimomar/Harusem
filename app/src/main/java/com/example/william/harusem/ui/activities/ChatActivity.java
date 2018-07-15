@@ -967,6 +967,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     }
 
     private void loadUserFullName() {
+        // TODO:
         QBUser currentUser = QBChatService.getInstance().getUser();
         QBUsers.getUser(currentUser.getId()).performAsync(new QBEntityCallback<QBUser>() {
             @Override
@@ -1742,4 +1743,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         }
 
     }
+
+
+
 }

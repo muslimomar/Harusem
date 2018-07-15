@@ -274,10 +274,10 @@ public class ChatHelper {
                 });
     }
     public void createDialogWithSelectedUsers(final List<QBUser> users,
-                                              final QBEntityCallback<QBChatDialog> callback, String groupName) {
+                                              final QBEntityCallback<QBChatDialog> callback, String groupName, String photoId) {
 
 
-        QBRestChatService.createChatDialog(QbDialogUtils.createGroupDialog(users, groupName)).performAsync(
+        QBRestChatService.createChatDialog(QbDialogUtils.createGroupDialogWithPhoto(users, groupName,photoId)).performAsync(
                 new QbEntityCallbackWrapper<QBChatDialog>(callback) {
                     @Override
                     public void onSuccess(QBChatDialog dialog, Bundle args) {

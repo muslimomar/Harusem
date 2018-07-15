@@ -24,9 +24,9 @@ import android.widget.Toast;
 import com.example.william.harusem.R;
 import com.example.william.harusem.manager.DialogsManager;
 import com.example.william.harusem.ui.adapters.GroupUsersAdapter;
-import com.example.william.harusem.ui.adapters.UsersAdapter;
 import com.example.william.harusem.util.ChatHelper;
 import com.example.william.harusem.util.ErrorUtils;
+import com.example.william.harusem.util.Toaster;
 import com.example.william.harusem.util.Utils;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBSystemMessagesManager;
@@ -138,11 +138,15 @@ public class CreateGroupActivity extends AppCompatActivity {
     private void onGroupCreate() {
         String groupName = groupNameEt.getText().toString().trim();
         if (groupName.isEmpty()) {
+            Toaster.shortToast("Please type a name for the group!");
             return;
         }
 
-        createDialog(qbUsers, groupName);
-
+        if (photoFile != null) {
+            createDialogWithPhoto(qbUsers, groupName);
+        } else {
+            createDialog(qbUsers, groupName);
+        }
 
     }
 
@@ -153,12 +157,7 @@ public class CreateGroupActivity extends AppCompatActivity {
         ChatHelper.getInstance().createDialogWithSelectedUsers(selectedUsers, new QBEntityCallback<QBChatDialog>() {
                     @Override
                     public void onSuccess(QBChatDialog dialog, Bundle bundle) {
-                        if (photoFile != null) {
-                            uploadDialogPhoto(dialog, progressDialog);
-                        } else {
-                            endCreatingDialog(progressDialog, dialog);
-                        }
-
+                        endCreatingDialog(progressDialog, dialog);
                     }
 
                     @Override
@@ -172,25 +171,40 @@ public class CreateGroupActivity extends AppCompatActivity {
                         });
 
                     }
-                }, groupName
+                }, groupName, null
         );
 
-
     }
 
-    private void endCreatingDialog(ProgressDialog progressDialog, QBChatDialog dialog) {
-        progressDialog.dismiss();
-        sendSystemMessage(dialog);
-        redirectToChatActivity(dialog);
-    }
+    private void createDialogWithPhoto(final ArrayList<QBUser> selectedUsers, String groupName) {
+        ProgressDialog progressDialog = Utils.buildProgressDialog(this, "", "Please Wait...", false);
+        progressDialog.show();
 
-    private void uploadDialogPhoto(QBChatDialog dialog, ProgressDialog progressDialog) {
         QBContent.uploadFileTask(photoFile, true, null).performAsync(new QBEntityCallback<QBFile>() {
 
             @Override
             public void onSuccess(QBFile qbFile, Bundle bundle) {
-                dialog.setPhoto(qbFile.getId().toString());
-                endCreatingDialog(progressDialog, dialog);
+                ChatHelper.getInstance().createDialogWithSelectedUsers(selectedUsers, new QBEntityCallback<QBChatDialog>() {
+                            @Override
+                            public void onSuccess(QBChatDialog dialog, Bundle bundle) {
+                                endCreatingDialog(progressDialog, dialog);
+                            }
+
+                            @Override
+                            public void onError(QBResponseException e) {
+                                progressDialog.dismiss();
+                                showErrorSnackbar(R.string.error_creating_group, e, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        createDialogWithPhoto(selectedUsers, groupName);
+                                    }
+                                });
+
+                            }
+                        }, groupName, qbFile.getId().toString()
+                );
+
+
             }
 
             @Override
@@ -199,11 +213,19 @@ public class CreateGroupActivity extends AppCompatActivity {
                 showErrorSnackbar(R.string.error_update_group_photo, e, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        uploadDialogPhoto(dialog, progressDialog);
+                        createDialogWithPhoto(qbUsers, groupName);
                     }
                 });
             }
         });
+
+
+    }
+
+    private void endCreatingDialog(ProgressDialog progressDialog, QBChatDialog dialog) {
+        progressDialog.dismiss();
+        sendSystemMessage(dialog);
+        redirectToChatActivity(dialog);
     }
 
     private void redirectToChatActivity(QBChatDialog dialog) {
