@@ -260,5 +260,10 @@
     <string name="voice_attach">9099CryptoVoice attachment988</string>
     <string name="photo_attach">9099CryptoPhoto988</string>
 
+    <string-array name="spinner_array">
+        <item>Beginning</item>
+        <item>Intermediate</item>
+        <item>Advanced</item>
+    </string-array>
 
 </resources>

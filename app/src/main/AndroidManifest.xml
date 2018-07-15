@@ -39,7 +39,14 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".ui.activities.ProfileActivity" />
+        <activity android:name=".ui.activities.ProfileActivity"
+            android:parentActivityName=".ui.activities.MainActivity"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.MainActivity" />
+
+        </activity>
         <activity
             android:name=".ui.activities.PasswordActivity"
             android:parentActivityName=".ui.activities.MainActivity">
