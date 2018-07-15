@@ -967,19 +967,11 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     }
 
     private void loadUserFullName() {
-        // TODO:
-        QBUser currentUser = QBChatService.getInstance().getUser();
-        QBUsers.getUser(currentUser.getId()).performAsync(new QBEntityCallback<QBUser>() {
-            @Override
-            public void onSuccess(QBUser user, Bundle bundle) {
-                fullName = user.getFullName();
-            }
-
-            @Override
-            public void onError(QBResponseException e) {
-                Log.e(TAG, "onError: ", e);
-            }
-        });
+        QBUser signInQbUser = QBUsersHolder.getInstance().getSignInQbUser();
+        if (signInQbUser == null) {
+            SharedPrefsHelper.getInstance().getQbUser();
+        }
+        fullName = signInQbUser.getFullName();
     }
 
 
