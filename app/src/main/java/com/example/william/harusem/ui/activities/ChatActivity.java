@@ -160,6 +160,10 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     ProgressBar progressBar;
     @BindView(R.id.send_txt_btn)
     ImageButton sendTxtBtn;
+    @BindView(R.id.audio_call_img_btn)
+    ImageButton audioCallBtn;
+    @BindView(R.id.video_call_img_btn)
+    ImageButton videoCallBtn;
     @BindView(R.id.chat_recycler_view)
     RecyclerView chatListRecyclerView;
     @BindView(R.id.layout_attachment_preview_container)
@@ -269,17 +273,34 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         //initIsTypingListener();
 
         //Go to audio call activity
-//        audioCallBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                startCall();
-//
-//                //Intent intent= new Intent(ChatActivity.this,CallActivity.class);
-//                //startActivity(intent);
-//            }
-//        });
+        audioCallBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+
+                startInnerCall(false);
+
+                //Intent intent= new Intent(ChatActivity.this,CallActivity.class);
+                //startActivity(intent);
+            }
+        });
+
+        //Video call
+
+        videoCallBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                startInnerCall(true);
+            }
+        });
+
+    }
+
+    private void startInnerCall(Boolean getCallFlag) {
+
+        QBUser current = SharedPrefsHelper.getInstance().getQbUser();
+        startLoginService(current,getCallFlag);
     }
 
     public void setupChat() {
@@ -406,16 +427,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         PermissionsActivity.startActivity(this, checkOnlyAudio, Consts.PERMISSIONS);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        Log.i(TAG, "onCreateOptionsMenu: " + SharedPrefsHelper.getInstance().getQbUser());
-        if (SharedPrefsHelper.getInstance().getQbUser() != null) {
-            Log.i(TAG, "onCreateOptionsMenu: 5" + SharedPrefsHelper.getInstance().getQbUser());
-            getMenuInflater().inflate(R.menu.activity_selected_opponents, menu);
-        }
 
-        return super.onCreateOptionsMenu(menu);
-    }
 
     //new
     @Override
@@ -475,7 +487,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         //ArrayList<Integer> opponentsList = CollectionsUtils.getIdsSelectedOpponents(usersAdapter.);
 
         QBRTCClient qbrtcClient = QBRTCClient.getInstance(getApplicationContext());
-        // the casting wouldd do shitty thing and I know it but  ta da
+        // the casting would do shitty thing and I know it but  ta da
         List<Integer> occupants = qbChatDialog.getOccupants();
         occupants.remove(SharedPrefsHelper.getInstance().getQbUser().getId());
         QBRTCSession newQbRtcSession = qbrtcClient.createNewSessionWithOpponents(occupants, conferenceType);
@@ -543,14 +555,19 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     //startLoginService(qbUser);
     //}
 
-    private void startLoginService(QBUser qbUser) {
+
+    private void startLoginService(QBUser qbUser,Boolean getCallTag) {
 
         Intent tempIntent = new Intent(this, CallService.class);
         PendingIntent pendingIntent = createPendingResult(Consts.EXTRA_LOGIN_RESULT_CODE, tempIntent, 0);
         CallService.start(this, qbUser, pendingIntent);
+
+        // call it with true for the video call when you add the video button
+        startCall(getCallTag);
         /////////////// where do we really change the intent
 //        startOpponentsActivity();
     }
+
 
 //    private void startOpponentsActivity() {
 //        OpponentsActivity.start(ChatActivity.this, false);
@@ -971,9 +988,13 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     private void loadUserFullName() {
         QBUser signInQbUser = QBUsersHolder.getInstance().getSignInQbUser();
         if (signInQbUser == null) {
-            signInQbUser = SharedPrefsHelper.getInstance().getQbUser();
-        }
-        fullName = signInQbUser.getFullName();
+            signInQbUser= SharedPrefsHelper.getInstance().getQbUser();
+       }
+
+
+            fullName = signInQbUser.getFullName();
+
+
     }
 
 
@@ -1596,6 +1617,13 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         super.onStop();
         clearAudioRecorder();
     }
+////After deleting Opponent
+//    public static void start(Context context, boolean isRunForCall) {
+//        Intent intent = new Intent(context, ChatActivity.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//        intent.putExtra(Consts.EXTRA_IS_STARTED_FOR_CALL, isRunForCall);
+//        context.startActivity(intent);
+//    }
 
     private class ChatMessageListener extends QbChatDialogMessageListenerImp {
         @Override
