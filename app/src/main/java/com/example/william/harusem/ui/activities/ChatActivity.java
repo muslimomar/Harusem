@@ -959,7 +959,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             @Override
             public void onError(QBResponseException e) {
                 Log.e(TAG, "QBPushNotifications onError: ", e);
-                Toast.makeText(ChatActivity.this, "QBPushNotifications error!!!!" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -109,6 +109,8 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         }
 
+        getUpdatedDialogFromChat();
+
         setHasOptionsMenu(true);
 
         googlePlayServicesHelper = new GooglePlayServicesHelper();
@@ -219,6 +221,21 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
         });
 
         return view;
+    }
+
+    private void getUpdatedDialogFromChat() {
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            String dialogId = arguments.getString(ChatActivity.EXTRA_DIALOG_ID);
+            if (dialogId != null && !dialogId.isEmpty()) {
+                loadUpdatedDialog(dialogId);
+            } else {
+                isProcessingResultInProgress = false;
+                updateDialogsList();
+            }
+        }
+
+
     }
 
 
