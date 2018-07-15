@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 
 import com.example.william.harusem.helper.QBFriendListHelper;
 
+import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.services.CallService;
 
 import com.example.william.harusem.ui.activities.LoginActivity;
@@ -110,7 +111,7 @@ public class SplashActivity extends AppCompatActivity {
                 // dismiss dialog
                 initPingListener();
                 initQBRTCClient();
-
+                QBUsersHolder.getInstance().setSignInQbUser(qbUser);
                 ProgressDialogFragment.hide(getSupportFragmentManager());
                 QBFriendListHelper friendListHelper = new QBFriendListHelper(SplashActivity.this);
                 proceedToMainActivity();
@@ -176,6 +177,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private QBUser getUserFromSession() {
         QBUser user = SharedPrefsHelper.getInstance().getQbUser();
+        QBUsersHolder.getInstance().setSignInQbUser(user);
         user.setId(QBSessionManager.getInstance().getSessionParameters().getUserId());
         return user;
     }

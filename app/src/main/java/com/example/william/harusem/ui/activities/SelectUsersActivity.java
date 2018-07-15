@@ -42,6 +42,8 @@ public class SelectUsersActivity extends AppCompatActivity {
 
     public static final String TAG = SelectUsersActivity.class.getSimpleName();
     public static final String EXTRA_QB_USERS = "qb_users";
+    public static final String EXTRA_QB_USER_PHOTO = "qb_user_photo";
+    public static final String EXTRA_GROUP_NAME = "group_name";
     public static final int MINIMUM_CHAT_OCCUPANTS_SIZE = 2;
     private static final String EXTRA_QB_DIALOG = "qb_dialog";
     private static final long CLICK_DELAY = TimeUnit.SECONDS.toMillis(2);
@@ -122,7 +124,9 @@ public class SelectUsersActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CreateGroupActivity.class);
         ArrayList<QBUser> selectedUsers = new ArrayList<>(usersAdapter.getSelectedUsers());
         intent.putExtra(CreateGroupActivity.USERS_ID_LIST, selectedUsers);
+        intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
         startActivity(intent);
+        finish();
     }
 
     private void loadFriends() {

@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -60,7 +59,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static android.app.Activity.RESULT_OK;
@@ -235,11 +233,11 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_search_dialog:
-//                Toast.makeText(getActivity(), "Add Users", Toast.LENGTH_SHORT).show();
                 searchView.setMenuItem(item);
                 break;
             case R.id.new_group_item:
-                startActivity(new Intent(getActivity(), SelectUsersActivity.class));
+                Intent intent = new Intent(getActivity(), SelectUsersActivity.class);
+                startActivityForResult(intent, REQUEST_SELECT_PEOPLE);
                 break;
         }
 
@@ -329,6 +327,9 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
                 ArrayList<QBUser> selectedUsers = (ArrayList<QBUser>) data
                         .getSerializableExtra(SelectUsersActivity.EXTRA_QB_USERS);
 
+                String photoId = data.getStringExtra(SelectUsersActivity.EXTRA_QB_USER_PHOTO);
+                String groupName = data.getStringExtra(SelectUsersActivity.EXTRA_GROUP_NAME);
+
                 if (isPrivateDialogExist(selectedUsers)) {
                     selectedUsers.remove(ChatHelper.getCurrentUser());
                     QBChatDialog existingPrivateDialog = QBChatDialogHolder.getInstance().getPrivateDialogWithUser(selectedUsers.get(0));
@@ -336,7 +337,12 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
                     startForResult(getActivity(), REQUEST_DIALOG_ID_FOR_UPDATE, existingPrivateDialog);
                 } else {
                     ProgressDialogFragment.show(getActivity().getSupportFragmentManager(), R.string.create_chat);
-                    createDialog(selectedUsers);
+
+                    if (photoId != null && !photoId.equals("") && !photoId.equalsIgnoreCase("null")) {
+                        createDialogWithPhoto(selectedUsers, photoId,groupName);
+                    } else {
+                        createDialog(selectedUsers);
+                    }
                 }
             } else if (requestCode == REQUEST_DIALOG_ID_FOR_UPDATE) {
                 if (data != null) {
@@ -450,7 +456,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
 
 
     private void createDialog(final ArrayList<QBUser> selectedUsers) {
-        ChatHelper.getInstance().createDialogWithSelectedUsers(selectedUsers,
+        ChatHelper.getInstance().createDialogWithSelectedUsersWithPhoto(selectedUsers,
                 new QBEntityCallback<QBChatDialog>() {
                     @Override
                     public void onSuccess(QBChatDialog dialog, Bundle args) {
@@ -469,6 +475,28 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
                 }
         );
     }
+
+    private void createDialogWithPhoto(final ArrayList<QBUser> selectedUsers, String photoId, String groupName) {
+        ChatHelper.getInstance().createDialogWithSelectedUsersWithPhoto(selectedUsers,
+                new QBEntityCallback<QBChatDialog>() {
+                    @Override
+                    public void onSuccess(QBChatDialog dialog, Bundle args) {
+                        isProcessingResultInProgress = false;
+                        dialogsManager.sendSystemMessageAboutCreatingDialog(systemMessagesManager, dialog);
+                        startForResult(getActivity(), REQUEST_DIALOG_ID_FOR_UPDATE, dialog);
+                        ProgressDialogFragment.hide(getActivity().getSupportFragmentManager());
+                    }
+
+                    @Override
+                    public void onError(QBResponseException e) {
+                        isProcessingResultInProgress = false;
+                        ProgressDialogFragment.hide(getActivity().getSupportFragmentManager());
+                        showErrorSnackbar(R.string.dialogs_creation_error, null, null);
+                    }
+                }, groupName,photoId
+        );
+    }
+
 
     private void loadDialogsFromQb(final boolean silentUpdate, final boolean clearDialogHolder) {
         isProcessingResultInProgress = true;

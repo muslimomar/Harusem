@@ -969,7 +969,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     private void loadUserFullName() {
         QBUser signInQbUser = QBUsersHolder.getInstance().getSignInQbUser();
         if (signInQbUser == null) {
-            SharedPrefsHelper.getInstance().getQbUser();
+            signInQbUser = SharedPrefsHelper.getInstance().getQbUser();
         }
         fullName = signInQbUser.getFullName();
     }
