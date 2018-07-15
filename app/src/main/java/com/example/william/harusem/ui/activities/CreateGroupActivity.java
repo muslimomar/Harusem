@@ -69,7 +69,6 @@ public class CreateGroupActivity extends AppCompatActivity {
     @BindView(R.id.grid_view)
     GridView gridView;
     ArrayList<QBUser> qbUsers;
-    ArrayList<QBUser> qbUsersWithoutCurrent;
     @BindView(R.id.root_layout)
     LinearLayout rootLayout;
     DialogsManager dialogsManager;
@@ -86,7 +85,13 @@ public class CreateGroupActivity extends AppCompatActivity {
         dialogsManager = new DialogsManager();
 
         getQbUsers();
-        getQbUsersWithoutCurrent();
+
+        ArrayList<QBUser> qbUsersWithoutCurrent = new ArrayList<>();
+        for (QBUser user : qbUsers) {
+            if(!QBChatService.getInstance().getUser().equals(user))
+                qbUsersWithoutCurrent.add(user);
+        }
+
         fillParticipants(qbUsersWithoutCurrent);
         participantsTv.setText(getString(R.string.participants, qbUsersWithoutCurrent.size()));
 
@@ -94,14 +99,8 @@ public class CreateGroupActivity extends AppCompatActivity {
 
     private void getQbUsers() {
         qbUsers = (ArrayList<QBUser>) getIntent().getSerializableExtra(USERS_ID_LIST);
-        qbUsersWithoutCurrent = (ArrayList<QBUser>) getIntent().getSerializableExtra(USERS_ID_LIST);
     }
 
-    private void getQbUsersWithoutCurrent() {
-        QBUser currentUser = QBChatService.getInstance().getUser();
-        qbUsersWithoutCurrent.remove(currentUser);
-
-    }
 
     private void fillParticipants(ArrayList<QBUser> qbUsers) {
         GroupUsersAdapter adapter = new GroupUsersAdapter(CreateGroupActivity.this, qbUsers);

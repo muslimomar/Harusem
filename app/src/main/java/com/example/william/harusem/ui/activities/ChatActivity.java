@@ -405,10 +405,11 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         PermissionsActivity.startActivity(this, checkOnlyAudio, Consts.PERMISSIONS);
     }
 
-    //new
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.i(TAG, "onCreateOptionsMenu: " + SharedPrefsHelper.getInstance().getQbUser());
         if (SharedPrefsHelper.getInstance().getQbUser() != null) {
+            Log.i(TAG, "onCreateOptionsMenu: 5" + SharedPrefsHelper.getInstance().getQbUser());
             getMenuInflater().inflate(R.menu.activity_selected_opponents, menu);
         }
 
@@ -1080,6 +1081,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
     private void getDialogPhoto() {
         QBChatDialog dialog = qbChatDialog;
+
         if (dialog.getPhoto() != null && !dialog.getPhoto().equalsIgnoreCase("null")) {
 
             QBContent.getFile(Integer.parseInt(dialog.getPhoto())).performAsync(new QBEntityCallback<QBFile>() {

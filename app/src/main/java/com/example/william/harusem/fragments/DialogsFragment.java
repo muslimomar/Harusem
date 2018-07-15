@@ -330,20 +330,30 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
                 String photoId = data.getStringExtra(SelectUsersActivity.EXTRA_QB_USER_PHOTO);
                 String groupName = data.getStringExtra(SelectUsersActivity.EXTRA_GROUP_NAME);
 
-                if (isPrivateDialogExist(selectedUsers)) {
-                    selectedUsers.remove(ChatHelper.getCurrentUser());
-                    QBChatDialog existingPrivateDialog = QBChatDialogHolder.getInstance().getPrivateDialogWithUser(selectedUsers.get(0));
-                    isProcessingResultInProgress = false;
-                    startForResult(getActivity(), REQUEST_DIALOG_ID_FOR_UPDATE, existingPrivateDialog);
+                if (groupName.isEmpty() || groupName == null) {
+                    // one to one chat
+                    if (isPrivateDialogExist(selectedUsers)) {
+                        selectedUsers.remove(ChatHelper.getCurrentUser());
+                        QBChatDialog existingPrivateDialog = QBChatDialogHolder.getInstance().getPrivateDialogWithUser(selectedUsers.get(0));
+                        isProcessingResultInProgress = false;
+                        startForResult(getActivity(), REQUEST_DIALOG_ID_FOR_UPDATE, existingPrivateDialog);
+                    } else {
+                        ProgressDialogFragment.show(getActivity().getSupportFragmentManager(), R.string.create_chat);
+                        createDialog(selectedUsers);
+                    }
+
                 } else {
+                    // create group
                     ProgressDialogFragment.show(getActivity().getSupportFragmentManager(), R.string.create_chat);
 
                     if (photoId != null && !photoId.equals("") && !photoId.equalsIgnoreCase("null")) {
-                        createDialogWithPhoto(selectedUsers, photoId,groupName);
+                        createDialogWithPhoto(selectedUsers, photoId, groupName);
                     } else {
                         createDialog(selectedUsers);
                     }
                 }
+
+
             } else if (requestCode == REQUEST_DIALOG_ID_FOR_UPDATE) {
                 if (data != null) {
                     String dialogId = data.getStringExtra(ChatActivity.EXTRA_DIALOG_ID);
@@ -493,7 +503,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
                         ProgressDialogFragment.hide(getActivity().getSupportFragmentManager());
                         showErrorSnackbar(R.string.dialogs_creation_error, null, null);
                     }
-                }, groupName,photoId
+                }, groupName, photoId
         );
     }
 
