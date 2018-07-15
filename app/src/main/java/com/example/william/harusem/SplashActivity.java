@@ -111,7 +111,6 @@ public class SplashActivity extends AppCompatActivity {
                 // dismiss dialog
                 initPingListener();
                 initQBRTCClient();
-                QBUsersHolder.getInstance().setSignInQbUser(qbUser);
                 ProgressDialogFragment.hide(getSupportFragmentManager());
                 QBFriendListHelper friendListHelper = new QBFriendListHelper(SplashActivity.this);
                 proceedToMainActivity();
