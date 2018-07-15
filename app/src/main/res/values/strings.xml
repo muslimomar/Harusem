@@ -272,6 +272,7 @@
 
     <string name="error_creating_group">Error creating group!</string>
     <string name="error_update_group_photo">Error updating group photo</string>
+    <string name="error_uploading_photo">Error uploading photo!</string>
 
 
 </resources>

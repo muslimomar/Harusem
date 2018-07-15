@@ -53,7 +53,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="@drawable/circle_ripple"
-                    android:src="@drawable/profile_placeholder" />
+                    android:src="@drawable/ic_user_new" />
 
                 <ImageButton
                     android:id="@+id/more_iv"

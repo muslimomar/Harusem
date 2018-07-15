@@ -154,7 +154,6 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
             @Override
             public void onError(QBResponseException e) {
                 Log.e(TAG, "QBPushNotifications error!: Friend Request Sent", e);
-                Toast.makeText(context, "QBPushNotifications error!!!!" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
