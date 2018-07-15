@@ -59,7 +59,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private void onPasswordReset() {
         String email = resetEmailEt.getText().toString().trim();
         if (email.isEmpty() || !isEmailValid(email)) {
-            Toaster.shortToast("Please enter a valid email!");
+            Toaster.shortToast(R.string.err_valid_mail);
             return;
         }
 
@@ -70,7 +70,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void aVoid, Bundle bundle) {
                 progressDialog.dismiss();
-                Utils.buildAlertDialog("Success", "We have sent you instructions to reset your password!", true,ForgotPasswordActivity.this);
+                Utils.buildAlertDialog(getString(R.string.done), getString(R.string.link_sent_pw), true,ForgotPasswordActivity.this);
             }
 
             @Override

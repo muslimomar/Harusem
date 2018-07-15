@@ -372,6 +372,12 @@
     <string name="img_too_big">Error, selected image is too large</string>
     <string name="push_accepted">has accepted your friend request</string>
     <string name="push_wants_friend">Wants to be your friend</string>
+    <string name="forget_password">Forget password?</string>
+    <string name="e_mail_address">E-mail address</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="err_valid_mail">Please enter a valid email!</string>
+    <string name="done">Success</string>
+    <string name="link_sent_pw">We have sent you instructions to reset your password!</string>
 
 
 </resources>
