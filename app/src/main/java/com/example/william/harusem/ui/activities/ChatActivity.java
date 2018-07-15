@@ -427,14 +427,14 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     }
 
     //new
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (SharedPrefsHelper.getInstance().getQbUser() != null) {
-            getMenuInflater().inflate(R.menu.activity_selected_opponents, menu);
-        }
-
-        return super.onCreateOptionsMenu(menu);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        if (SharedPrefsHelper.getInstance().getQbUser() != null) {
+//            getMenuInflater().inflate(R.menu.activity_selected_opponents, menu);
+//        }
+//
+//        return super.onCreateOptionsMenu(menu);
+//    }
 
     //new
     @Override
@@ -995,9 +995,13 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     private void loadUserFullName() {
         QBUser signInQbUser = QBUsersHolder.getInstance().getSignInQbUser();
         if (signInQbUser == null) {
-            SharedPrefsHelper.getInstance().getQbUser();
-        }
-        fullName = signInQbUser.getFullName();
+            signInQbUser= SharedPrefsHelper.getInstance().getQbUser();
+       }
+
+
+            fullName = signInQbUser.getFullName();
+
+
     }
 
 
@@ -1619,6 +1623,13 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         super.onStop();
         clearAudioRecorder();
     }
+////After deleting Opponent
+//    public static void start(Context context, boolean isRunForCall) {
+//        Intent intent = new Intent(context, ChatActivity.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//        intent.putExtra(Consts.EXTRA_IS_STARTED_FOR_CALL, isRunForCall);
+//        context.startActivity(intent);
+//    }
 
     private class ChatMessageListener extends QbChatDialogMessageListenerImp {
         @Override
