@@ -71,7 +71,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     private static final String TAG = DialogFragment.class.getSimpleName();
     private static final int REQUEST_SELECT_PEOPLE = 174;
     private static final int REQUEST_DIALOG_ID_FOR_UPDATE = 165;
-
+    private static ArrayList<QBChatDialog> qbUserWithoutCurrent = new ArrayList<>();
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
     @BindView(R.id.swipe_refresh)
@@ -83,8 +83,6 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     Toolbar toolbar;
     @BindView(R.id.list_chat_dialogs)
     ListView dialogsListView;
-    @BindView(R.id.fab)
-    FloatingActionButton fab;
     @BindView(R.id.layout_root)
     RelativeLayout layoutRoot;
     Unbinder unbinder;
@@ -101,8 +99,6 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     private QBIncomingMessagesManager incomingMessagesManager;
     private DialogsManager dialogsManager;
     private QBUser currentUser;
-
-    private static ArrayList<QBChatDialog> qbUserWithoutCurrent = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -241,10 +237,10 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
             case R.id.action_search_dialog:
 //                Toast.makeText(getActivity(), "Add Users", Toast.LENGTH_SHORT).show();
                 searchView.setMenuItem(item);
-            break;
+                break;
             case R.id.new_group_item:
-                Toast.makeText(getActivity(), "group", Toast.LENGTH_SHORT).show();
-            break;
+                startActivity(new Intent(getActivity(), SelectUsersActivity.class));
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -530,12 +526,6 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     @Override
     public void onNewDialogLoaded(QBChatDialog chatDialog) {
         updateDialogsAdapter();
-    }
-
-    @OnClick(R.id.fab)
-    public void createChatFab(View view) {
-        Intent intent = new Intent(getActivity(), SelectUsersActivity.class);
-        startActivityForResult(intent, REQUEST_SELECT_PEOPLE);
     }
 
     public void startForResult(Activity activity, int code, QBChatDialog dialogId) {

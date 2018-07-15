@@ -23,8 +23,20 @@ public class QbDialogUtils {
             QBUser currentUser = ChatHelper.getCurrentUser();
             users.remove(currentUser);
         }
+
         return DialogUtils.buildDialog(users.toArray(new QBUser[users.size()]));
     }
+
+
+    public static QBChatDialog createGroupDialog(List<QBUser> users, String groupName) {
+        List<Integer> userIds = new ArrayList<>();
+        for (QBUser user : users) {
+            userIds.add(user.getId());
+        }
+
+        return DialogUtils.buildDialog(groupName, QBDialogType.GROUP, userIds);
+    }
+
 
     private static boolean isPrivateChat(List<QBUser> users) {
         return users.size() == 2;

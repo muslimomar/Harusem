@@ -295,7 +295,6 @@ public class ProfileFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-
             Uri imagePath = data.getData();
             CropImage.activity(imagePath).setGuidelines(CropImageView.Guidelines.ON)
                     .setAspectRatio(1, 1)

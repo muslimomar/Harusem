@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.helper.QBFriendListHelper;
+import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.ui.adapters.newAdapters.CheckboxUsersAdapter;
 import com.example.william.harusem.util.ErrorUtils;
 import com.example.william.harusem.util.Toaster;
@@ -50,9 +51,8 @@ public class SelectUsersActivity extends AppCompatActivity {
     ProgressBar progressBar;
     @BindView(R.id.layout_1)
     RelativeLayout layout1;
-    private long lastClickTime = 0l;
-    private CheckboxUsersAdapter usersAdapter;
     QBFriendListHelper qbFriendListHelper;
+    private CheckboxUsersAdapter usersAdapter;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, SelectUsersActivity.class);
@@ -77,12 +77,7 @@ public class SelectUsersActivity extends AppCompatActivity {
 
         qbFriendListHelper = new QBFriendListHelper(this);
 
-        if (isEditingChat()) {
-            setActionBarTitle(R.string.select_users_edit_chat);
-        } else {
-            setActionBarTitle(R.string.select_users_create_chat);
-        }
-
+        setActionBarTitle(R.string.select_users);
 
         loadFriends();
     }
@@ -96,13 +91,8 @@ public class SelectUsersActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if ((SystemClock.uptimeMillis() - lastClickTime) < CLICK_DELAY) {
-            return super.onOptionsItemSelected(item);
-        }
-        lastClickTime = SystemClock.uptimeMillis();
-
         switch (item.getItemId()) {
-            case R.id.menu_select_people_action_done:
+            case R.id.next_action:
                 if (usersAdapter != null) {
                     List<QBUser> users = new ArrayList<>(usersAdapter.getSelectedUsers());
                     if (users.size() >= MINIMUM_CHAT_OCCUPANTS_SIZE) {
@@ -129,11 +119,10 @@ public class SelectUsersActivity extends AppCompatActivity {
 
 
     private void passResultToCallerActivity() {
-        Intent result = new Intent();
+        Intent intent = new Intent(this, CreateGroupActivity.class);
         ArrayList<QBUser> selectedUsers = new ArrayList<>(usersAdapter.getSelectedUsers());
-        result.putExtra(EXTRA_QB_USERS, selectedUsers);
-        setResult(RESULT_OK, result);
-        finish();
+        intent.putExtra(CreateGroupActivity.USERS_ID_LIST, selectedUsers);
+        startActivity(intent);
     }
 
     private void loadFriends() {
@@ -143,10 +132,10 @@ public class SelectUsersActivity extends AppCompatActivity {
 
         QBUsers.getUsersByIDs(friendsIds, null).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
             @Override
-            public void onSuccess(ArrayList<QBUser> result, Bundle params) {
+            public void onSuccess(ArrayList<QBUser> users, Bundle params) {
                 QBChatDialog dialog = (QBChatDialog) getIntent().getSerializableExtra(EXTRA_QB_DIALOG);
-
-                usersAdapter = new CheckboxUsersAdapter(SelectUsersActivity.this, result);
+                QBUsersHolder.getInstance().putUsers(users);
+                usersAdapter = new CheckboxUsersAdapter(SelectUsersActivity.this, users);
                 if (dialog != null) {
                     usersAdapter.addSelectedUsers(dialog.getOccupants());
                 }
@@ -169,12 +158,6 @@ public class SelectUsersActivity extends AppCompatActivity {
             }
         });
     }
-
-
-    private boolean isEditingChat() {
-        return getIntent().getSerializableExtra(EXTRA_QB_DIALOG) != null;
-    }
-
 
     protected Snackbar showErrorSnackbar(@StringRes int resId, Exception e,
                                          View.OnClickListener clickListener) {

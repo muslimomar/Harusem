@@ -36,7 +36,7 @@ import butterknife.Unbinder;
 public class SearchFragment extends Fragment {
 
     private static final String TAG = UsersActivity.class.getSimpleName();
-
+    private static ArrayList<QBUser> qbUserWithoutCurrent = new ArrayList<>();
     Unbinder unbinder;
     @BindView(R.id.search_view)
     MaterialSearchView searchView;
@@ -44,9 +44,6 @@ public class SearchFragment extends Fragment {
     Toolbar toolbar;
     @BindView(R.id.search_recyclerview)
     RecyclerView recyclerView;
-
-    private static ArrayList<QBUser> qbUserWithoutCurrent = new ArrayList<>();
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,7 +57,10 @@ public class SearchFragment extends Fragment {
         }
         setHasOptionsMenu(true);
 
-        retrieveAllUser();
+        if (getActivity() != null && isAdded()) {
+            retrieveAllUser();
+        }
+
         configRecyclerView();
 
 
@@ -85,7 +85,6 @@ public class SearchFragment extends Fragment {
                         @Override
                         public void onSuccess(ArrayList<QBUser> qbUsers, Bundle bundle) {
 
-
                             QBUsersHolder.getInstance().putUsers(qbUsers);
 
                             ArrayList<QBUser> qbUserWithoutCurrent = new ArrayList<>();
@@ -95,10 +94,7 @@ public class SearchFragment extends Fragment {
                                 }
                             }
 
-                            UsersAdapter adapter = new UsersAdapter(qbUserWithoutCurrent, getContext());
-                            recyclerView.setAdapter(adapter);
-                            adapter.notifyDataSetChanged();
-
+                            updateAdapter(qbUserWithoutCurrent);
                         }
 
                         @Override
@@ -110,8 +106,7 @@ public class SearchFragment extends Fragment {
                 } else {
                     // if search text is null
                     // return default
-                    UsersAdapter adapter = new UsersAdapter(qbUserWithoutCurrent, getContext());
-                    recyclerView.setAdapter(adapter);
+                    updateAdapter(qbUserWithoutCurrent);
                 }
                 return true;
             }
@@ -134,10 +129,7 @@ public class SearchFragment extends Fragment {
                                 }
                             }
 
-                            UsersAdapter adapter = new UsersAdapter(qbUserWithoutCurrent, getContext());
-                            recyclerView.setAdapter(adapter);
-                            adapter.notifyDataSetChanged();
-
+                            updateAdapter(qbUserWithoutCurrent);
                         }
 
                         @Override
@@ -149,8 +141,9 @@ public class SearchFragment extends Fragment {
                 } else {
                     // if search text is null
                     // return default
-                    UsersAdapter adapter = new UsersAdapter(qbUserWithoutCurrent, getContext());
-                    recyclerView.setAdapter(adapter);
+                    updateAdapter(qbUserWithoutCurrent);
+
+
                 }
                 return true;
             }
@@ -201,9 +194,7 @@ public class SearchFragment extends Fragment {
                     }
                 }
 
-                UsersAdapter adapter = new UsersAdapter(qbUserWithoutCurrent, getContext());
-                recyclerView.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
+                updateAdapter(qbUserWithoutCurrent);
 
             }
 
@@ -215,10 +206,18 @@ public class SearchFragment extends Fragment {
 
     }
 
+    private void updateAdapter(ArrayList<QBUser> qbUserWithoutCurrent) {
+        if (getActivity() != null && isAdded()) {
+            UsersAdapter adapter = new UsersAdapter(qbUserWithoutCurrent, getContext());
+            recyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
     private void configRecyclerView() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         recyclerView.setLayoutManager(mLayoutManager);
     }
 

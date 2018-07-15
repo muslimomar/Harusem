@@ -172,7 +172,7 @@
     <string name="select_users_get_users_error">Error while retrieving users</string>
     <string name="select_users_edit_chat">Add Users to chat</string>
     <string name="select_users_create_chat">Create new chat</string>
-    <string name="select_users_choose_users">Please select user/users</string>
+    <string name="select_users_choose_users">Please select at least 1 user</string>
     <string name="dlg_restoring_chat_session">Logging in…</string>
     <string name="error_recreate_session">Login Chat error</string>
     <string name="sender_id">640804138209</string>
@@ -265,5 +265,13 @@
         <item>Intermediate</item>
         <item>Advanced</item>
     </string-array>
+
+    <string name="participants">Participants: %d</string>
+    <string name="group_name">Group Name</string>
+    <string name="select_users">Select Users</string>
+
+    <string name="error_creating_group">Error creating group!</string>
+    <string name="error_update_group_photo">Error updating group photo</string>
+
 
 </resources>
