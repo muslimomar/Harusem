@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/context_delete_dialog"
-        android:title="Delete" />
+        android:title="@string/delete" />
 
     <item
         android:id="@+id/context_view_contact"

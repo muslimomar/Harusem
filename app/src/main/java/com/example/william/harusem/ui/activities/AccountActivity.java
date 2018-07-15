@@ -51,7 +51,7 @@ public class AccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
         ButterKnife.bind(this);
-        setTitle("Account");
+        setTitle(R.string.account);
 
         containerLayout.setVisibility(View.GONE);
         uiProgressBar.setVisibility(View.VISIBLE);
@@ -88,7 +88,7 @@ public class AccountActivity extends AppCompatActivity {
     }
 
     private void saveChanges() {
-        final ProgressDialog progressDialog = Utils.buildProgressDialog(this, "", "Updating Profile...", false);
+        final ProgressDialog progressDialog = Utils.buildProgressDialog(this, "", getString(R.string.acc_update_profile_dialog), false);
 
         String fullName = nameEt.getText().toString().trim();
         String email = emailEt.getText().toString().trim();
@@ -96,14 +96,14 @@ public class AccountActivity extends AppCompatActivity {
 
 
         if (fullName.isEmpty()) {
-            nameEt.setError("Please enter a valid name!");
+            nameEt.setError(getString(R.string.err_enter_name));
             nameEt.requestFocus();
             return;
         }
 
         if (email.isEmpty() ||
                 !isEmailValid(email)) {
-            emailEt.setError("Please enter a valid email address!");
+            emailEt.setError(getString(R.string.err_enter_email));
             emailEt.requestFocus();
             return;
         }

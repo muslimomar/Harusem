@@ -155,7 +155,7 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
     private void startAudioManager() {
         ////////////////////////////////////////7
         audioManager.start((selectedAudioDevice, availableAudioDevices) -> {
-            Toaster.shortToast("Audio device switched to  " + selectedAudioDevice);
+            Toaster.shortToast(getString(R.string.call_audio_switched) + selectedAudioDevice);
 
             if (onChangeAudioDeviceCallback != null) {
                 onChangeAudioDeviceCallback.audioDeviceChanged(selectedAudioDevice);
@@ -174,7 +174,7 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
         try {
             currentSession.getMediaStreamManager().setVideoCapturer(new QBRTCCameraVideoCapturer(this, null));
         } catch (QBRTCCameraVideoCapturer.QBRTCCameraCapturerException e) {
-            Log.i(TAG, "Error: device doesn't have camera");
+            Log.i(TAG, getString(R.string.call_no_camera));
         }
     }
 
@@ -275,13 +275,13 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
 
         audioManager.setOnWiredHeadsetStateListener((plugged, hasMicrophone) -> {
             if (callStarted) {
-                Toaster.shortToast("Headset " + (plugged ? "plugged" : "unplugged"));
+                Toaster.shortToast(getString(R.string.call_headset) + (plugged ? getString(R.string.plugged) : getString(R.string.unpluged)));
             }
         });
 
         audioManager.setBluetoothAudioDeviceStateListener(connected -> {
             if (callStarted) {
-                Toaster.shortToast("Bluetooth " + (connected ? "connected" : "disconnected"));
+                Toaster.shortToast(getString(R.string.bluetooth) + (connected ? getString(R.string.connected) : getString(R.string.call_disconnected)));
             }
         });
     }
@@ -293,23 +293,23 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
             @Override
             public void onCameraError(final String s) {
 
-                showToast("Camera error: " + s);
+                showToast(getString(R.string.camera_error) + s);
             }
 
             @Override
             public void onCameraDisconnected() {
-                showToast("Camera onCameraDisconnected: ");
+                showToast(getString(R.string.camera_disconnected));
             }
 
             @Override
             public void onCameraFreezed(String s) {
-                showToast("Camera freezed: " + s);
+                showToast(getString(R.string.camera_freezed) + s);
                 hangUpCurrentSession();
             }
 
             @Override
             public void onCameraOpening(String s) {
-                showToast("Camera aOpening: " + s);
+                showToast(getString(R.string.camera_opening) + s);
             }
 
             @Override
@@ -354,7 +354,7 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
     @Override
     public void connectivityChanged(boolean availableNow) {
         if (callStarted) {
-            showToast("Internet connection " + (availableNow ? "available" : " unavailable"));
+            showToast(getString(R.string.internet_con) + (availableNow ? getString(R.string.available_) : getString(R.string.unavailable)));
         }
     }
 

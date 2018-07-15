@@ -18,7 +18,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Full Name" />
+            android:text="@string/full_name" />
 
         <EditText
             android:id="@+id/name_et"
@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:text="Email" />
+            android:text="@string/email" />
 
         <EditText
             android:id="@+id/email_et"
@@ -42,20 +42,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:text="Password" />
+            android:text="@string/password" />
 
         <EditText
             android:id="@+id/password_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/stars_hint"
             android:inputType="textWebPassword"
-            android:text="12345678" />
+            android:textAlignment="viewStart" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:text="Confirm Password"
+            android:text="@string/confirm_password"
 
             />
 
@@ -63,8 +64,9 @@
             android:id="@+id/pass_confirm_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/stars_hint"
             android:inputType="textWebPassword"
-            android:text="12345678" />
+            android:textAlignment="viewStart" />
 
 
         <LinearLayout
@@ -82,7 +84,7 @@
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
-                    android:text="English" />
+                    android:text="@string/english" />
 
 
                 <Spinner
@@ -92,7 +94,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="30dp"
-                    android:text="beginer"
+                    android:text="@string/beginner"
                     android:textColor="@color/black" />
             </LinearLayout>
 
@@ -105,7 +107,7 @@
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
-                    android:text="Turkish" />
+                    android:text="@string/turkish" />
 
 
                 <Spinner
@@ -115,7 +117,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="30dp"
-                    android:text="beginer"
+                    android:text="@string/beginner"
                     android:textColor="@color/black" />
             </LinearLayout>
 
@@ -128,7 +130,7 @@
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
-                    android:text="Arabic" />
+                    android:text="@string/arabic" />
 
 
                 <Spinner
@@ -138,7 +140,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="30dp"
-                    android:text="beginer"
+                    android:text="@string/beginner"
                     android:textColor="@color/black"
                     android:tooltipText="beginner" />
             </LinearLayout>
@@ -157,7 +159,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:text="Country" />
+                android:text="@string/country" />
 
             <TextView
                 android:id="@+id/country_tv"
@@ -167,7 +169,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="30dp"
-                android:text="Turkey"
+                android:text="@string/turkey"
                 android:textColor="@color/black" />
         </LinearLayout>
 

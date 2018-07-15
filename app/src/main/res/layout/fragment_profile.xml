@@ -8,7 +8,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         tools:context="com.example.william.harusem.fragments.ProfileFragment">
 
         <RelativeLayout
@@ -60,6 +60,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
                     android:alpha="0.8"
+                    android:layout_marginLeft="5dp"
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     tools:text="119" />
@@ -69,7 +70,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:alpha="0.8"
-                    android:text="Friends"
+                    android:text="@string/friends"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
 
@@ -89,7 +90,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
                     android:alpha="0.8"
-                    android:text="0"
+                    tools:text="0"
+                    android:layout_marginLeft="5dp"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
 
@@ -98,7 +100,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:alpha="0.8"
-                    android:text="Points"
+                    android:text="@string/points"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
 
@@ -123,12 +125,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-                android:drawableLeft="@drawable/ic_account_profile"
+                android:drawableStart="@drawable/ic_account_profile"
                 android:drawablePadding="@dimen/profile_drawable_padding"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:padding="8dp"
-                android:text="Account"
+                android:text="@string/account"
                 android:textColor="@android:color/tab_indicator_text"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -139,12 +141,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_between_options_profile"
                 android:clickable="true"
-                android:drawableLeft="@drawable/ic_password_profile"
+                android:drawableStart="@drawable/ic_password_profile"
                 android:drawablePadding="@dimen/profile_drawable_padding"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:padding="8dp"
-                android:text="Password"
+                android:text="@string/password"
                 android:textColor="@android:color/tab_indicator_text"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -160,12 +162,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="true"
-                    android:drawableLeft="@drawable/ic_notification_profile"
+                    android:drawableStart="@drawable/ic_notification_profile"
                     android:drawablePadding="@dimen/profile_drawable_padding"
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackgroundBorderless"
                     android:padding="8dp"
-                    android:text="Friend Requests"
+                    android:text="@string/friend_requests"
                     android:textColor="@android:color/tab_indicator_text"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -174,7 +176,7 @@
                     android:id="@+id/notification_badge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true" />
 
             </RelativeLayout>
@@ -185,12 +187,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_between_options_profile"
                 android:clickable="true"
-                android:drawableLeft="@drawable/ic_friends_profile"
+                android:drawableStart="@drawable/ic_friends_profile"
                 android:drawablePadding="@dimen/profile_drawable_padding"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:padding="8dp"
-                android:text="Friends"
+                android:text="@string/friends"
                 android:textColor="@android:color/tab_indicator_text"
                 android:textSize="15sp"
                 android:textStyle="bold"
@@ -203,12 +205,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_between_options_profile"
                 android:clickable="true"
-                android:drawableLeft="@drawable/ic_block"
+                android:drawableStart="@drawable/ic_block"
                 android:drawablePadding="@dimen/profile_drawable_padding"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:padding="8dp"
-                android:text="Blocking List"
+                android:text="@string/blocking_list"
                 android:textColor="@android:color/tab_indicator_text"
                 android:textSize="15sp"
                 android:textStyle="bold"
@@ -228,12 +230,12 @@
                     android:id="@+id/log_out_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_log_out_profile"
+                    android:drawableStart="@drawable/ic_log_out_profile"
                     android:drawablePadding="@dimen/profile_drawable_padding"
                     android:drawableTint="@color/dark_red"
                     android:foreground="?attr/selectableItemBackgroundBorderless"
                     android:padding="8dp"
-                    android:text="Logout"
+                    android:text="@string/logout"
                     android:textColor="@color/dark_red"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -243,9 +245,9 @@
                     style="?android:attr/progressBarStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginEnd="8dp"
                     android:indeterminateTint="@color/dark_red"
                     android:visibility="gone"
 

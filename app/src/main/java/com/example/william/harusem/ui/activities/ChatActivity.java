@@ -1281,7 +1281,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
 
         if (isUserBlocked(qbChatDialog.getRecipientId().toString())) {
-            Toast.makeText(this, "You can't send message to this user!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.cant_send_msg_blocked, Toast.LENGTH_SHORT).show();
             messageInputEt.setText("");
             return;
         }
