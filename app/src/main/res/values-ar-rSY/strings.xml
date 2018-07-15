@@ -231,4 +231,8 @@
     <string name="img_too_big">خطأ حجم الصورة كبير للغاية</string>
     <string name="push_accepted">وافق على طلب الصداقة الخاص بك</string>
     <string name="push_wants_friend">يرغب باضافتك كصديق</string>
+    <string name="dialog_no_chats">أوبس ! لا يوجد لديك أي محادثات, إضغط على إنشاء مجموعة محادثة أو إذهب إلى محادثة خاصة في صفحة معلومات الأصدقاء</string>
+    <string name="err_valid_mail">يرجى إدخال بريد الكتروني صالح</string>
+    <string name="done">تم</string>
+    <string name="link_sent_pw">لقد قمنا بإرسال رسالة للبريد الإلكتروني تحتوي على تعليمات إعادة تعيين كلمة السر</string>
 </resources>
