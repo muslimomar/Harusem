@@ -119,6 +119,38 @@ public class ChatHelper {
         chatDialog.leave();
     }
 
+    public void updateDialog(QBChatDialog qbDialog, List<QBUser> newQbDialogUsersList
+            , String name, String photo, QBEntityCallback<QBChatDialog> callback) {
+
+        List<QBUser> addedUsers = QbDialogUtils.getAddedUsers(qbDialog, newQbDialogUsersList);
+        List<QBUser> removedUsers = QbDialogUtils.getRemovedUsers(qbDialog, newQbDialogUsersList);
+
+        QBDialogRequestBuilder qbRequestBuilder = new QBDialogRequestBuilder();
+        if (!addedUsers.isEmpty()) {
+            qbRequestBuilder.addUsers(addedUsers.toArray(new QBUser[addedUsers.size()]));
+            QBUsersHolder.getInstance().putUsers(addedUsers);
+        }
+        if (!removedUsers.isEmpty()) {
+            qbRequestBuilder.removeUsers(removedUsers.toArray(new QBUser[removedUsers.size()]));
+        }
+
+
+        qbDialog.setName(name);
+        if (photo != null && !photo.isEmpty()) {
+            qbDialog.setPhoto(photo);
+        }
+
+        QBRestChatService.updateGroupChatDialog(qbDialog, qbRequestBuilder).performAsync(
+                new QbEntityCallbackWrapper<QBChatDialog>(callback) {
+                    @Override
+                    public void onSuccess(QBChatDialog qbDialog, Bundle bundle) {
+                        QBUsersHolder.getInstance().putUsers(newQbDialogUsersList);
+                        super.onSuccess(qbDialog, bundle);
+                    }
+                });
+
+    }
+
     public void updateDialogUsers(QBChatDialog qbDialog,
                                   final List<QBUser> newQbDialogUsersList,
                                   QBEntityCallback<QBChatDialog> callback) {
@@ -273,11 +305,12 @@ public class ChatHelper {
                     }
                 });
     }
+
     public void createDialogWithSelectedUsersWithPhoto(final List<QBUser> users,
                                                        final QBEntityCallback<QBChatDialog> callback, String groupName, String photoId) {
 
 
-        QBRestChatService.createChatDialog(QbDialogUtils.createGroupDialogWithPhoto(users, groupName,photoId)).performAsync(
+        QBRestChatService.createChatDialog(QbDialogUtils.createGroupDialogWithPhoto(users, groupName, photoId)).performAsync(
                 new QbEntityCallbackWrapper<QBChatDialog>(callback) {
                     @Override
                     public void onSuccess(QBChatDialog dialog, Bundle args) {

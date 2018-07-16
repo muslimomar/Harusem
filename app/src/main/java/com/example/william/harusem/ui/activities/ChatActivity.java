@@ -127,6 +127,8 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.fabric.sdk.android.Fabric;
 
+import static com.example.william.harusem.ui.activities.SelectUsersActivity.EXTRA_QB_USERS;
+
 ////////For call
 
 /**
@@ -297,7 +299,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     private void startInnerCall(Boolean getCallFlag) {
 
         QBUser current = SharedPrefsHelper.getInstance().getQbUser();
-        startLoginService(current,getCallFlag);
+        startLoginService(current, getCallFlag);
     }
 
     public void setupChat() {
@@ -308,7 +310,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         initChat();
         addChatMessagesAdapterListeners();
         addIsTypingListener();
-        qbChatDialog.addMessageListener(chatMessageListener);
         initFields();
     }
 
@@ -454,7 +455,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     }
 
 
-
     private void startCall(boolean isVideoCall) {
         QBRTCTypes.QBConferenceType conferenceType = isVideoCall
                 ? QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO
@@ -532,7 +532,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     //}
 
 
-    private void startLoginService(QBUser qbUser,Boolean getCallTag) {
+    private void startLoginService(QBUser qbUser, Boolean getCallTag) {
 
         Intent tempIntent = new Intent(this, CallService.class);
         PendingIntent pendingIntent = createPendingResult(Consts.EXTRA_LOGIN_RESULT_CODE, tempIntent, 0);
@@ -746,13 +746,19 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
         Menu menu = popup.getMenu();
         MenuItem menuItemLeave = menu.findItem(R.id.menu_chat_action_leave);
-        MenuItem menuItemAdd = menu.findItem(R.id.menu_chat_action_add);
-        MenuItem menuItemDelete = menu.findItem(R.id.menu_chat_action_delete);
+        MenuItem menuItemViewProfile = menu.findItem(R.id.menu_chat_action_view_profile);
+        MenuItem menuItemGroupInfo = menu.findItem(R.id.menu_chat_action_group_info);
         if (qbChatDialog.getType() == QBDialogType.PRIVATE) {
             menuItemLeave.setVisible(false);
-            menuItemAdd.setVisible(false);
+            menuItemGroupInfo.setVisible(false);
         } else {
-            menuItemDelete.setVisible(false);
+            menuItemViewProfile.setVisible(false);
+            if (qbChatDialog.getUserId().equals(QBChatService.getInstance().getUser().getId())) {
+                // if group owner
+                menuItemGroupInfo.setVisible(true);
+            } else {
+                menuItemGroupInfo.setVisible(false);
+            }
         }
         popup.setOnMenuItemClickListener(this);
         popup.show();
@@ -788,17 +794,17 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         });
     }
 
-
     @SuppressWarnings("unchecked")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_CODE_SELECT_PEOPLE) {
-                ArrayList<QBUser> selectedUsers = (ArrayList<QBUser>) data.getSerializableExtra(
-                        SelectUsersActivity.EXTRA_QB_USERS);
-                updateDialog(selectedUsers);
+                ArrayList<QBUser> selectedUsers = (ArrayList<QBUser>) data.getSerializableExtra(EXTRA_QB_USERS);
+                String groupName = data.getStringExtra(SelectUsersActivity.EXTRA_GROUP_NAME);
+                String groupPhoto = data.getStringExtra(SelectUsersActivity.EXTRA_QB_USER_PHOTO);
 
+                updateDialog(selectedUsers, groupName, groupPhoto);
             }
         }
     }
@@ -946,11 +952,11 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     private void loadUserFullName() {
         QBUser signInQbUser = QBUsersHolder.getInstance().getSignInQbUser();
         if (signInQbUser == null) {
-            signInQbUser= SharedPrefsHelper.getInstance().getQbUser();
-       }
+            signInQbUser = SharedPrefsHelper.getInstance().getQbUser();
+        }
 
 
-            fullName = signInQbUser.getFullName();
+        fullName = signInQbUser.getFullName();
 
 
     }
@@ -1013,11 +1019,14 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         }
     }
 
-    private void updateDialog(final ArrayList<QBUser> selectedUsers) {
-        ChatHelper.getInstance().updateDialogUsers(qbChatDialog, selectedUsers, new QBEntityCallback<QBChatDialog>() {
+    private void updateDialog(final ArrayList<QBUser> selectedUsers, String groupName, String groupPhoto) {
+        ChatHelper.getInstance().updateDialog(qbChatDialog, selectedUsers, groupName, groupPhoto, new QBEntityCallback<QBChatDialog>() {
             @Override
-            public void onSuccess(QBChatDialog qbChatDialog, Bundle bundle) {
-
+            public void onSuccess(QBChatDialog dialog, Bundle bundle) {
+                qbChatDialog = dialog;
+                QBChatDialogHolder.getInstance().updateDialog(qbChatDialog.getDialogId(), groupName, groupPhoto,
+                        qbChatDialog.getOccupants());
+                loadDialogUsers();
             }
 
             @Override
@@ -1026,7 +1035,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                updateDialog(selectedUsers);
+                                updateDialog(selectedUsers, groupName, groupPhoto);
                             }
                         });
             }
@@ -1334,11 +1343,10 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     public boolean onMenuItemClick(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.menu_chat_action_info:
-                ChatInfoActivity.start(this, qbChatDialog);
-                return true;
-            case R.id.menu_chat_action_add:
-                SelectUsersActivity.startForResult(this, REQUEST_CODE_SELECT_PEOPLE, qbChatDialog);
+            case R.id.menu_chat_action_group_info:
+                Intent intent = new Intent(this, CreateGroupActivity.class);
+                intent.putExtra(EXTRA_DIALOG, qbChatDialog);
+                startActivityForResult(intent, REQUEST_CODE_SELECT_PEOPLE);
                 return true;
             case R.id.menu_chat_action_leave:
                 leaveGroupChat();
@@ -1347,7 +1355,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
                 deleteChat();
                 return true;
             case R.id.menu_chat_action_view_profile:
-                    redirectToProfileActivity();
+                redirectToProfileActivity();
             default:
                 return true;
         }

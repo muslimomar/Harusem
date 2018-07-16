@@ -71,6 +71,6 @@ public class CheckboxUsersAdapter extends UsersAdapter {
 
     @Override
     protected boolean isAvailableForSelection(QBUser user) {
-        return super.isAvailableForSelection(user) && !initiallySelectedUsers.contains(user.getId());
+        return true;
     }
 }

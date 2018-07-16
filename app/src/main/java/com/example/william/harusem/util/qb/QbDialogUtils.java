@@ -43,7 +43,9 @@ public class QbDialogUtils {
             userIds.add(user.getId());
         }
         QBChatDialog chatDialog = DialogUtils.buildDialog(groupName, QBDialogType.GROUP, userIds);
-        chatDialog.setPhoto(photoId);
+        if (photoId != null && !photoId.isEmpty()) {
+            chatDialog.setPhoto(photoId);
+        }
         return chatDialog;
     }
 

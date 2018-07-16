@@ -103,6 +103,17 @@ public class QBChatDialogHolder {
         dialogsMap.put(updatedDialog.getDialogId(), updatedDialog);
     }
 
+    public void updateDialog(String dialogId, String groupName,String photo,List<Integer> integers) {
+        QBChatDialog updatedDialog = getChatDialogById(dialogId);
+        updatedDialog.setUnreadMessageCount(updatedDialog.getUnreadMessageCount() != null
+                ? updatedDialog.getUnreadMessageCount() + 1 : 1);
+        updatedDialog.setName(groupName);
+        updatedDialog.setPhoto(photo);
+        updatedDialog.setOccupantsIds(integers);
+
+        dialogsMap.put(updatedDialog.getDialogId(), updatedDialog);
+    }
+
     public Map<String, QBChatDialog> getDialogs() {
         return getSortedMap(dialogsMap);
     }

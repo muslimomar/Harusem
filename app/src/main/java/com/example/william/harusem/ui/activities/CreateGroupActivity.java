@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.StringRes;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,6 +19,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,11 +31,14 @@ import com.example.william.harusem.util.ErrorUtils;
 import com.example.william.harusem.util.Toaster;
 import com.example.william.harusem.util.Utils;
 import com.quickblox.chat.QBChatService;
+import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.content.QBContent;
 import com.quickblox.content.model.QBFile;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -49,6 +55,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.example.william.harusem.ui.activities.SelectUsersActivity.EDITED_USERS;
 import static com.example.william.harusem.ui.activities.SelectUsersActivity.EXTRA_GROUP_NAME;
 import static com.example.william.harusem.ui.activities.SelectUsersActivity.EXTRA_QB_USERS;
 import static com.example.william.harusem.ui.activities.SelectUsersActivity.EXTRA_QB_USER_PHOTO;
@@ -56,8 +63,9 @@ import static com.example.william.harusem.ui.activities.SelectUsersActivity.EXTR
 public class CreateGroupActivity extends AppCompatActivity {
 
     public static final String USERS_ID_LIST = "USERS_ID_LIST";
+    public static final String EXISTING_USERS_LIST = "existing_users_list_id";
     private static final String TAG = CreateGroupActivity.class.getSimpleName();
-
+    private static final int REQUEST_USERS = 51;
     @BindView(R.id.group_circle_iv)
     CircleImageView groupCircleIv;
     @BindView(R.id.group_name_et)
@@ -70,10 +78,15 @@ public class CreateGroupActivity extends AppCompatActivity {
     GridView gridView;
     ArrayList<QBUser> qbUsers;
     @BindView(R.id.root_layout)
-    LinearLayout rootLayout;
+    RelativeLayout rootLayout;
     DialogsManager dialogsManager;
     String photoId;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
+    @BindView(R.id.photo_pb)
+    ProgressBar photoPb;
     private int REQUEST_CODE = 44;
+    private QBChatDialog qbChatDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,19 +95,93 @@ public class CreateGroupActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         configureActionBar();
 
+        qbChatDialog = (QBChatDialog) getIntent().getSerializableExtra(ChatActivity.EXTRA_DIALOG);
         dialogsManager = new DialogsManager();
 
-        getQbUsers();
+        if (isEditMode()) {
+            setTitle("Edit Group");
+            fab.setVisibility(View.VISIBLE);
+            groupCircleIv.setImageResource(R.drawable.circle_shape);
+            participantsTv.setText(getString(R.string.participants, qbChatDialog.getOccupants().size() - 1));
+            loadUserData();
+        } else {
+            setTitle("New Group");
+            fab.setVisibility(View.GONE);
+            groupCircleIv.setImageResource(R.drawable.camera_png);
+            photoPb.setVisibility(View.GONE);
+            getQbUsers();
 
-        ArrayList<QBUser> qbUsersWithoutCurrent = new ArrayList<>();
-        for (QBUser user : qbUsers) {
-            if(!QBChatService.getInstance().getUser().equals(user))
-                qbUsersWithoutCurrent.add(user);
+            ArrayList<QBUser> qbUsersWithoutCurrent = new ArrayList<>();
+            for (QBUser user : qbUsers) {
+                if (!QBChatService.getInstance().getUser().equals(user))
+                    qbUsersWithoutCurrent.add(user);
+            }
+
+            fillParticipants(qbUsersWithoutCurrent);
+            participantsTv.setText(getString(R.string.participants, qbUsersWithoutCurrent.size()));
+
         }
 
-        fillParticipants(qbUsersWithoutCurrent);
-        participantsTv.setText(getString(R.string.participants, qbUsersWithoutCurrent.size()));
 
+    }
+
+    private void loadUserData() {
+        ProgressDialog progressDialog = Utils.buildProgressDialog(this, "", "Please Wait...", false);
+        progressDialog.show();
+        groupNameEt.setText(qbChatDialog.getName());
+
+        getUserPhoto();
+
+        QBUsers.getUsersByIDs(qbChatDialog.getOccupants(), null).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
+            @Override
+            public void onSuccess(ArrayList<QBUser> users, Bundle bundle) {
+                progressDialog.dismiss();
+                ArrayList<QBUser> qbUserWithoutCurrent = new ArrayList<>();
+                for (QBUser user : users) {
+                    if (!user.getLogin().equals(QBChatService.getInstance().getUser().getLogin())) {
+                        qbUserWithoutCurrent.add(user);
+                    }
+                }
+
+                qbUsers = users;
+                fillParticipants(qbUserWithoutCurrent);
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                progressDialog.dismiss();
+                Toaster.shortToast(e.getMessage());
+            }
+        });
+
+
+    }
+
+    private void getUserPhoto() {
+        photoPb.setVisibility(View.VISIBLE);
+        String photo = qbChatDialog.getPhoto();
+        if (photo != null) {
+            QBContent.getFile(Integer.parseInt(photo)).performAsync(new QBEntityCallback<QBFile>() {
+                @Override
+                public void onSuccess(QBFile file, Bundle bundle) {
+                    photoPb.setVisibility(View.GONE);
+                    Picasso.get().load(file.getPublicUrl()).into(groupCircleIv);
+                }
+
+                @Override
+                public void onError(QBResponseException e) {
+                    photoPb.setVisibility(View.GONE);
+                    Toaster.shortToast(e.getMessage());
+                }
+            });
+        } else {
+            photoPb.setVisibility(View.GONE);
+            groupCircleIv.setImageResource(R.drawable.camera_png);
+        }
+    }
+
+    private boolean isEditMode() {
+        return null != qbChatDialog;
     }
 
     private void getQbUsers() {
@@ -112,12 +199,15 @@ public class CreateGroupActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        setTitle("New Group");
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.create_group_menu, menu);
+        if (isEditMode()) {
+            getMenuInflater().inflate(R.menu.password_change_menu, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.create_group_menu, menu);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -130,10 +220,30 @@ public class CreateGroupActivity extends AppCompatActivity {
             case R.id.create_action:
                 onGroupCreate();
                 return true;
+            case R.id.save:
+                onGroupEdit();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private void onGroupEdit() {
+        String groupName = groupNameEt.getText().toString().trim();
+        if (groupName.isEmpty()) {
+            Toaster.shortToast("Please type a name for the group!");
+            return;
+        }
+
+
+        Intent intent = new Intent();
+        intent.putExtra(SelectUsersActivity.EXTRA_QB_USERS, qbUsers);
+        intent.putExtra(SelectUsersActivity.EXTRA_QB_USER_PHOTO, photoId);
+        intent.putExtra(SelectUsersActivity.EXTRA_GROUP_NAME, groupName);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
 
     private void onGroupCreate() {
         String groupName = groupNameEt.getText().toString().trim();
@@ -212,6 +322,23 @@ public class CreateGroupActivity extends AppCompatActivity {
             }
         }
 
+        if (requestCode == REQUEST_USERS && resultCode == RESULT_OK) {
+
+            qbUsers = (ArrayList<QBUser>) data.getSerializableExtra(EDITED_USERS);
+
+            ArrayList<QBUser> qbUsersWithoutCurrent = new ArrayList<>();
+            for (QBUser user : qbUsers) {
+                if (!QBChatService.getInstance().getUser().equals(user))
+                    qbUsersWithoutCurrent.add(user);
+            }
+
+            getUserPhoto();
+
+            groupNameEt.setText(qbChatDialog.getName());
+            fillParticipants(qbUsersWithoutCurrent);
+            participantsTv.setText(getString(R.string.participants, qbUsersWithoutCurrent.size()));
+        }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -243,6 +370,14 @@ public class CreateGroupActivity extends AppCompatActivity {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         startActivityForResult(Intent.createChooser(intent, "Select a Picture"), REQUEST_CODE);
+    }
+
+    @OnClick(R.id.fab)
+    public void setFab(View view) {
+        Intent intent = new Intent(this, SelectUsersActivity.class);
+        intent.putExtra(EXISTING_USERS_LIST, qbUsers);
+        startActivityForResult(intent, REQUEST_USERS);
+
     }
 
 }

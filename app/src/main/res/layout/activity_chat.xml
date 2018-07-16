@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".ui.activities.MessageActivity">
+    tools:context=".ui.activities.ChatActivity">
 
     <LinearLayout
         android:id="@+id/toolbar_layout"
@@ -118,7 +118,7 @@
                     android:layout_centerVertical="true"
                     android:gravity="center_horizontal"
                     android:singleLine="true"
-                    android:text="Jane "
+                    tools:text="Jane "
                     android:textColor="@color/colorPrimary"
                     android:textSize="16sp"
                     android:textStyle="bold" />

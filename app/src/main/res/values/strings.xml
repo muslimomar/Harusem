@@ -155,7 +155,7 @@
 
 
     <string name="menu_new_chat">New Chat</string>
-    <string name="menu_chat_info">Chat info</string>
+    <string name="menu_chat_info">Edit Group</string>
     <string name="menu_add_users_to_chat">Add Users to Chat</string>
     <string name="menu_leave_chat">Leave Chat</string>
     <string name="menu_delete_chat">Delete Chat</string>

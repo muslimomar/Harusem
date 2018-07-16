@@ -384,12 +384,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
                 } else {
                     // create group
                     ProgressDialogFragment.show(getActivity().getSupportFragmentManager(), R.string.create_chat);
-
-                    if (photoId != null && !photoId.equals("") && !photoId.equalsIgnoreCase("null")) {
-                        createDialogWithPhoto(selectedUsers, photoId, groupName);
-                    } else {
-                        createDialog(selectedUsers);
-                    }
+                    createDialogWithPhoto(selectedUsers, photoId, groupName);
                 }
 
 

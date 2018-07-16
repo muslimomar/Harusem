@@ -127,7 +127,6 @@ public class ProfileFragment extends Fragment {
 
                         if (getActivity() != null && isAdded()) {
                             nameTv.setText(user.getFullName());
-                            // TODO: get unread friend request
 
                             getUnreadFriendRequests();
 
