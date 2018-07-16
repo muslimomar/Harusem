@@ -59,6 +59,12 @@ public class ProfileActivity extends AppCompatActivity {
     CardView cardView;
     @BindView(R.id.profile_activity_loading_pb)
     ProgressBar progressBar;
+    @BindView(R.id.english_progress_bar)
+    ProgressBar englishProgressBar;
+    @BindView(R.id.turkish_progress_bar)
+    ProgressBar turkishProgressBar;
+    @BindView(R.id.arabic_progress_bar)
+    ProgressBar arabicProgressBar;
 
     private static final String TAG = ProfileActivity.class.getSimpleName();
     QBPrivacyListsManager privacyListsManager;
@@ -436,7 +442,23 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         flagIv.setImageResource(id);
+    }
 
+    //kullanıcının ingizlice dil seviyesini getiren ve progress bar'a yükleyen metoddur.
+    private void getUserEnglishLanguage(QBUser user) {
+
+        String englishLevel = user.getCustomData();
+
+        //signup sayfasında girilen dil seviyelerini nasıl çağıracağımı tam olarak bilmiyorum.
+        if (englishLevel.equals(0)) {
+            englishProgressBar.setProgress(25);
+        } else if (englishLevel.equals(1)) {
+            englishProgressBar.setProgress(50);
+
+        } else if (englishLevel.equals(2)) {
+            englishProgressBar.setProgress(75);
+
+        }
     }
 
     private void showProgressBar(ProgressBar progressBar) {
@@ -464,7 +486,6 @@ public class ProfileActivity extends AppCompatActivity {
         cardView.setVisibility(View.VISIBLE);
 
     }
-
 
 //    private static class blockTask extends AsyncTask<Void, Void, Void> {
 //        ProgressDialog progressDialog;

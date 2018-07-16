@@ -1,7 +1,6 @@
 package com.example.william.harusem.fragments;
 
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -21,21 +20,17 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.example.william.harusem.BlockingActivity;
-import com.example.william.harusem.holder.QBFriendRequestsHolder;
-import com.example.william.harusem.holder.QBUsersHolder;
-import com.example.william.harusem.helper.QBFriendListHelper;
 
 import com.example.william.harusem.R;
+import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.holder.QBChatDialogHolder;
+import com.example.william.harusem.holder.QBFriendRequestsHolder;
+import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.ui.activities.AccountActivity;
 import com.example.william.harusem.ui.activities.FriendRequestsActivity;
 import com.example.william.harusem.ui.activities.FriendsActivity;
 import com.example.william.harusem.ui.activities.LoginActivity;
 import com.example.william.harusem.ui.activities.PasswordActivity;
-import com.example.william.harusem.helper.QBFriendListHelper;
-import com.example.william.harusem.holder.QBFriendRequestsHolder;
-import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.util.ChatHelper;
 import com.example.william.harusem.util.SharedPrefsHelper;
 import com.example.william.harusem.util.Utils;
@@ -102,6 +97,13 @@ public class ProfileFragment extends Fragment {
     RelativeLayout logOutLayout;
     @BindView(R.id.profile_loading_pb)
     ProgressBar profileLoadingPb;
+
+    // Dil için seviye belirleyen progressBarlar çağrıldı.
+    @BindView(R.id.profile_fragment_english_progress_bar)
+    ProgressBar englishProgressBar;
+    @BindView(R.id.profile_fragment_turkish_progress_bar)
+    ProgressBar turkishProgressBar;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
