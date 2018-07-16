@@ -63,8 +63,8 @@ public class ProfileActivity extends AppCompatActivity {
     ProgressBar englishProgressBar;
     @BindView(R.id.turkish_progress_bar)
     ProgressBar turkishProgressBar;
-    @BindView(R.id.arabic_progress_bar)
-    ProgressBar arabicProgressBar;
+//    @BindView(R.id.arabic_progress_bar)
+//    ProgressBar arabicProgressBar;
 
     private static final String TAG = ProfileActivity.class.getSimpleName();
     QBPrivacyListsManager privacyListsManager;

@@ -112,6 +112,7 @@ public class AccountActivity extends AppCompatActivity {
         user.setId(QBChatService.getInstance().getUser().getId());
         user.setFullName(fullName);
         user.setEmail(email);
+        user.setLogin(email);
         user.setCustomData(country);
 
         progressDialog.show();
