@@ -102,6 +102,13 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.profile_loading_pb)
     ProgressBar profileLoadingPb;
 
+    // Dil için seviye belirleyen progressBarlar çağrıldı.
+    @BindView(R.id.profile_fragment_english_progress_bar)
+    ProgressBar englishProgressBar;
+    @BindView(R.id.profile_fragment_turkish_progress_bar)
+    ProgressBar turkishProgressBar;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

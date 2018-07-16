@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -56,9 +57,8 @@ public class SignupActivity extends AppCompatActivity {
     Spinner englishLanguageTv;
     @BindView(R.id.language_turkish_tv)
     Spinner turkishLanguageTv;
-    @BindView(R.id.language_arabic_tv)
-    Spinner arabicLanguageTv;
 
+    String englishLevel, turkishLevel;
 
     public static String getEditTextString(EditText editText) {
         return editText.getText().toString().trim();
@@ -71,10 +71,9 @@ public class SignupActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         hideSoftKeyboard();
-        spinnerArabic();
+
         spinnerEnglish();
         spinnerTurkish();
-
     }
 
     public void spinnerEnglish() {
@@ -84,7 +83,26 @@ public class SignupActivity extends AppCompatActivity {
 // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 // Apply the adapter to the spinner
+        englishLevel = getString(R.string.beginner);
         englishLanguageTv.setAdapter(adapter);
+        englishLanguageTv.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    englishLevel = getString(R.string.beginner);
+                } else if (position == 1) {
+                    englishLevel = getString(R.string.intermediate);
+
+                } else if (position == 2) {
+                    englishLevel = getString(R.string.advanced);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     public void spinnerTurkish() {
@@ -94,18 +112,28 @@ public class SignupActivity extends AppCompatActivity {
 // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 // Apply the adapter to the spinner
+        turkishLevel = getString(R.string.beginner);
         turkishLanguageTv.setAdapter(adapter);
+        turkishLanguageTv.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    turkishLevel = getString(R.string.beginner);
+                } else if (position == 1) {
+                    turkishLevel = getString(R.string.intermediate);
+
+                } else if (position == 2) {
+                    turkishLevel = getString(R.string.advanced);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
-    public void spinnerArabic() {
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.spinner_array, android.R.layout.simple_spinner_item);
-// Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
-        arabicLanguageTv.setAdapter(adapter);
-    }
 
     private void onSignup() {
 
@@ -140,6 +168,7 @@ public class SignupActivity extends AppCompatActivity {
             return;
         }
 
+
         createAccount(getEditTextString(emailEt), getEditTextString(passwordEt), getEditTextString(nameEt));
     }
 
@@ -152,7 +181,6 @@ public class SignupActivity extends AppCompatActivity {
         qbUser.setFullName(name);
         qbUser.setEmail(email);
         qbUser.setCustomData(countryTv.getText().toString().trim());
-
         QBUsers.signUpSignInTask(qbUser).performAsync(new QBEntityCallback<QBUser>() {
 
             @Override
@@ -231,6 +259,7 @@ public class SignupActivity extends AppCompatActivity {
     public void countryClick(View view) {
         setupCountryPicker();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

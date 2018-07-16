@@ -68,6 +68,29 @@
             android:inputType="textWebPassword"
             android:textAlignment="viewStart" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Country" />
+
+            <TextView
+                android:id="@+id/country_tv"
+                style="@style/Base.Widget.AppCompat.Spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:gravity="center_vertical"
+                android:text="Turkey"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -81,10 +104,13 @@
 
                 <TextView
 
-                    android:layout_width="60dp"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
-                    android:text="@string/english" />
+
+                    android:text="Mather Language" />
+
+
 
 
                 <Spinner
@@ -104,10 +130,11 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="60dp"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
-                    android:text="@string/turkish" />
+                    android:text="Learned Language" />
+
 
 
                 <Spinner
@@ -121,56 +148,6 @@
                     android:textColor="@color/black" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="60dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
-                    android:text="@string/arabic" />
-
-
-                <Spinner
-                    android:id="@+id/language_arabic_tv"
-                    style="@style/Base.Widget.AppCompat.Spinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="30dp"
-                    android:text="@string/beginner"
-                    android:textColor="@color/black"
-                    android:tooltipText="beginner" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="30dp"
-                android:text="@string/country" />
-
-            <TextView
-                android:id="@+id/country_tv"
-                style="@style/Base.Widget.AppCompat.Spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="30dp"
-                android:text="@string/turkey"
-                android:textColor="@color/black" />
         </LinearLayout>
 
     </LinearLayout>

@@ -265,6 +265,10 @@
         <item>Advanced</item>
     </string-array>
 
+    <string name="beginner">beginner</string>
+    <string name="intermediate">intermediate</string>
+    <string name="advanced">advanced</string>
+
     <string name="participants">Participants: %d</string>
     <string name="select_users">Select Users</string>
 
