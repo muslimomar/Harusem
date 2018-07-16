@@ -303,7 +303,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                     // Get file size
                     int imageSizeKB = (int) (file.length() / 1024);
                     if (imageSizeKB >= (1024 * 100)) {
-                        Toast.makeText(this, "Error, selected image is too large", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, R.string.img_too_big, Toast.LENGTH_SHORT).show();
                     }
 
                     uploadPhoto(progressDialog, file);

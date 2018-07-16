@@ -54,12 +54,12 @@ public class Harusem extends Application {
         QBPushManager.getInstance().addListener(new QBPushManager.QBSubscribeListener() {
             @Override
             public void onSubscriptionCreated() {
-                Toast.makeText(Harusem.this, "Subscription Created!", Toast.LENGTH_SHORT).show();
+                Log.v("Pushsubscription!","succes!");
             }
 
             @Override
             public void onSubscriptionError(Exception e, int i) {
-                Toast.makeText(Harusem.this, "Error Subscribing!" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.v("Pushsubscription!","error!"+e.getMessage());
             }
 
             @Override

@@ -14,10 +14,12 @@ import com.quickblox.core.exception.QBResponseException;
 
 import java.util.List;
 
+import static com.example.william.harusem.util.ResourceUtils.getString;
+
 public class ErrorUtils {
 
-    private static final String NO_CONNECTION_ERROR = "Connection failed. Please check your internet connection.";
-    private static final String NO_RESPONSE_TIMEOUT = "No response received within reply timeout.";
+    private static final String NO_CONNECTION_ERROR = getString(R.string.err_connection);
+    private static final String NO_RESPONSE_TIMEOUT = getString(R.string.err_no_response);
     private static Handler mainThreadHandler = new Handler(Looper.getMainLooper());
 
     private ErrorUtils() {

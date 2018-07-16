@@ -55,10 +55,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupBottomNavigation() {
 
-        AHBottomNavigationItem item1 = new AHBottomNavigationItem("Chats", R.drawable.ic_chat_24dp);
-        AHBottomNavigationItem item2 = new AHBottomNavigationItem("Search", R.drawable.ic_search_24dp);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem("Account", R.drawable.ic_account_24dp);
-
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.chats_nav_item, R.drawable.ic_chat_24dp, R.color.colorPrimary);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.search_nav_item, R.drawable.ic_search_24dp, R.color.colorPrimary);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.account_nav_item, R.drawable.ic_account_24dp, R.color.colorPrimary);
         bottomNavigation.addItem(item1);
         bottomNavigation.addItem(item2);
         bottomNavigation.addItem(item3);

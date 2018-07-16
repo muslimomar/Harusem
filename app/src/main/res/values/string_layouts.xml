@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--	This file is auto-generated DO NOT insert new strings here manually!!!
+		Just insert the string value in the respective widget text within the layout file, this value will then be automatically added to this file with the correct reference	
+--><resources>
+<string name="activity_chat_opponent_name_tv_text">Jane </string>
+<string name="activity_chat_message_input_et_hint">Write a Message</string>
+<string name="activity_login_email_et_text">test@test.com</string>
+<string name="activity_login_email_et_hint">Email</string>
+<string name="activity_login_password_et_text">12345678</string>
+<string name="activity_login_password_et_hint">******</string>
+<string name="activity_login_login_btn_text">LOGIN</string>
+<string name="activity_login_signup_btn_text">SIGNUP</string>
+<string name="activity_login_forgot_pass_tv_text">Click Here</string>
+<string name="activity_profile_friend_name_friend_detail_text">Isim Soyisim</string>
+<string name="activity_signup_password_et_text">12345678</string>
+<string name="activity_signup_pass_confirm_et_text">12345678</string>
+<string name="activity_signup_country_tv_text">Turkey</string>
+<string name="block_list_item_unblock_btn_text">Unblock</string>
+<string name="edit_group_dialog_group_name_et_hint">Group Name</string>
+<string name="fragment_profile_friends_count_key_tv_text">Friends</string>
+<string name="fragment_profile_points_count_value_tv_text">0</string>
+<string name="fragment_profile_points_count_key_tv_text">Points</string>
+<string name="fragment_profile_account_tv_text">Account</string>
+<string name="fragment_profile_password_tv_text">Password</string>
+<string name="fragment_profile_friends_requests_tv_text">Friend Requests</string>
+<string name="fragment_profile_friends_tv_text">Friends</string>
+<string name="fragment_profile_blocking_tv_text">Blocking List</string>
+<string name="fragment_profile_log_out_tv_text">Logout</string>
+<string name="friends_list_item_add_friend_btn_text">Unfriend</string>
+<string name="slide_1_slide_1_title_text">Instant Chat</string>
+<string name="slide_1_slide_1_description_text">Learn and teach by chatting with friends</string>
+<string name="slide_2_slide_2_title_text">Bot Chat</string>
+<string name="slide_3_slide_2_title_text">Microphone Access</string>
+<string name="slide_3_slide_2_description_text">Harusem needs the microphone to record your voice</string>
+</resources>
