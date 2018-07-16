@@ -20,7 +20,7 @@
         android:layout_below="@id/slide_img"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="55dp"
-        android:text="Instant Chat"
+        android:text="@string/instant_chat"
         android:textColor="@color/white"
         android:textSize="24sp"
         android:textStyle="bold" />
@@ -34,7 +34,7 @@
         android:layout_marginTop="16dp"
         android:alpha="0.75"
         android:lineSpacingExtra="5dp"
-        android:text="Learn and teach by chatting with friends"
+        android:text="@string/learn_and_teach_by_chatting_with_friends"
         android:gravity="center_horizontal"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"

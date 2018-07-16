@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.example.william.harusem.R;
 import com.example.william.harusem.fcm.NotificationHelper;
 import com.example.william.harusem.helper.QBFriendListHelper;
+import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.ui.activities.ChatActivity;
 import com.example.william.harusem.ui.activities.ProfileActivity;
 import com.example.william.harusem.util.Utils;
@@ -29,8 +30,6 @@ import com.quickblox.chat.QBSystemMessagesManager;
 import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBChatMessage;
 import com.quickblox.chat.utils.DialogUtils;
-import com.example.william.harusem.holder.QBUsersHolder;
-import com.quickblox.chat.QBChatService;
 import com.quickblox.content.QBContent;
 import com.quickblox.content.model.QBFile;
 import com.quickblox.core.QBEntityCallback;
@@ -48,6 +47,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.example.william.harusem.ui.activities.ChatActivity.EXTRA_DIALOG;
+import static com.example.william.harusem.ui.activities.MainActivity.REQUEST_DIALOG;
 
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder> {
 
@@ -154,7 +154,6 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
             @Override
             public void onError(QBResponseException e) {
                 Log.e(TAG, "QBPushNotifications error!: Friend Request Sent", e);
-                Toast.makeText(context, "QBPushNotifications error!!!!" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -174,19 +173,19 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
     }
 
     private void setAddFriendBtn(Button button) {
-        button.setText("Add Friend");
+        button.setText(R.string.add_friend);
         button.setTextColor(context.getResources().getColor(R.color.colorPrimary));
         button.setBackgroundResource(R.drawable.border_radius);
     }
 
     private void setMessageBtn(Button button) {
-        button.setText("Message");
+        button.setText(R.string.msg_user);
         button.setTextColor(Color.WHITE);
         button.setBackgroundResource(R.drawable.primary_button_radius);
     }
 
     private void setRequestSentBtn(Button button) {
-        button.setText("Request Sent");
+        button.setText(R.string.request_sent);
         button.setTextColor(Color.WHITE);
         button.setBackgroundResource(R.drawable.red_button_radius);
         button.setEnabled(false);
@@ -260,7 +259,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
     }
 
     private void createPrivateChatDialog(final QBUser user) {
-        final ProgressDialog progressDialog = Utils.buildProgressDialog(context, "", "Loading...", false);
+        final ProgressDialog progressDialog = Utils.buildProgressDialog(context, "", context.getString(R.string.loading_load), false);
         progressDialog.show();
 
         QBChatDialog chatDialog = DialogUtils.buildPrivateDialog(user.getId());
@@ -284,8 +283,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
 
                 Intent intent = new Intent(context, ChatActivity.class);
                 intent.putExtra(EXTRA_DIALOG, qbChatDialog);
-                context.startActivity(intent);
-                ((Activity) context).finish();
+                ((Activity) context).startActivityForResult(intent, REQUEST_DIALOG);
             }
 
             @Override

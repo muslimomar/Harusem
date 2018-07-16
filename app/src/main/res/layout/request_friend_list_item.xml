@@ -16,14 +16,12 @@
         android:orientation="horizontal"
         android:paddingBottom="15dp"
         android:paddingTop="15dp"
-
         >
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/image_user"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             tools:src="@drawable/ic_user_new" />
 
@@ -32,15 +30,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:layout_toEndOf="@id/image_user"
-            android:layout_toLeftOf="@id/buttons_layout"
-            android:layout_toRightOf="@id/image_user"
             android:layout_toStartOf="@id/buttons_layout"
             android:ellipsize="end"
             android:paddingEnd="8dp"
-            android:paddingRight="8dp"
+            android:paddingStart="8dp"
             android:singleLine="true"
             android:textColor="@color/black"
             tools:text="Jamal" />
@@ -50,9 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -60,9 +53,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="15dp"
-                android:layout_marginRight="15dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
+                android:contentDescription="@string/decline"
                 android:focusable="true"
                 android:src="@drawable/ic_close" />
 
@@ -72,6 +65,7 @@
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
+                android:contentDescription="@string/accept"
                 android:focusable="true"
                 android:src="@drawable/ic_tick" />
         </LinearLayout>

@@ -52,7 +52,7 @@ public class OpponentsActivity extends BaseActivity {
     private boolean isRunForCall;
     private WebRtcSessionManager webRtcSessionManager;
     private PermissionsChecker checker;
-//////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////
     public static void start(Context context, boolean isRunForCall) {
         Intent intent = new Intent(context, OpponentsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -242,6 +242,7 @@ public class OpponentsActivity extends BaseActivity {
             Toaster.shortToast(R.string.dlg_signal_error);
             tryReLoginToChat();
             return false;
+
         }
         return true;
     }
@@ -336,4 +337,14 @@ public class OpponentsActivity extends BaseActivity {
 //        LoginActivity.start(this);
 //        finish();
 //    }
+
+
 }
+
+
+
+
+
+
+
+

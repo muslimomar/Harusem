@@ -9,7 +9,7 @@
 
     <item
         android:id="@+id/new_group_item"
-        android:title="Create Group"
+        android:title="@string/create_group"
         app:showAsAction="never" />
 
 </menu>

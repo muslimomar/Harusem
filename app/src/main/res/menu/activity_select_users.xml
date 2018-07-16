@@ -3,6 +3,6 @@
 
     <item
         android:id="@+id/next_action"
-        android:title="NEXT"
+        android:title="@string/next"
         app:showAsAction="ifRoom" />
 </menu>

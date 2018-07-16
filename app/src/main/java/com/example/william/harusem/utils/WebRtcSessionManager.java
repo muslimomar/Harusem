@@ -3,6 +3,7 @@ package com.example.william.harusem.utils;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.william.harusem.ui.activities.ChatActivity;
 import com.example.william.harusem.ui.activities.OpponentsActivity;
 import com.quickblox.videochat.webrtc.QBRTCSession;
 import com.quickblox.videochat.webrtc.callbacks.QBRTCClientSessionCallbacksImpl;

@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/create_action"
-        android:title="CREATE"
+        android:title="@string/create"
         app:showAsAction="always" />
 
 </menu>

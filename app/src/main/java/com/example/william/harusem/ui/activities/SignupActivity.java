@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -199,14 +200,14 @@ public class SignupActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = pref.edit();
                         editor.putString("QB_USER_FULL_NAME_FOR_NOTIFICATIONS", fullName);  // Saving string
                         editor.apply();
-                        Toast.makeText(SignupActivity.this, "Save To Success" + fullName, Toast.LENGTH_SHORT).show();
+                        Log.v("did_saved?","result: "+fullName);
                         redirectToMainActivity();
                     }
 
                     @Override
                     public void onError(QBResponseException e) {
                         dismissDialog(loadingPb);
-                        buildAlertDialog("Signup Failed", e.getMessage(), true, SignupActivity.this);
+                        buildAlertDialog(getString(R.string.signup_failed), e.getMessage(), true, SignupActivity.this);
                     }
                 });
 
@@ -215,7 +216,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onError(QBResponseException e) {
                 dismissDialog(loadingPb);
-                buildAlertDialog("Signup Failed", e.getMessage(), true, SignupActivity.this);
+                buildAlertDialog(getString(R.string.signup_failed), e.getMessage(), true, SignupActivity.this);
 
             }
         });

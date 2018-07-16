@@ -48,7 +48,7 @@ public class BlockingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blocking);
         ButterKnife.bind(this);
-        setTitle("Block List");
+        setTitle(getString(R.string.block_activity_block_list));
 
         privacyListsManager = QBChatService.getInstance().getPrivacyListsManager();
         configRecyclerView();

@@ -20,7 +20,7 @@
         android:layout_below="@id/slide_img"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="55dp"
-        android:text="Bot Chat"
+        android:text="@string/bot_chat"
         android:textColor="@color/white"
         android:textSize="24sp"
         android:textStyle="bold" />

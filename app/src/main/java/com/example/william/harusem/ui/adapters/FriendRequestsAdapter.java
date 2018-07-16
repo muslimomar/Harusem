@@ -133,7 +133,6 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
             @Override
             public void onError(QBResponseException e) {
                 Log.e(TAG, "QBPushNotifications error!: FriendRequest Back Not Sent ERROR!", e);
-                Toast.makeText(context, "FriendRequest Back Not QBPushNotifications error!!!!" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

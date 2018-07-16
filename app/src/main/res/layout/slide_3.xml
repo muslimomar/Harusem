@@ -20,7 +20,7 @@
         android:layout_below="@id/slide_img"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="55dp"
-        android:text="Microphone Access"
+        android:text="@string/microphone_access"
         android:textColor="@color/white"
         android:textSize="24sp"
         android:textStyle="bold" />
@@ -37,7 +37,7 @@
         android:alpha="0.75"
         android:gravity="center_horizontal"
         android:lineSpacingExtra="5dp"
-        android:text="Harusem needs the microphone to record your voice"
+        android:text="@string/harusem_needs_the_microphone_to_record_your_voice"
         android:textColor="@color/white"
         android:textSize="16sp" />
 
