@@ -259,12 +259,28 @@
     <string name="voice_attach">9099CryptoVoice attachment988</string>
     <string name="photo_attach">9099CryptoPhoto988</string>
 
-    <string-array name="spinner_array">
+    <string-array name="levels_array">
+        <item>Select your level</item>
         <item>Beginner</item>
         <item>Intermediate</item>
         <item>Advanced</item>
     </string-array>
 
+
+    <string-array name="mother_languages_array">
+        <item>Select your mother language</item>
+        <item>English</item>
+        <item>Arabic</item>
+        <item>Turkish</item>
+    </string-array>
+
+
+    <string-array name="learning_language_array">
+        <item>Select learning language</item>
+        <item>English</item>
+        <item>Turkish</item>
+        <item>Arabic</item>
+    </string-array>
     <string name="beginner">beginner</string>
     <string name="intermediate">intermediate</string>
     <string name="advanced">advanced</string>
@@ -282,7 +298,6 @@
     <string name="password">Password</string>
     <string name="_12345678">12345678</string>
 
-    <string name="beginner">Beginner</string>
     <string name="turkish">Turkish</string>
 
 
@@ -382,6 +397,9 @@
     <string name="err_valid_mail">Please enter a valid email!</string>
     <string name="done">Success</string>
     <string name="link_sent_pw">We have sent you instructions to reset your password!</string>
+    <string name="mother_language">Mother Language</string>
+    <string name="learning_language">Learning Language</string>
+    <string name="language_level">Language Level</string>
 
 
 </resources>
