@@ -21,12 +21,13 @@ import com.example.william.harusem.util.Toaster;
 import com.example.william.harusem.util.Utils;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
-import com.quickblox.core.model.QBEntity;
 import com.quickblox.users.QBUsers;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.example.william.harusem.common.Common.NOT_FOUND_HTTP_CODE;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
 
@@ -70,18 +71,24 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void aVoid, Bundle bundle) {
                 progressDialog.dismiss();
-                Utils.buildAlertDialog(getString(R.string.done), getString(R.string.link_sent_pw), true,ForgotPasswordActivity.this);
+                Utils.buildAlertDialog(getString(R.string.done), getString(R.string.link_sent_pw), true, ForgotPasswordActivity.this);
             }
 
             @Override
             public void onError(QBResponseException e) {
                 progressDialog.dismiss();
-                showErrorSnackbar(R.string.error_resetting_password, e, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        onPasswordReset();
-                    }
-                });
+
+                if (e.getHttpStatusCode() == NOT_FOUND_HTTP_CODE) {
+                    Utils.buildAlertDialog("Reset Failed", "No such email in our system!", true, ForgotPasswordActivity.this);
+                }
+                {
+                    showErrorSnackbar(R.string.error_resetting_password, e, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            onPasswordReset();
+                        }
+                    });
+                }
             }
         });
 

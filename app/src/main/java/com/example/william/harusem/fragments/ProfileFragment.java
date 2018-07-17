@@ -9,6 +9,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +20,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +36,7 @@ import com.example.william.harusem.ui.activities.LoginActivity;
 import com.example.william.harusem.ui.activities.PasswordActivity;
 import com.example.william.harusem.util.ChatHelper;
 import com.example.william.harusem.util.ChatPingAlarmManager;
+import com.example.william.harusem.util.ErrorUtils;
 import com.example.william.harusem.util.SharedPrefsHelper;
 import com.example.william.harusem.util.Toaster;
 import com.example.william.harusem.util.Utils;
@@ -108,6 +112,8 @@ public class ProfileFragment extends Fragment {
     ProgressBar englishProgressBar;
     @BindView(R.id.profile_fragment_turkish_progress_bar)
     ProgressBar turkishProgressBar;
+    @BindView(R.id.root_layout)
+    ScrollView rootLayout;
 
 
     @Override
@@ -230,11 +236,11 @@ public class ProfileFragment extends Fragment {
             rtcClient.destroy();
         }
 
-       try{
+        try {
             ChatPingAlarmManager.onDestroy();
-       }catch (Exception e) {
-           Toaster.longToast(e.toString());
-       }
+        } catch (Exception e) {
+            Toaster.longToast(e.toString());
+        }
 
         if (chatService != null) {
             chatService.logout(new QBEntityCallback<Void>() {
@@ -374,35 +380,7 @@ public class ProfileFragment extends Fragment {
                         Toast.makeText(getActivity(), R.string.img_large, Toast.LENGTH_SHORT).show();
                     }
 
-                    QBContent.uploadFileTask(file, true, null).performAsync(new QBEntityCallback<QBFile>() {
-
-                        @Override
-                        public void onSuccess(QBFile qbFile, Bundle bundle) {
-                            QBUser user = new QBUser();
-                            user.setId(QBChatService.getInstance().getUser().getId());
-                            user.setFileId(Integer.parseInt(qbFile.getId().toString()));
-
-                            QBUsers.updateUser(user)
-                                    .performAsync(new QBEntityCallback<QBUser>() {
-                                        @Override
-                                        public void onSuccess(QBUser user, Bundle bundle) {
-                                            progressDialog.dismiss();
-                                        }
-
-                                        @Override
-                                        public void onError(QBResponseException e) {
-                                            Log.e(TAG, "onError:updateuser ", e);
-                                        }
-                                    });
-
-                        }
-
-                        @Override
-                        public void onError(QBResponseException e) {
-                            Log.e(TAG, "onError: uploadfiletask", e);
-                        }
-                    });
-
+                    uploadFile(file, progressDialog);
 
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -418,6 +396,61 @@ public class ProfileFragment extends Fragment {
             }
         }
 
+    }
+
+    private void uploadFile(File file, ProgressDialog progressDialog) {
+        QBContent.uploadFileTask(file, true, null).performAsync(new QBEntityCallback<QBFile>() {
+
+            @Override
+            public void onSuccess(QBFile qbFile, Bundle bundle) {
+                QBUser user = new QBUser();
+                user.setId(QBChatService.getInstance().getUser().getId());
+                user.setFileId(Integer.parseInt(qbFile.getId().toString()));
+
+                updateUser(user, progressDialog);
+
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                progressDialog.dismiss();
+                showErrorSnackbar(R.string.dlg_retry, e, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        uploadFile(file, progressDialog);
+                    }
+                });
+            }
+        });
+
+
+    }
+
+    private void updateUser(QBUser user, ProgressDialog progressDialog) {
+        QBUsers.updateUser(user)
+                .performAsync(new QBEntityCallback<QBUser>() {
+                    @Override
+                    public void onSuccess(QBUser user, Bundle bundle) {
+                        progressDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onError(QBResponseException e) {
+                        progressDialog.dismiss();
+                        showErrorSnackbar(R.string.dlg_retry, e, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                updateUser(user, progressDialog);
+                            }
+                        });
+                    }
+                });
+    }
+
+    protected Snackbar showErrorSnackbar(@StringRes int resId, Exception e,
+                                         View.OnClickListener clickListener) {
+        return ErrorUtils.showSnackbar(rootLayout, resId, e,
+                R.string.dlg_retry, clickListener);
     }
 
     @OnClick(R.id.account_tv)
