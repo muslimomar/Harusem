@@ -583,12 +583,10 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
                         QBChatDialogHolder.getInstance().clear();
                     }
 
-
                     Boolean isThereBot = SharedPrefsHelper.getInstance().get("is_there_bot", false);
                     if (!isThereBot) {
                         checkBot(dialogs);
                     }
-
 
                     QBChatDialogHolder.getInstance().putDialogs(dialogs);
                     updateDialogsAdapter();
