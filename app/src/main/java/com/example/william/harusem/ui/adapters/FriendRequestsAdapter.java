@@ -3,6 +3,7 @@ package com.example.william.harusem.ui.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,14 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.fcm.NotificationHelper;
 import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.holder.QBFriendRequestsHolder;
-import com.example.william.harusem.ui.activities.ProfileActivity;
 import com.example.william.harusem.holder.QBUsersHolder;
+import com.example.william.harusem.ui.activities.ProfileActivity;
+import com.example.william.harusem.util.ErrorUtils;
 import com.example.william.harusem.util.qb.callback.QbEntityCallbackImpl;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.content.QBContent;
@@ -65,43 +66,14 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
         holder.acceptIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                friendListHelper.acceptFriendRequest(user, new QbEntityCallbackImpl<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid, Bundle bundle) {
-                        QBFriendRequestsHolder.getInstance().removeFriendRequest(user.getId());
-                        usersList.remove(user);
-                        notifyItemRemoved(usersList.indexOf(user));
-                        showSnackBar(view, "Request Accepted");
-                        sendNotification(user, view, position);
-                    }
-
-                    @Override
-                    public void onError(QBResponseException e) {
-                        Log.e("FriendRequestAdapter", "onError: ", e);
-                    }
-                });
-
+                acceptFriendRequest(user, usersList, view, position);
             }
         });
 
         holder.declineIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                friendListHelper.declineFriendRequest(user, new QBEntityCallback<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid, Bundle bundle) {
-                        QBFriendRequestsHolder.getInstance().removeFriendRequest(user.getId());
-                        usersList.remove(user);
-                        notifyItemRemoved(usersList.indexOf(user));
-                        showSnackBar(view, "Request Declined");
-                    }
-
-                    @Override
-                    public void onError(QBResponseException e) {
-                        Log.e(TAG, "onError: ", e);
-                    }
-                });
-
+                declineFriendRequest(user, usersList, view, position);
             }
         });
 
@@ -114,6 +86,58 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
             }
         });
 
+    }
+
+    private void declineFriendRequest(QBUser user, List<QBUser> usersList, View view, int position) {
+        friendListHelper.declineFriendRequest(user, new QBEntityCallback<Void>() {
+            @Override
+            public void onSuccess(Void aVoid, Bundle bundle) {
+                QBFriendRequestsHolder.getInstance().removeFriendRequest(user.getId());
+                usersList.remove(user);
+                notifyItemRemoved(usersList.indexOf(user));
+                showSnackBar(view, "Request Declined");
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                showErrorSnackbar(R.string.dlg_retry, e, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        declineFriendRequest(user, usersList, view, position);
+                    }
+                }, view);
+            }
+        });
+    }
+
+    private void acceptFriendRequest(QBUser user, List<QBUser> usersList, View view, int position) {
+        friendListHelper.acceptFriendRequest(user, new QbEntityCallbackImpl<Void>() {
+            @Override
+            public void onSuccess(Void aVoid, Bundle bundle) {
+                QBFriendRequestsHolder.getInstance().removeFriendRequest(user.getId());
+                usersList.remove(user);
+                notifyItemRemoved(usersList.indexOf(user));
+                showSnackBar(view, "Request Accepted");
+                sendNotification(user, view, position);
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                showErrorSnackbar(R.string.dlg_retry, e, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        acceptFriendRequest(user, usersList, view, position);
+                    }
+                }, view);
+            }
+        });
+
+    }
+
+    protected Snackbar showErrorSnackbar(@StringRes int resId, Exception e,
+                                         View.OnClickListener clickListener, View v) {
+        return ErrorUtils.showSnackbar(v, resId, e,
+                R.string.dlg_retry, clickListener);
     }
 
 

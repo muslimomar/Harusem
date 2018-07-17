@@ -970,7 +970,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             Toaster.shortToast("Can't send a message, You are not connected to chat");
         }
 
-        if(!isRecipientBot) {
+        if (!isRecipientBot) {
             sendTxtBtn.setVisibility(View.GONE);
             recordAudioBtn.setVisibility(View.VISIBLE);
         }
@@ -1123,20 +1123,35 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             if (dialog.getType().equals(QBDialogType.PRIVATE)) {
                 QBUser recipient = QBUsersHolder.getInstance().getUserById(dialog.getRecipientId());
                 if (recipient == null) {
-                    try {
-                        QBUsers.getUser(dialog.getRecipientId()).perform();
-                    } catch (QBResponseException e) {
-                        e.printStackTrace();
+                    QBUsers.getUser(dialog.getRecipientId()).performAsync(new QBEntityCallback<QBUser>() {
+                        @Override
+                        public void onSuccess(QBUser user, Bundle bundle) {
+                            Integer fileId = recipient.getFileId();
+                            if (fileId != null) {
+                                getRecipientPhoto(fileId, dialogAvatar);
+                            } else {
+                                dialogAvatar.setBackgroundDrawable(getResources().getDrawable(R.drawable.placeholder_user));
+                                dialogAvatar.setImageDrawable(null);
+                            }
+                        }
+
+                        @Override
+                        public void onError(QBResponseException e) {
+                            Log.e(TAG, "onError: ",e );
+                        }
+                    });
+
+                }else{
+                    Integer fileId = recipient.getFileId();
+                    if (fileId != null) {
+                        getRecipientPhoto(fileId, dialogAvatar);
+                    } else {
+                        dialogAvatar.setBackgroundDrawable(getResources().getDrawable(R.drawable.placeholder_user));
+                        dialogAvatar.setImageDrawable(null);
                     }
                 }
 
-                Integer fileId = recipient.getFileId();
-                if (fileId != null) {
-                    getRecipientPhoto(fileId, dialogAvatar);
-                } else {
-                    dialogAvatar.setBackgroundDrawable(getResources().getDrawable(R.drawable.placeholder_user));
-                    dialogAvatar.setImageDrawable(null);
-                }
+
 
             } else {
                 dialogAvatar.setBackgroundDrawable(UiUtils.getGreyCircleDrawable());

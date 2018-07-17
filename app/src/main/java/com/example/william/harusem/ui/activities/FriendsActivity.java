@@ -77,7 +77,6 @@ public class FriendsActivity extends AppCompatActivity {
                 //Do some magic
                 if (newText != null && !newText.isEmpty()) {
 
-
                     progressBar.setVisibility(View.VISIBLE);
                     Collection<Integer> allFriends = qbFriendListHelper.getAllFriends();
 
@@ -96,7 +95,6 @@ public class FriendsActivity extends AppCompatActivity {
 
                             }
 
-//                          UsersAdapter adapter = new UsersAdapter(getContext(),android.R.layout.simple_list_item_1,lstFound);
                             FriendsAdapter adapter = new FriendsAdapter(lstFound, FriendsActivity.this);
                             friendsRecyclerView.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
