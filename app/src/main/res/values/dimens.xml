@@ -98,6 +98,7 @@
 
     <!--Pager fragment-->
 
+    <dimen name="chat_layout_padding">4dp</dimen>
     <dimen name="pager_image_width">400dp</dimen>
     <dimen name="pager_image_height">500dp</dimen>
 </resources>

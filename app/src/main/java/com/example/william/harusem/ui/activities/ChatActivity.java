@@ -183,10 +183,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     ImageView statusSignIv;
     @BindView(R.id.opponent_name_tv)
     TextView opponentNameTv;
-    @BindView(R.id.img_online_ocunt)
-    ImageView imageOnlineCount;
-    @BindView(R.id.txt_online_count)
-    TextView textOnlineCount;
     @BindView(R.id.dialog_avatar)
     CircleImageView dialogAvatar;
     @BindView(R.id.dot_loader)
@@ -337,6 +333,12 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             sendTxtBtn.setVisibility(View.VISIBLE);
             videoCallBtn.setVisibility(View.GONE);
             audioCallBtn.setVisibility(View.GONE);
+            statusSignIv.setVisibility(View.GONE);
+
+            int dimension = (int) getResources().getDimension(R.dimen.chat_layout_padding);
+            bottomBar.setPadding(0, dimension, 0, dimension);
+
+
         }
     }
 
@@ -590,7 +592,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
 
     private void setButtonsVisibility(String s) {
-        if(!isRecipientBot) {
+        if (!isRecipientBot) {
             if (s.isEmpty() && attachmentPreviewAdapter.getUploadedAttachments().size() == 0) {
                 sendTxtBtn.setVisibility(View.GONE);
                 recordAudioBtn.setVisibility(View.VISIBLE);
