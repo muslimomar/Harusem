@@ -58,7 +58,7 @@ public class DialogsAdapter extends BaseSelectableListAdapter<QBChatDialog> {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Collections.swap();
+//        Collections.swap();
 
         final QBChatDialog dialog = getItem(position);
 
