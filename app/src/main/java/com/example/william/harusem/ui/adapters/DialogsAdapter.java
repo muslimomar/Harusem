@@ -24,6 +24,8 @@ import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.model.QBUser;
 import com.squareup.picasso.Picasso;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -55,6 +57,8 @@ public class DialogsAdapter extends BaseSelectableListAdapter<QBChatDialog> {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+
+        Collections.swap();
 
         final QBChatDialog dialog = getItem(position);
 

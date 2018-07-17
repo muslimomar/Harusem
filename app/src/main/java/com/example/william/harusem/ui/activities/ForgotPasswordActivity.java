@@ -27,6 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.example.william.harusem.common.Common.INTERNAL_SERVER_ERROR_HTTP_CODE;
 import static com.example.william.harusem.common.Common.NOT_FOUND_HTTP_CODE;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
@@ -80,8 +81,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
                 if (e.getHttpStatusCode() == NOT_FOUND_HTTP_CODE) {
                     Utils.buildAlertDialog("Reset Failed", "No such email in our system!", true, ForgotPasswordActivity.this);
-                }
-                {
+                }else if (e.getHttpStatusCode() == INTERNAL_SERVER_ERROR_HTTP_CODE) {
+                    Utils.buildAlertDialog("Reset Failed", e.getMessage(), true, ForgotPasswordActivity.this);
+                }else{
                     showErrorSnackbar(R.string.error_resetting_password, e, new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {

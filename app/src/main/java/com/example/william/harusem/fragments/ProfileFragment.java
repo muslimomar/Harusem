@@ -24,6 +24,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.william.harusem.BlockingActivity;
 import com.example.william.harusem.R;
 import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.holder.QBChatDialogHolder;
@@ -114,6 +115,8 @@ public class ProfileFragment extends Fragment {
     ProgressBar turkishProgressBar;
     @BindView(R.id.root_layout)
     ScrollView rootLayout;
+    @BindView(R.id.blocking_tv)
+    TextView blockingTv;
 
 
     @Override
@@ -495,5 +498,9 @@ public class ProfileFragment extends Fragment {
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
+@OnClick(R.id.blocking_tv) public void setBlockingTv(View view) {
+        Intent intent = new Intent(getActivity(), BlockingActivity.class);
+        startActivity(intent);
+}
 
 }

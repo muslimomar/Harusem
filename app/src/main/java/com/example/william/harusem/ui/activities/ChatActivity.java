@@ -837,7 +837,10 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         switch (requestCode) {
             case REQUEST_CODE_ATTACHMENT:
                 sendTxtBtn.setVisibility(View.VISIBLE);
-                recordAudioBtn.setVisibility(View.GONE);
+
+                if (!isRecipientBot) {
+                    recordAudioBtn.setVisibility(View.GONE);
+                }
                 attachmentPreviewAdapter.add(file);
                 break;
         }
@@ -967,8 +970,10 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             Toaster.shortToast("Can't send a message, You are not connected to chat");
         }
 
-        sendTxtBtn.setVisibility(View.GONE);
-        recordAudioBtn.setVisibility(View.VISIBLE);
+        if(!isRecipientBot) {
+            sendTxtBtn.setVisibility(View.GONE);
+            recordAudioBtn.setVisibility(View.VISIBLE);
+        }
     }
 
     private void loadUserFullName() {
@@ -979,7 +984,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
 
         fullName = signInQbUser.getFullName();
-
 
     }
 
@@ -993,7 +997,9 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
                 joinGroupChat();
                 break;
             case PRIVATE:
-                statusSignIv.setVisibility(View.VISIBLE);
+                if (!isRecipientBot) {
+                    statusSignIv.setVisibility(View.VISIBLE);
+                }
                 loadDialogUsers();
                 break;
             default:
@@ -1620,6 +1626,16 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 //        intent.putExtra(Consts.EXTRA_IS_STARTED_FOR_CALL, isRunForCall);
 //        context.startActivity(intent);
 //    }
+
+    @OnClick(R.id.dialog_avatar)
+    public void setDialogAvatar(View view) {
+        if (qbChatDialog != null && qbChatDialog.getType() == QBDialogType.PRIVATE) {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            intent.putExtra("user_id", qbChatDialog.getRecipientId());
+            intent.putExtra("name", qbChatDialog.getName());
+            startActivity(intent);
+        }
+    }
 
     private class ChatMessageListener extends QbChatDialogMessageListenerImp {
         @Override

@@ -12,7 +12,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -79,8 +78,6 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     private static ArrayList<QBChatDialog> qbUserWithoutCurrent = new ArrayList<>();
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
-    @BindView(R.id.swipe_refresh)
-    SwipeRefreshLayout swipeRefreshLayout;
     /////
     @BindView(R.id.search_view_dialog)
     MaterialSearchView searchView;
@@ -493,18 +490,6 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
 
         requestBuilder = new QBRequestGetBuilder();
 
-
-        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent),
-                getResources().getColor(R.color.colorPrimary),
-                getResources().getColor(R.color.colorPrimaryDark));
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                requestBuilder.setSkip(skipRecords += ChatHelper.DIALOG_ITEMS_PER_PAGE);
-                loadDialogsFromQb(true, false);
-            }
-        });
     }
 
 
@@ -593,7 +578,6 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
                 if (getActivity() != null && isAdded()) {
                     isProcessingResultInProgress = false;
                     progressBar.setVisibility(View.GONE);
-                    swipeRefreshLayout.setRefreshing(false);
 
                     if (clearDialogHolder) {
                         QBChatDialogHolder.getInstance().clear();
@@ -615,7 +599,6 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
             public void onError(QBResponseException e) {
                 isProcessingResultInProgress = false;
                 progressBar.setVisibility(View.GONE);
-                swipeRefreshLayout.setRefreshing(false);
                 Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -623,12 +606,13 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
 
     private void checkBot(ArrayList<QBChatDialog> dialogs) {
         if (dialogs.size() > 0) {
+            ArrayList<Integer> dialogRecipients = new ArrayList<>();
             for (QBChatDialog dialog : dialogs) {
-                ArrayList<Integer> dialogRecipients = new ArrayList<>();
                 dialogRecipients.add(dialog.getRecipientId());
-                if (!dialogRecipients.contains(BOT_ID)) {
-                    createBotDialog();
-                }
+            }
+
+            if (!dialogRecipients.contains(BOT_ID)) {
+                createBotDialog();
             }
         } else {
             createBotDialog();
