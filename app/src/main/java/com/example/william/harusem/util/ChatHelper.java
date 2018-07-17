@@ -321,6 +321,17 @@ public class ChatHelper {
                 });
     }
 
+    public void createBotDialog(int userId,QBEntityCallback<QBChatDialog> callback ) {
+        QBRestChatService.createChatDialog(QbDialogUtils.createBotDialog(userId)).performAsync(
+                new QbEntityCallbackWrapper<QBChatDialog>(callback) {
+                    @Override
+                    public void onSuccess(QBChatDialog dialog, Bundle args) {
+                        QBChatDialogHolder.getInstance().putDialog(dialog);
+                        super.onSuccess(dialog, args);
+                    }
+                });
+    }
+
     public void getDialogs(QBRequestGetBuilder customObjectRequestBuilder, final QBEntityCallback<ArrayList<QBChatDialog>> callback) {
         customObjectRequestBuilder.setLimit(DIALOG_ITEMS_PER_PAGE);
 

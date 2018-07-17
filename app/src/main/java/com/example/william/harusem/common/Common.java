@@ -17,6 +17,7 @@ public class Common {
     public static final String UPDATE_MODE = "Mode";
     public static final String UPDATE_ADD_MODE = "add";
     public static final String UPDATE_REMOVE_MODE = "remove";
+    public static final int BOT_ID = 55063917;
 
     public static String createChatDialogName(List<Integer> qbUsers) {
 

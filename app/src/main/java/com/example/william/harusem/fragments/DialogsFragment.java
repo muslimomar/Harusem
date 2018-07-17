@@ -1,6 +1,7 @@
 package com.example.william.harusem.fragments;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -38,6 +39,8 @@ import com.example.william.harusem.ui.adapters.DialogsAdapter;
 import com.example.william.harusem.ui.dialog.ProgressDialogFragment;
 import com.example.william.harusem.util.ChatHelper;
 import com.example.william.harusem.util.ErrorUtils;
+import com.example.william.harusem.util.SharedPrefsHelper;
+import com.example.william.harusem.util.Utils;
 import com.example.william.harusem.util.consts.GcmConsts;
 import com.example.william.harusem.util.gcm.GooglePlayServicesHelper;
 import com.example.william.harusem.util.qb.QbChatDialogMessageListenerImp;
@@ -65,6 +68,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 import static android.app.Activity.RESULT_OK;
+import static com.example.william.harusem.common.Common.BOT_ID;
 
 
 public class DialogsFragment extends Fragment implements DialogsManager.ManagingDialogsCallbacks {
@@ -226,6 +230,34 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
         return view;
     }
 
+    private void createBotDialog() {
+        ProgressDialog progressDialog = Utils.buildProgressDialog(getActivity(), "Loading", "Initializing bot for the first time...", false);
+        progressDialog.show();
+
+        ChatHelper.getInstance().createBotDialog(BOT_ID, new QBEntityCallback<QBChatDialog>() {
+            @Override
+            public void onSuccess(QBChatDialog qbChatDialog, Bundle bundle) {
+                progressDialog.dismiss();
+                QBChatDialogHolder.getInstance().putDialog(qbChatDialog);
+                updateDialogsAdapter();
+                SharedPrefsHelper.getInstance().save("is_there_bot", true);
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                progressDialog.dismiss();
+                showErrorSnackbar(R.string.dlg_retry, e, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        createBotDialog();
+                    }
+                });
+            }
+        });
+
+
+    }
+
     private void getUpdatedDialogFromChat() {
         Bundle arguments = getArguments();
         if (arguments != null) {
@@ -272,11 +304,18 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
         QBChatDialog dialog = (QBChatDialog) dialogsListView.getItemAtPosition(info.position);
 
         MenuItem viewContactItem = menu.findItem(R.id.context_view_contact);
+        MenuItem deleteItem = menu.findItem(R.id.context_delete_dialog);
         if (dialog.getType() != QBDialogType.PRIVATE) {
             viewContactItem.setVisible(false);
         } else {
             viewContactItem.setVisible(true);
         }
+
+        if (dialog.getOccupants().contains(BOT_ID)) {
+            viewContactItem.setVisible(false);
+            deleteItem.setVisible(false);
+        }
+
 
     }
 
@@ -559,6 +598,14 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
                     if (clearDialogHolder) {
                         QBChatDialogHolder.getInstance().clear();
                     }
+
+
+                    Boolean isThereBot = SharedPrefsHelper.getInstance().get("is_there_bot", false);
+                    if (!isThereBot) {
+                        checkBot(dialogs);
+                    }
+
+
                     QBChatDialogHolder.getInstance().putDialogs(dialogs);
                     updateDialogsAdapter();
                 }
@@ -572,6 +619,21 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
                 Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void checkBot(ArrayList<QBChatDialog> dialogs) {
+        if (dialogs.size() > 0) {
+            for (QBChatDialog dialog : dialogs) {
+                ArrayList<Integer> dialogRecipients = new ArrayList<>();
+                dialogRecipients.add(dialog.getRecipientId());
+                if (!dialogRecipients.contains(BOT_ID)) {
+                    createBotDialog();
+                }
+            }
+        } else {
+            createBotDialog();
+        }
+
     }
 
     private void updateDialogsAdapter() {

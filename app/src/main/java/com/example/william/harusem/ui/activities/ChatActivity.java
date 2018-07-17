@@ -127,6 +127,7 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.fabric.sdk.android.Fabric;
 
+import static com.example.william.harusem.common.Common.BOT_ID;
 import static com.example.william.harusem.ui.activities.SelectUsersActivity.EXTRA_QB_USERS;
 
 ////////For call
@@ -222,6 +223,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     private String fullName;
     private SystemPermissionHelper systemPermissionHelper;
     private Vibrator vibrator;
+    private boolean isRecipientBot = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -303,6 +305,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     }
 
     public void setupChat() {
+        hideForBot();
         initChatConnectionListener();
         initMessagesRecyclerView();
         initDialogForChat();
@@ -323,6 +326,18 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         EdtTxtListener();
         initChatConnectionListener();
         initIsTypingListener();
+
+    }
+
+    private void hideForBot() {
+        if (qbChatDialog.getOccupants().contains(BOT_ID)) {
+            isRecipientBot = true;
+            recordAudioBtn.setVisibility(View.GONE);
+            attachIv.setVisibility(View.GONE);
+            sendTxtBtn.setVisibility(View.VISIBLE);
+            videoCallBtn.setVisibility(View.GONE);
+            audioCallBtn.setVisibility(View.GONE);
+        }
     }
 
     private void EdtTxtListener() {
@@ -575,13 +590,16 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
 
     private void setButtonsVisibility(String s) {
-        if (s.isEmpty() && attachmentPreviewAdapter.getUploadedAttachments().size() == 0) {
-            sendTxtBtn.setVisibility(View.GONE);
-            recordAudioBtn.setVisibility(View.VISIBLE);
-        } else {
-            sendTxtBtn.setVisibility(View.VISIBLE);
-            recordAudioBtn.setVisibility(View.GONE);
+        if(!isRecipientBot) {
+            if (s.isEmpty() && attachmentPreviewAdapter.getUploadedAttachments().size() == 0) {
+                sendTxtBtn.setVisibility(View.GONE);
+                recordAudioBtn.setVisibility(View.VISIBLE);
+            } else {
+                sendTxtBtn.setVisibility(View.VISIBLE);
+                recordAudioBtn.setVisibility(View.GONE);
+            }
         }
+
     }
 
     private void initIsTypingListener() {
@@ -760,9 +778,11 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
                 menuItemGroupInfo.setVisible(false);
             }
         }
-        popup.setOnMenuItemClickListener(this);
-        popup.show();
 
+        popup.setOnMenuItemClickListener(this);
+        if (!isRecipientBot) {
+            popup.show();
+        }
     }
 
     private void sendDialogId() {

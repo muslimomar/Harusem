@@ -93,29 +93,29 @@
 
 
         <CheckBoxPreference
-            android:key="@string/pref_disable_built_in_aec_key"
-            android:title="@string/pref_disable_built_in_aec_title"
+            android:defaultValue="@string/pref_disable_built_in_aec_default"
             android:dialogTitle="@string/pref_disable_built_in_aec_dlg"
-            android:defaultValue="@string/pref_disable_built_in_aec_default" />
+            android:key="@string/pref_disable_built_in_aec_key"
+            android:title="@string/pref_disable_built_in_aec_title" />
 
         <CheckBoxPreference
-            android:key="@string/pref_opensles_key"
-            android:title="@string/pref_opensles_title"
+            android:defaultValue="@string/pref_opensles_default"
             android:dialogTitle="@string/pref_opensles_dlg"
-            android:defaultValue="@string/pref_opensles_default" />
+            android:key="@string/pref_opensles_key"
+            android:title="@string/pref_opensles_title" />
 
         <CheckBoxPreference
-            android:key="@string/pref_noaudioprocessing_key"
-            android:title="@string/pref_noaudioprocessing_title"
+            android:defaultValue="@string/pref_noaudioprocessing_default"
             android:dialogTitle="@string/pref_noaudioprocessing_dlg"
-            android:defaultValue="@string/pref_noaudioprocessing_default" />
+            android:key="@string/pref_noaudioprocessing_key"
+            android:title="@string/pref_noaudioprocessing_title" />
 
         <CheckBoxPreference
-            android:key="@string/pref_manage_speakerphone_by_proximity_key"
-            android:title="@string/pref_manage_speakerphone_by_proximity_title"
+            android:defaultValue="@string/pref_manage_speakerphone_by_proximity_default"
             android:dialogTitle="@string/pref_manage_speakerphone_by_proximity_dlg"
+            android:key="@string/pref_manage_speakerphone_by_proximity_key"
             android:summary="@string/pref_manage_speakerphone_by_proximity_summary"
-            android:defaultValue="@string/pref_manage_speakerphone_by_proximity_default" />
+            android:title="@string/pref_manage_speakerphone_by_proximity_title" />
 
     </PreferenceCategory>
 

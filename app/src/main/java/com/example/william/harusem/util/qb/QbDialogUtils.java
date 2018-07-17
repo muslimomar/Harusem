@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.util.ChatHelper;
+import com.example.william.harusem.utils.DialogUtil;
 import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBDialogType;
 import com.quickblox.chat.utils.DialogUtils;
@@ -27,6 +28,9 @@ public class QbDialogUtils {
         return DialogUtils.buildDialog(users.toArray(new QBUser[users.size()]));
     }
 
+    public static QBChatDialog createBotDialog(int userId) {
+        return DialogUtils.buildPrivateDialog(userId);
+    }
 
     public static QBChatDialog createGroupDialog(List<QBUser> users, String groupName) {
         List<Integer> userIds = new ArrayList<>();

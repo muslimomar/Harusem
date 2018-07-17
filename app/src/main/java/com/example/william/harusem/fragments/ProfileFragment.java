@@ -34,6 +34,7 @@ import com.example.william.harusem.ui.activities.PasswordActivity;
 import com.example.william.harusem.util.ChatHelper;
 import com.example.william.harusem.util.ChatPingAlarmManager;
 import com.example.william.harusem.util.SharedPrefsHelper;
+import com.example.william.harusem.util.Toaster;
 import com.example.william.harusem.util.Utils;
 import com.example.william.harusem.utils.UsersUtils;
 import com.nex3z.notificationbadge.NotificationBadge;
@@ -228,7 +229,13 @@ public class ProfileFragment extends Fragment {
         if (rtcClient != null) {
             rtcClient.destroy();
         }
-        ChatPingAlarmManager.onDestroy();
+
+       try{
+            ChatPingAlarmManager.onDestroy();
+       }catch (Exception e) {
+           Toaster.longToast(e.toString());
+       }
+
         if (chatService != null) {
             chatService.logout(new QBEntityCallback<Void>() {
                 @Override
