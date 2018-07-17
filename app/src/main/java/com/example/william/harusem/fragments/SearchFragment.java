@@ -195,8 +195,6 @@ public class SearchFragment extends Fragment {
                     }
                 }
 
-
-
                 updateAdapter(qbUserWithoutCurrent);
 
             }

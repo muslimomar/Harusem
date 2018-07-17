@@ -336,6 +336,7 @@ public class ProfileFragment extends Fragment {
         super.onResume();
         if (getActivity() != null && isAdded())
             getUnreadFriendRequests();
+        friendsCountValueTv.setText(String.valueOf(getFriendsCount()));
     }
 
     @OnClick(R.id.profile_circle_iv)
