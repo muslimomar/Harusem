@@ -386,6 +386,11 @@ public class ProfileActivity extends AppCompatActivity {
                     });
                 } else {
                     userThumbIv.setImageResource(R.drawable.placeholder_user);
+                    getUserCountry(user);
+
+                    // hide the progess bar and show the layout
+                    hideProgressBar(progressBar);
+                    showLayout();
                 }
             }
 
