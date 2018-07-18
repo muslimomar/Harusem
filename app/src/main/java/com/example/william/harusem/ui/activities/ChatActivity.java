@@ -183,10 +183,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     ImageView statusSignIv;
     @BindView(R.id.opponent_name_tv)
     TextView opponentNameTv;
-    @BindView(R.id.img_online_ocunt)
-    ImageView imageOnlineCount;
-    @BindView(R.id.txt_online_count)
-    TextView textOnlineCount;
     @BindView(R.id.dialog_avatar)
     CircleImageView dialogAvatar;
     @BindView(R.id.dot_loader)
@@ -337,6 +333,12 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             sendTxtBtn.setVisibility(View.VISIBLE);
             videoCallBtn.setVisibility(View.GONE);
             audioCallBtn.setVisibility(View.GONE);
+            statusSignIv.setVisibility(View.GONE);
+
+            int dimension = (int) getResources().getDimension(R.dimen.chat_layout_padding);
+            bottomBar.setPadding(0, dimension, 0, dimension);
+
+
         }
     }
 
@@ -590,7 +592,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
 
     private void setButtonsVisibility(String s) {
-        if(!isRecipientBot) {
+        if (!isRecipientBot) {
             if (s.isEmpty() && attachmentPreviewAdapter.getUploadedAttachments().size() == 0) {
                 sendTxtBtn.setVisibility(View.GONE);
                 recordAudioBtn.setVisibility(View.VISIBLE);
@@ -835,7 +837,10 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         switch (requestCode) {
             case REQUEST_CODE_ATTACHMENT:
                 sendTxtBtn.setVisibility(View.VISIBLE);
-                recordAudioBtn.setVisibility(View.GONE);
+
+                if (!isRecipientBot) {
+                    recordAudioBtn.setVisibility(View.GONE);
+                }
                 attachmentPreviewAdapter.add(file);
                 break;
         }
@@ -965,8 +970,10 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             Toaster.shortToast("Can't send a message, You are not connected to chat");
         }
 
-        sendTxtBtn.setVisibility(View.GONE);
-        recordAudioBtn.setVisibility(View.VISIBLE);
+        if (!isRecipientBot) {
+            sendTxtBtn.setVisibility(View.GONE);
+            recordAudioBtn.setVisibility(View.VISIBLE);
+        }
     }
 
     private void loadUserFullName() {
@@ -977,7 +984,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
 
         fullName = signInQbUser.getFullName();
-
 
     }
 
@@ -991,7 +997,9 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
                 joinGroupChat();
                 break;
             case PRIVATE:
-                statusSignIv.setVisibility(View.VISIBLE);
+                if (!isRecipientBot) {
+                    statusSignIv.setVisibility(View.VISIBLE);
+                }
                 loadDialogUsers();
                 break;
             default:
@@ -1115,20 +1123,35 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             if (dialog.getType().equals(QBDialogType.PRIVATE)) {
                 QBUser recipient = QBUsersHolder.getInstance().getUserById(dialog.getRecipientId());
                 if (recipient == null) {
-                    try {
-                        QBUsers.getUser(dialog.getRecipientId()).perform();
-                    } catch (QBResponseException e) {
-                        e.printStackTrace();
+                    QBUsers.getUser(dialog.getRecipientId()).performAsync(new QBEntityCallback<QBUser>() {
+                        @Override
+                        public void onSuccess(QBUser user, Bundle bundle) {
+                            Integer fileId = recipient.getFileId();
+                            if (fileId != null) {
+                                getRecipientPhoto(fileId, dialogAvatar);
+                            } else {
+                                dialogAvatar.setBackgroundDrawable(getResources().getDrawable(R.drawable.placeholder_user));
+                                dialogAvatar.setImageDrawable(null);
+                            }
+                        }
+
+                        @Override
+                        public void onError(QBResponseException e) {
+                            Log.e(TAG, "onError: ",e );
+                        }
+                    });
+
+                }else{
+                    Integer fileId = recipient.getFileId();
+                    if (fileId != null) {
+                        getRecipientPhoto(fileId, dialogAvatar);
+                    } else {
+                        dialogAvatar.setBackgroundDrawable(getResources().getDrawable(R.drawable.placeholder_user));
+                        dialogAvatar.setImageDrawable(null);
                     }
                 }
 
-                Integer fileId = recipient.getFileId();
-                if (fileId != null) {
-                    getRecipientPhoto(fileId, dialogAvatar);
-                } else {
-                    dialogAvatar.setBackgroundDrawable(getResources().getDrawable(R.drawable.placeholder_user));
-                    dialogAvatar.setImageDrawable(null);
-                }
+
 
             } else {
                 dialogAvatar.setBackgroundDrawable(UiUtils.getGreyCircleDrawable());
@@ -1618,6 +1641,16 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 //        intent.putExtra(Consts.EXTRA_IS_STARTED_FOR_CALL, isRunForCall);
 //        context.startActivity(intent);
 //    }
+
+    @OnClick(R.id.dialog_avatar)
+    public void setDialogAvatar(View view) {
+        if (qbChatDialog != null && qbChatDialog.getType() == QBDialogType.PRIVATE) {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            intent.putExtra("user_id", qbChatDialog.getRecipientId());
+            intent.putExtra("name", qbChatDialog.getName());
+            startActivity(intent);
+        }
+    }
 
     private class ChatMessageListener extends QbChatDialogMessageListenerImp {
         @Override

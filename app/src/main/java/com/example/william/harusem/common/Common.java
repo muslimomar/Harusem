@@ -18,6 +18,8 @@ public class Common {
     public static final String UPDATE_ADD_MODE = "add";
     public static final String UPDATE_REMOVE_MODE = "remove";
     public static final int BOT_ID = 55063917;
+    public static final int NOT_FOUND_HTTP_CODE = 404;
+    public static final int INTERNAL_SERVER_ERROR_HTTP_CODE = 500;
 
     public static String createChatDialogName(List<Integer> qbUsers) {
 
