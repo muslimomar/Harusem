@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +22,7 @@ import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.ui.adapters.newAdapters.CheckboxUsersAdapter;
 import com.example.william.harusem.util.ErrorUtils;
 import com.example.william.harusem.util.Toaster;
+import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
@@ -47,6 +47,7 @@ public class SelectUsersActivity extends AppCompatActivity {
     public static final int MINIMUM_CHAT_OCCUPANTS_SIZE = 2;
     private static final String EXTRA_QB_DIALOG = "qb_dialog";
     private static final long CLICK_DELAY = TimeUnit.SECONDS.toMillis(2);
+    public static final String EDITED_USERS = "edited_users";
     @BindView(R.id.all_users_list)
     ListView usersListView;
     @BindView(R.id.progress_bar)
@@ -54,6 +55,7 @@ public class SelectUsersActivity extends AppCompatActivity {
     @BindView(R.id.layout_1)
     RelativeLayout layout1;
     QBFriendListHelper qbFriendListHelper;
+    ArrayList<QBUser> qbUsers;
     private CheckboxUsersAdapter usersAdapter;
 
     public static void start(Context context) {
@@ -81,13 +83,71 @@ public class SelectUsersActivity extends AppCompatActivity {
 
         setActionBarTitle(R.string.select_users);
 
-        loadFriends();
+        if (!isEditMode()) {
+            loadFriends();
+        } else {
+            loadFriendsEdit();
+        }
+
+    }
+
+    private void loadFriendsEdit() {
+        progressBar.setVisibility(View.VISIBLE);
+
+        Collection<Integer> friendsIds = qbFriendListHelper.getAllFriends();
+
+        QBUsers.getUsersByIDs(friendsIds, null).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
+            @Override
+            public void onSuccess(ArrayList<QBUser> allUsers, Bundle params) {
+                QBUsersHolder.getInstance().putUsers(allUsers);
+
+                ArrayList<QBUser> qbUsersWithoutCurrent = new ArrayList<>();
+                for (QBUser user : allUsers) {
+                    if (!QBChatService.getInstance().getUser().equals(user))
+                        qbUsersWithoutCurrent.add(user);
+                }
+
+                usersAdapter = new CheckboxUsersAdapter(SelectUsersActivity.this, qbUsersWithoutCurrent);
+
+                ArrayList<Integer> userIds = new ArrayList<>();
+                for (QBUser user: qbUsers) {
+                    userIds.add(user.getId());
+                }
+
+                usersAdapter.addSelectedUsers(userIds);
+                usersListView.setAdapter(usersAdapter);
+
+
+                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                showErrorSnackbar(R.string.select_users_get_users_error, e,
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                loadFriendsEdit();
+                            }
+                        });
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private boolean isEditMode() {
+        qbUsers = (ArrayList<QBUser>) getIntent().getSerializableExtra(CreateGroupActivity.EXISTING_USERS_LIST);
+        return qbUsers != null;
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_select_users, menu);
+        if (isEditMode()) {
+            getMenuInflater().inflate(R.menu.reset_pass_menu, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.activity_select_users, menu);
+        }
         return true;
     }
 
@@ -104,7 +164,12 @@ public class SelectUsersActivity extends AppCompatActivity {
                     }
                 }
                 return true;
-
+            case R.id.action_proceed:
+                ArrayList<QBUser> selectedUsers = new ArrayList<>(usersAdapter.getSelectedUsers());
+                Intent result = new Intent();
+                result.putExtra(EDITED_USERS,selectedUsers);
+                setResult(RESULT_OK,result);
+                finish();
             default:
                 return super.onOptionsItemSelected(item);
         }

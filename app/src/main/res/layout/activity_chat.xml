@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".ui.activities.MessageActivity">
+    tools:context=".ui.activities.ChatActivity">
 
     <LinearLayout
         android:id="@+id/toolbar_layout"
@@ -68,6 +68,7 @@
                     android:padding="5dp"
                     android:src="@drawable/ic_more_vert_black_24dp"
                     android:visibility="visible" />
+
                 <ImageButton
                     android:id="@+id/audio_call_img_btn"
                     android:layout_width="wrap_content"
@@ -76,8 +77,8 @@
                     android:layout_marginLeft="12dp"
                     android:layout_toLeftOf="@id/more_iv"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_call_black_24dp"
                     android:padding="3dp"
+                    android:src="@drawable/ic_call_black_24dp"
                     android:visibility="visible" />
 
                 <ImageButton
@@ -88,8 +89,8 @@
                     android:layout_marginLeft="12dp"
                     android:layout_toLeftOf="@id/audio_call_img_btn"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_videocam_black_24dp"
                     android:padding="3dp"
+                    android:src="@drawable/ic_videocam_black_24dp"
                     android:visibility="visible" />
 
             </RelativeLayout>
@@ -118,10 +119,10 @@
                     android:layout_centerVertical="true"
                     android:gravity="center_horizontal"
                     android:singleLine="true"
-                    android:text="Jane "
                     android:textColor="@color/colorPrimary"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:text="Jane " />
 
                 <ImageView
                     android:id="@+id/status_sign_iv"
@@ -205,7 +206,8 @@
             android:clickable="true"
             android:focusable="true"
             android:padding="10dp"
-            android:src="@drawable/ic_attach_file_black_24dp" />
+            android:src="@drawable/ic_attach_file_black_24dp"
+            tools:visibility="gone" />
 
         <EditText
             android:id="@+id/message_input_et"
@@ -215,6 +217,7 @@
             android:background="@android:color/transparent"
             android:gravity="center_vertical"
             android:hint="@string/write_a_message"
+            android:paddingLeft="8dp"
             android:textSize="20sp" />
 
         <ImageButton
@@ -237,7 +240,8 @@
             android:layout_gravity="center_vertical"
             android:padding="8dp"
             android:scaleType="centerInside"
-            android:src="@android:drawable/ic_btn_speak_now" />
+            android:src="@android:drawable/ic_btn_speak_now"
+            tools:visibility="gone" />
 
     </LinearLayout>
 
@@ -278,8 +282,9 @@
             style="@style/MatchWidth" />
 
     </LinearLayout>
-    <include layout="@layout/chat_audio_attach_container"
-        android:visibility="invisible"
-        />
+
+    <include
+        layout="@layout/chat_audio_attach_container"
+        android:visibility="invisible" />
 
 </RelativeLayout>

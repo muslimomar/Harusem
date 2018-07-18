@@ -155,7 +155,7 @@
 
 
     <string name="menu_new_chat">New Chat</string>
-    <string name="menu_chat_info">Chat info</string>
+    <string name="menu_chat_info">Edit Group</string>
     <string name="menu_add_users_to_chat">Add Users to Chat</string>
     <string name="menu_leave_chat">Leave Chat</string>
     <string name="menu_delete_chat">Delete Chat</string>
@@ -320,8 +320,8 @@
     <string name="full_name">Full Name</string>
     <string name="email">Email</string>
     <string name="country">Country</string>
-    <string name="friends">Friends</string>
-    <string name="points">Points</string>
+    <string name="friends">Friend | </string>
+    <string name="points">Points    | </string>
     <string name="account">Account</string>
     <string name="friend_requests">Friend Requests</string>
     <string name="blocking_list">Blocking List</string>
@@ -372,7 +372,7 @@
     <string name="select_img">Select a Picture</string>
     <string name="err_connection">Connection failed. Please check your internet connection.</string>
     <string name="err_no_response">No response received within reply timeout.</string>
-    <string name="stars_hint">******</string>
+    <string name="stars_hint">********</string>
     <string name="add_friend">Add Friend</string>
     <string name="msg_user">Message</string>
     <string name="request_sent">Request Sent</string>
@@ -399,7 +399,7 @@
     <string name="link_sent_pw">We have sent you instructions to reset your password!</string>
     <string name="mother_language">Mother Language</string>
     <string name="learning_language">Learning Language</string>
-    <string name="language_level">Language Level</string>
+    <string name="language_level">Learning Language Level</string>
 
 
 </resources>

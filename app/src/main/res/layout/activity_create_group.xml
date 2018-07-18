@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_layout"
@@ -16,19 +16,35 @@
         android:orientation="vertical"
         android:paddingBottom="16dp">
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40dp"
+
+            >
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/group_circle_iv"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40dp"
             android:clickable="true"
             android:focusable="true"
             android:foreground="@drawable/circle_ripple"
             android:src="@drawable/camera_png"
             app:civ_border_width="0dp"
-
             />
+
+            <ProgressBar
+                android:id="@+id/photo_pb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone"
+                tools:visibility="visible"
+                />
+
+        </RelativeLayout>
 
         <EditText
             android:id="@+id/group_name_et"
@@ -38,6 +54,7 @@
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:layout_marginTop="20dp"
+
             android:hint="@string/group_name" />
     </LinearLayout>
 
@@ -45,6 +62,7 @@
         android:id="@+id/participants_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/group_upper_layout"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:textSize="15sp"
@@ -54,6 +72,7 @@
         android:id="@+id/grid_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/participants_tv"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:layout_marginTop="16dp"
@@ -62,9 +81,19 @@
         android:numColumns="auto_fit"
         android:paddingBottom="4dp"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="24dp"
+        android:verticalSpacing="24dp" />
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_add_black_24dp"
 
         />
 
 
-</LinearLayout>
+</RelativeLayout>

@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.holder.QBUsersHolder;
-import com.example.william.harusem.ui.activities.UsersActivity;
 import com.example.william.harusem.ui.adapters.UsersAdapter;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.quickblox.chat.QBChatService;
@@ -35,7 +34,7 @@ import butterknife.Unbinder;
 
 public class SearchFragment extends Fragment {
 
-    private static final String TAG = UsersActivity.class.getSimpleName();
+    private static final String TAG = SearchFragment.class.getSimpleName();
     private static ArrayList<QBUser> qbUserWithoutCurrent = new ArrayList<>();
     Unbinder unbinder;
     @BindView(R.id.search_view)

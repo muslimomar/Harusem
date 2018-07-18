@@ -22,7 +22,9 @@ import android.widget.Toast;
 import com.example.william.harusem.R;
 import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.holder.QBUsersHolder;
+import com.example.william.harusem.models.UserData;
 import com.example.william.harusem.util.SharedPrefsHelper;
+import com.google.gson.Gson;
 import com.mukesh.countrypicker.Country;
 import com.mukesh.countrypicker.CountryPicker;
 import com.mukesh.countrypicker.OnCountryPickerListener;
@@ -62,7 +64,7 @@ public class SignupActivity extends AppCompatActivity {
     String[] levelsArray;
     String[] learningLanguagesArray;
     boolean isSelected = false;
-    String language, selectedLanguageLevel, selectedLearningLanguage, arabicLevel, englishLevel, turkishLevel;
+    String selectedLanguage, selectedLanguageLevel, selectedLearningLanguage, arabicLevel, englishLevel, turkishLevel;
     @BindView(R.id.learning_language_tv)
     TextView learningLanguageTv;
     @BindView(R.id.learning_language)
@@ -82,6 +84,7 @@ public class SignupActivity extends AppCompatActivity {
         spinnerLearnLanguage();
         spinnerLevel();
     }
+
     private void spinnerMotherLanguage() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.mother_languages_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -91,8 +94,8 @@ public class SignupActivity extends AppCompatActivity {
         motherLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                language = motherLanguage.getSelectedItem().toString();
-                if (language.equals("Select your mother language")) {
+                selectedLanguage = motherLanguage.getSelectedItem().toString();
+                if (selectedLanguage.equals("Select your mother language")) {
                     learningLanguage.setVisibility(View.INVISIBLE);
                     learningLanguageTv.setVisibility(View.INVISIBLE);
                     languageLevel.setVisibility(View.INVISIBLE);
@@ -100,7 +103,8 @@ public class SignupActivity extends AppCompatActivity {
                 } else {
                     learningLanguage.setVisibility(View.VISIBLE);
                     learningLanguageTv.setVisibility(View.VISIBLE);
-                    Toast.makeText(SignupActivity.this, "Selected language is : " + language, Toast.LENGTH_SHORT).show();
+                    learningLanguage.setSelection(0);
+                    Toast.makeText(SignupActivity.this, "Selected language is : " + selectedLanguage, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -110,6 +114,7 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
     }
+
     private void spinnerLearnLanguage() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.learning_language_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -120,11 +125,13 @@ public class SignupActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedLearningLanguage = learningLanguage.getSelectedItem().toString();
                 if (selectedLearningLanguage.equals("Select learning language")) {
-                    languageLevel.setVisibility(View.GONE);
-                    learningLanguageTv.setVisibility(View.GONE);
+                    languageLevel.setVisibility(View.INVISIBLE);
+                    languageLevelTv.setVisibility(View.INVISIBLE);
+                    languageLevel.setVisibility(View.INVISIBLE);
                 } else {
                     languageLevel.setVisibility(View.VISIBLE);
-                    learningLanguageTv.setVisibility(View.VISIBLE);
+                    //learningLanguageTv.setVisibility(View.VISIBLE);
+                    languageLevelTv.setVisibility(View.VISIBLE);
                     Toast.makeText(SignupActivity.this, "Learning Language is: " + selectedLearningLanguage, Toast.LENGTH_SHORT).show();
 
                 }
@@ -137,6 +144,7 @@ public class SignupActivity extends AppCompatActivity {
         });
 
     }
+
     private void spinnerLevel() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.levels_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -148,9 +156,9 @@ public class SignupActivity extends AppCompatActivity {
 
                 selectedLanguageLevel = languageLevel.getSelectedItem().toString();
                 if (selectedLanguageLevel.equals("Select your level")) {
-                    motherLanguage.setSelection(0);
-                    languageLevel.setVisibility(View.GONE);
-                    languageLevelTv.setVisibility(View.GONE);
+                    languageLevel.setVisibility(View.INVISIBLE);
+                    languageLevelTv.setVisibility(View.INVISIBLE);
+                    learningLanguage.setSelection(0);
                 } else {
                     languageLevel.setVisibility(View.VISIBLE);
                     languageLevelTv.setVisibility(View.VISIBLE);
@@ -163,9 +171,6 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
 
 
     private void onSignup() {
@@ -201,7 +206,7 @@ public class SignupActivity extends AppCompatActivity {
             return;
         }
 
-        if (language.equals("Select your mother language")) {
+        if (selectedLanguage.equals("Select your mother language")) {
             Toast.makeText(this, "Please select your language!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -210,6 +215,10 @@ public class SignupActivity extends AppCompatActivity {
             return;
         }
 
+        if (selectedLearningLanguage.equals("Select learning language")) {
+            Toast.makeText(this, "Please desired learning language!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         createAccount(getEditTextString(emailEt), getEditTextString(passwordEt), getEditTextString(nameEt));
     }
@@ -222,7 +231,11 @@ public class SignupActivity extends AppCompatActivity {
         final QBUser qbUser = new QBUser(email, pass);
         qbUser.setFullName(name);
         qbUser.setEmail(email);
-        qbUser.setCustomData(countryTv.getText().toString().trim());
+
+        UserData userData = new UserData(selectedLanguage, selectedLearningLanguage, selectedLanguageLevel, countryTv.getText().toString().trim());
+        String json = new Gson().toJson(userData);
+        qbUser.setCustomData(json);
+        Log.d("customdata", "custom data: " + json);
         QBUsers.signUpSignInTask(qbUser).performAsync(new QBEntityCallback<QBUser>() {
 
             @Override

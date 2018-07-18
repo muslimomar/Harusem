@@ -25,14 +25,6 @@
             android:name=".slides.MaterialIntroActivity"
             android:theme="@style/NoActionBar" />
         <activity android:name=".ui.activities.FriendRequestsActivity" />
-        <activity
-            android:name=".ui.activities.MessageActivity"
-            android:parentActivityName=".ui.activities.MainActivity"
-            android:theme="@style/NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainActivity" />
-        </activity>
         <activity android:name=".ui.activities.LoginActivity" />
         <activity android:name=".ui.activities.SignupActivity" />
         <activity
@@ -68,7 +60,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activities.UsersActivity" />
         <activity
             android:name=".ui.activities.FriendsActivity"
             android:theme="@style/NoActionBar" />
@@ -81,7 +72,6 @@
                 android:value=".ui.activities.MainActivity" />
         </activity>
         <activity android:name=".ui.activities.AttachmentImageActivity" />
-        <activity android:name=".ui.activities.ChatInfoActivity" />
         <activity android:name=".ui.activities.SelectUsersActivity" />
 
         <provider

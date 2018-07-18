@@ -18,7 +18,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.william.harusem.R;
+import com.example.william.harusem.models.UserData;
 import com.example.william.harusem.util.Utils;
+import com.google.gson.Gson;
 import com.mukesh.countrypicker.Country;
 import com.mukesh.countrypicker.CountryPicker;
 import com.mukesh.countrypicker.OnCountryPickerListener;
@@ -67,8 +69,9 @@ public class AccountActivity extends AppCompatActivity {
             public void onSuccess(QBUser user, Bundle bundle) {
                 String fullName = user.getFullName();
                 String email = user.getEmail();
-                String country = user.getCustomData();
-
+                String customData = user.getCustomData();
+                UserData retrievedData = new Gson().fromJson(customData, UserData.class);
+                String country = retrievedData.getUserCountry();
                 nameEt.setText(fullName);
                 emailEt.setText(email);
                 countryTv.setText(country);
@@ -112,6 +115,7 @@ public class AccountActivity extends AppCompatActivity {
         user.setId(QBChatService.getInstance().getUser().getId());
         user.setFullName(fullName);
         user.setEmail(email);
+        user.setLogin(email);
         user.setCustomData(country);
 
         progressDialog.show();
