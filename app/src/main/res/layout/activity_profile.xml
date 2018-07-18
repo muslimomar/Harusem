@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#DDDDDD"
     tools:context="com.example.william.harusem.ui.activities.ProfileActivity">
 
 
     <View
         android:id="@+id/top_bar"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="210dp"
         android:background="@color/colorPrimary" />
 
@@ -17,9 +18,9 @@
         android:id="@+id/fragment_activity_tab_layout"
         android:layout_width="match_parent"
         android:layout_height="210dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="85dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="84dp"
         android:background="@color/white"
         android:orientation="vertical">
 
@@ -54,16 +55,16 @@
                 android:textColor="#000" />
 
             <LinearLayout
-                android:baselineAligned="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/friend_name_friend_detail"
                 android:layout_marginTop="25dp"
+                android:baselineAligned="false"
                 android:orientation="horizontal"
                 android:padding="7dp">
 
 
-                <LinearLayout
+                <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -73,40 +74,60 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:text="@string/english"
-                        android:textColor="#000" />
+                        android:text="@string/mother_language"
+                        android:textColor="@color/colorPrimary" />
 
-                    <ProgressBar
-                        android:id="@+id/english_progress_bar"
-                        style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal"
-                        android:layout_width="80dp"
+
+                    <TextView
+                        android:id="@+id/mother_language_tv"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="5dp"
+                        android:textColor="#000"
+                        tools:text="@string/english" />
+
+                    <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+                        android:id="@+id/mother_language_pb"
+                        android:layout_width="80dp"
+                        android:layout_height="10dp"
+                        android:layout_gravity="center_horizontal"
                         android:layout_marginTop="10dp"
-                        android:background="@drawable/progress_style" />
+                        app:rcBackgroundPadding="5dp" />
+
                 </LinearLayout>
 
-                <LinearLayout
+                <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:text="@string/tukish"
-                        android:textColor="#000" />
+                        android:text="@string/learning_language"
+                        android:textColor="@color/colorPrimary" />
 
-                    <ProgressBar
-                        android:id="@+id/turkish_progress_bar"
-                        style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal"
-                        android:layout_width="80dp"
+                    <TextView
+                        android:id="@+id/learning_language_tv"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="5dp"
+                        android:textColor="#000"
+                        tools:text="@string/tukish" />
+
+                    <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+                        android:id="@+id/learning_language_pb"
+                        android:layout_width="80dp"
+                        android:layout_height="10dp"
+                        android:layout_gravity="center_horizontal"
                         android:layout_marginTop="10dp"
-                        android:background="@drawable/progress_style" />
+                        app:rcBackgroundPadding="5dp" />
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -127,46 +148,36 @@
         card_view:cardCornerRadius="3dp"
         card_view:contentPadding="7dp">
 
-        <LinearLayout
-            android:baselineAligned="false"
+        <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:baselineAligned="false"
             android:orientation="horizontal">
 
             <LinearLayout
+                android:layout_marginBottom="30dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical">
 
-                <ImageView
-                    android:id="@+id/flag"
-                    android:layout_width="40dp"
-                    android:layout_height="35dp"
-                    android:padding="2dp"
-                    android:src="@drawable/ic_flag" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="25dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/country"
-                    android:textColor="#000" />
-
                 <TextView
                     android:id="@+id/country_tv"
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/turkey"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/country"
                     android:textColor="#000" />
+
+                <ImageView
+                    android:id="@+id/flag"
+                    android:layout_width="40dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_height="35dp"
+                    android:padding="1dp"
+                    android:src="@drawable/ic_flag" />
+
+
             </LinearLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>

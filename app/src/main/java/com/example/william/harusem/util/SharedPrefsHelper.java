@@ -22,6 +22,7 @@ public class SharedPrefsHelper {
     private static final String QB_USER_FULL_NAME = "qb_user_full_name";
     private static final String QB_USER_TAGS = "qb_user_tags";
     private static final String QB_PUSH_DIALOG_ID = "qb_dialog_id";
+    private static final String QB_PUSH_PROFILE_ID = "qb_push_profile_id";
     private static final String QB_USER_CUSTOM_DATA = "qb_user_custom_data";
     private static final String QB_USER_EMAIL = "qb_user_email";
     private static final String MESSAGES_ARRAY = "messages_array";
@@ -66,6 +67,30 @@ public class SharedPrefsHelper {
         editor.commit();     // This line is IMPORTANT !!!
     }
 
+
+
+
+    //For Push Profile Message
+    public void saveProfileId(String profileId) {
+        Set<String> profileIdsSet = getProfileIds();
+        if (profileIdsSet == null) {
+            profileIdsSet = new HashSet<>();
+        }
+        profileIdsSet.add(profileId);
+        saveProfileIds(profileIdsSet);
+    }
+
+    public Set<String> getProfileIds() {
+        return get(QB_PUSH_PROFILE_ID, null);
+    }
+
+    private void saveProfileIds(Set<String> profileIds) {
+        SharedPreferences.Editor editor = getEditor();
+        editor.putStringSet(QB_PUSH_PROFILE_ID, profileIds);
+        editor.commit();
+    }
+
+    //For PushMessages
 
     public void savePushDialogId(String dialogId) {
         Set<String> dialogIdsSet = getPushDialogIds();

@@ -1,8 +1,10 @@
 package com.example.william.harusem.ui.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,7 +20,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.example.william.harusem.R;
+import com.example.william.harusem.models.UserData;
+import com.google.gson.Gson;
 import com.mukesh.countrypicker.Country;
 import com.mukesh.countrypicker.CountryPicker;
 import com.quickblox.chat.QBChatService;
@@ -59,12 +65,7 @@ public class ProfileActivity extends AppCompatActivity {
     CardView cardView;
     @BindView(R.id.profile_activity_loading_pb)
     ProgressBar progressBar;
-    @BindView(R.id.english_progress_bar)
-    ProgressBar englishProgressBar;
-    @BindView(R.id.turkish_progress_bar)
-    ProgressBar turkishProgressBar;
-//    @BindView(R.id.arabic_progress_bar)
-//    ProgressBar arabicProgressBar;
+
 
     private static final String TAG = ProfileActivity.class.getSimpleName();
     QBPrivacyListsManager privacyListsManager;
@@ -72,6 +73,14 @@ public class ProfileActivity extends AppCompatActivity {
 
     String userID;
     String friendUserName;
+    @BindView(R.id.mother_language_tv)
+    TextView motherLanguageTv;
+    @BindView(R.id.learning_language_tv)
+    TextView learningLanguageTv;
+    @BindView(R.id.mother_language_pb)
+    RoundCornerProgressBar motherLanguagePb;
+    @BindView(R.id.learning_language_pb)
+    RoundCornerProgressBar learningLanguagePb;
     private Menu menu;
 
     @Override
@@ -97,8 +106,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         //UserId Setting for intent
         userID = String.valueOf(intent.getStringExtra("user_id"));
-
-        Log.v("emine", "eee" + userID);
+        Log.v("UserID", "User id is : " + userID);
 
         initPrivacyListListener();
 
@@ -359,6 +367,10 @@ public class ProfileActivity extends AppCompatActivity {
         QBUsers.getUser(Integer.parseInt(userID)).performAsync(new QBEntityCallback<QBUser>() {
             @Override
             public void onSuccess(QBUser user, Bundle bundle) {
+                getUserCustomData(user);
+                hideProgressBar(progressBar);
+                showLayout();
+
                 if (user.getFileId() != null) {
                     int profilePicId = user.getFileId();
 
@@ -371,11 +383,8 @@ public class ProfileActivity extends AppCompatActivity {
                                     .centerCrop()
                                     .into(userThumbIv);
 
-                            getUserCountry(user);
-
                             // hide the progess bar and show the layout
-                            hideProgressBar(progressBar);
-                            showLayout();
+
                         }
 
                         @Override
@@ -402,40 +411,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
-    private void getUserCountry(QBUser user) {
-        String country = user.getCustomData();
-
-        countryTv.setText(country);
-
-        CountryPicker countryPicker =
-                new CountryPicker.Builder().with(this).build();
-
-        List<Country> allCountries = countryPicker.getAllCountries();
-        int id = 0;
-        for (Country c : allCountries) {
-            if (c.getName().equalsIgnoreCase(country))
-                id = c.getFlag();
-        }
-
-        flagIv.setImageResource(id);
-    }
-
-    //kullanıcının ingizlice dil seviyesini getiren ve progress bar'a yükleyen metoddur.
-    private void getUserEnglishLanguage(QBUser user) {
-
-        String englishLevel = user.getCustomData();
-
-        //signup sayfasında girilen dil seviyelerini nasıl çağıracağımı tam olarak bilmiyorum.
-        if (englishLevel.equals(0)) {
-            englishProgressBar.setProgress(25);
-        } else if (englishLevel.equals(1)) {
-            englishProgressBar.setProgress(50);
-
-        } else if (englishLevel.equals(2)) {
-            englishProgressBar.setProgress(75);
-
-        }
-    }
 
     private void showProgressBar(ProgressBar progressBar) {
         if (ProfileActivity.this != null) {
@@ -463,50 +438,96 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
-//    private static class blockTask extends AsyncTask<Void, Void, Void> {
-//        ProgressDialog progressDialog;
-//        int actionType;
-//        private WeakReference<ProfileActivity> profileActivity;
-//
-//        public blockTask(int actionType, ProfileActivity profileActivity) {
-//            this.actionType = actionType;
-//            this.profileActivity = new WeakReference<>(profileActivity);
-//
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            if(profileActivity.get() !=null) {
-//                progressDialog = Utils.buildProgressDialog(profileActivity.get(), "", "Please Wait...", false);
-//                    progressDialog.show();
-//            }
-//
-//        }
-//
-//
-//        @Override
-//        protected void onPostExecute(Void aVoid) {
-//            if (profileActivity.get() != null) {
-//                if (progressDialog.isShowing()) {
-//                    progressDialog.dismiss();
-//                    progressDialog = null;
-//                }
-//            }
-//
-//        }
-//
-//        @Override
-//        protected Void doInBackground(Void... voids) {
-//
-//            if (actionType == BLOCK_USER) {
-//                profileActivity.get().blockUser();
-//
-//            } else if (actionType == UNBLOCK_USER) {
-//                profileActivity.get().unblockUser();
-//            }
-//
-//            return null;
-//        }
-//    }
 
+    @SuppressLint("ClickableViewAccessibility")
+    public void getUserCustomData(QBUser user) {
+        String customData = user.getCustomData();
+
+        if (customData != null) {
+
+            UserData retrievedData = new Gson().fromJson(customData, UserData.class);
+
+            // Mother Language
+            String motherLanguage = retrievedData.getMotherLanguage();
+            motherLanguageTv.setText(motherLanguage);
+            motherLanguagePb.setProgressColor(ContextCompat.getColor(this, R.color.pb_color));
+            motherLanguagePb.setSecondaryProgressColor(ContextCompat.getColor(this, R.color.pb_sec_color));
+            motherLanguagePb.setSecondaryProgress(97);
+            motherLanguagePb.setProgressBackgroundColor(ContextCompat.getColor(this, R.color.pb_bg_color));
+            motherLanguagePb.setRadius(10);
+            motherLanguagePb.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    Toast.makeText(getApplicationContext(), motherLanguage + " is my mother language!", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
+            motherLanguagePb.setMax(100);
+            motherLanguagePb.setProgress(85);
+            motherLanguagePb.setReverse(false);
+            motherLanguagePb.setPadding(5);
+
+            //Learning Languague
+            String learningLanguage = retrievedData.getLearningLanguage();
+            String languageLevel = retrievedData.getSelectedLanguageLevel();
+            learningLanguageTv.setText(learningLanguage);
+            learningLanguagePb.setMax(100);
+            learningLanguagePb.setReverse(false);
+            learningLanguagePb.setRadius(10);
+            learningLanguagePb.setPadding(5);
+            learningLanguagePb.setSecondaryProgressColor(ContextCompat.getColor(this, R.color.pb_sec_color));
+            learningLanguagePb.setProgressColor(ContextCompat.getColor(this, R.color.pb_color));
+            learningLanguagePb.setProgressBackgroundColor(ContextCompat.getColor(this, R.color.pb_bg_color));
+            switch (languageLevel) {
+                case "Beginner":
+                    learningLanguagePb.setProgress(30);
+                    learningLanguagePb.setSecondaryProgress(45);
+                    learningLanguagePb.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            Toast.makeText(getApplicationContext(), "I'm still Beginner!", Toast.LENGTH_SHORT).show();
+                            return false;
+                        }
+                    });
+                    break;
+                case "Intermediate":
+                    learningLanguagePb.setProgress(50);
+                    learningLanguagePb.setSecondaryProgress(65);
+                    learningLanguagePb.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            Toast.makeText(getApplicationContext(), "I'm Intermediate", Toast.LENGTH_SHORT).show();
+                            return false;
+                        }
+                    });
+
+                    break;
+                case "Advanced":
+                    learningLanguagePb.setProgress(75);
+                    learningLanguagePb.setSecondaryProgress(90);
+                    learningLanguagePb.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            Toast.makeText(getApplicationContext(), "My level is Advanced!", Toast.LENGTH_SHORT).show();
+                            return false;
+                        }
+                    });
+
+                    break;
+            }
+
+            String country = retrievedData.getUserCountry();
+
+            CountryPicker countryPicker =
+                    new CountryPicker.Builder().with(this).build();
+
+            List<Country> allCountries = countryPicker.getAllCountries();
+            int id = 0;
+            for (Country c : allCountries) {
+                if (c.getName().equalsIgnoreCase(country))
+                    id = c.getFlag();
+            }
+            flagIv.setImageResource(id);
+        }
+    }
 }
