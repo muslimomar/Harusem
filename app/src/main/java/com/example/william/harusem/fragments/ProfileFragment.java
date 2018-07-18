@@ -1,6 +1,7 @@
 package com.example.william.harusem.fragments;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -10,22 +11,27 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.example.william.harusem.R;
 import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.holder.QBChatDialogHolder;
 import com.example.william.harusem.holder.QBFriendRequestsHolder;
 import com.example.william.harusem.holder.QBUsersHolder;
+import com.example.william.harusem.models.UserData;
 import com.example.william.harusem.ui.activities.AccountActivity;
 import com.example.william.harusem.ui.activities.FriendRequestsActivity;
 import com.example.william.harusem.ui.activities.FriendsActivity;
@@ -37,6 +43,10 @@ import com.example.william.harusem.util.SharedPrefsHelper;
 import com.example.william.harusem.util.Toaster;
 import com.example.william.harusem.util.Utils;
 import com.example.william.harusem.utils.UsersUtils;
+import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
+import com.mukesh.countrypicker.Country;
+import com.mukesh.countrypicker.CountryPicker;
 import com.nex3z.notificationbadge.NotificationBadge;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.content.QBContent;
@@ -58,6 +68,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -103,11 +114,20 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.profile_loading_pb)
     ProgressBar profileLoadingPb;
 
-    // Dil için seviye belirleyen progressBarlar çağrıldı.
-    @BindView(R.id.profile_fragment_english_progress_bar)
-    ProgressBar englishProgressBar;
-    @BindView(R.id.profile_fragment_turkish_progress_bar)
-    ProgressBar turkishProgressBar;
+    @BindView(R.id.profile_mother_lang)
+    TextView profileMotherLang;
+    @BindView(R.id.profile_mother_lang_pb)
+    RoundCornerProgressBar profileMotherLangPb;
+    @BindView(R.id.profile_learning_lang)
+    TextView profileLearningLang;
+    @BindView(R.id.profile_learn_lang_pb)
+    RoundCornerProgressBar profileLearnLangPb;
+    @BindView(R.id.profile_country_flag)
+    ImageView profileCountryFlag;
+    @BindView(R.id.friend_and_point_layout)
+    LinearLayout friendAndPointLayout;
+    @BindView(R.id.blocking_tv)
+    TextView blockingTv;
 
 
     @Override
@@ -115,13 +135,11 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-
         showProgressBar(profileLoadingPb);
         hideLayout();
-
         loadUserData();
-
         return rootView;
+
     }
 
     private void loadUserData() {
@@ -130,6 +148,7 @@ public class ProfileFragment extends Fragment {
                 .performAsync(new QBEntityCallback<QBUser>() {
                     @Override
                     public void onSuccess(QBUser user, Bundle bundle) {
+                        getUserCustomData(user);
 
                         QBUsersHolder.getInstance().putUser(user);
 
@@ -195,6 +214,106 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
+    public void getUserCustomData(QBUser user) {
+
+        try{
+            String customData = user.getCustomData();
+
+            UserData retrievedData = new Gson().fromJson(customData, UserData.class);
+            if (retrievedData != null) {
+                Log.v("retrieved data", "Data is: " + retrievedData);
+
+                // Mother Language
+                String motherLanguage = retrievedData.getMotherLanguage();
+                profileMotherLang.setText(motherLanguage);
+                profileMotherLangPb.setProgressColor(ContextCompat.getColor(getContext(), R.color.pb_color));
+                profileMotherLangPb.setSecondaryProgressColor(ContextCompat.getColor(getContext(), R.color.pb_sec_color));
+                profileMotherLangPb.setSecondaryProgress(97);
+                profileMotherLangPb.setProgressBackgroundColor(ContextCompat.getColor(getContext(), R.color.pb_bg_color));
+                profileMotherLangPb.setRadius(10);
+                profileMotherLangPb.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        Toast.makeText(getContext(), "I am Native speaker!", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                });
+                profileMotherLangPb.setMax(100);
+                profileMotherLangPb.setProgress(85);
+                profileMotherLangPb.setReverse(false);
+                profileMotherLangPb.setPadding(5);
+
+                //Learning Languague
+                String learningLanguage = retrievedData.getLearningLanguage();
+                String languageLevel = retrievedData.getSelectedLanguageLevel();
+                profileLearningLang.setText(learningLanguage);
+                profileLearnLangPb.setMax(100);
+                profileLearnLangPb.setReverse(false);
+                profileLearnLangPb.setRadius(10);
+                profileLearnLangPb.setPadding(5);
+                profileLearnLangPb.setSecondaryProgressColor(ContextCompat.getColor(getContext(), R.color.pb_sec_color));
+                profileLearnLangPb.setProgressColor(ContextCompat.getColor(getContext(), R.color.pb_color));
+                profileLearnLangPb.setProgressBackgroundColor(ContextCompat.getColor(getContext(), R.color.pb_bg_color));
+                switch (languageLevel) {
+                    case "Beginner":
+                        profileLearnLangPb.setProgress(30);
+                        profileLearnLangPb.setSecondaryProgress(40);
+                        profileLearnLangPb.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                Toast.makeText(getContext(), "Keep Learning! Your level is beginner!", Toast.LENGTH_SHORT).show();
+                                return false;
+                            }
+                        });
+                        break;
+                    case "Intermediate":
+                        profileLearnLangPb.setProgress(50);
+                        profileLearnLangPb.setSecondaryProgress(65);
+                        profileLearnLangPb.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                Toast.makeText(getContext(), "Good! Your level is Intermediate!", Toast.LENGTH_SHORT).show();
+                                return false;
+                            }
+                        });
+
+                        break;
+                    case "Advanced":
+                        profileLearnLangPb.setProgress(75);
+                        profileLearnLangPb.setSecondaryProgress(90);
+                        profileLearnLangPb.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                Toast.makeText(getContext(), "Amazing! Your level is Advanced!", Toast.LENGTH_SHORT).show();
+                                return false;
+                            }
+                        });
+
+                        break;
+                }
+
+                String country = retrievedData.getUserCountry();
+
+                CountryPicker countryPicker =
+                        new CountryPicker.Builder().with(getContext()).build();
+
+                List<Country> allCountries = countryPicker.getAllCountries();
+                int id = 0;
+                for (Country c : allCountries) {
+                    if (c.getName().equalsIgnoreCase(country))
+                        id = c.getFlag();
+                }
+                profileCountryFlag.setImageResource(id);
+            }
+            // Try your GSON thing
+        } catch (JsonParseException e){
+            Toast.makeText(getContext(), "ERROR! USER MIGHT NOT HAVE CUSTOM DATA!", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+
     private int getFriendsCount() {
         QBFriendListHelper friendListHelper = new QBFriendListHelper(getActivity());
         return friendListHelper.getAllFriends().size();
@@ -230,11 +349,11 @@ public class ProfileFragment extends Fragment {
             rtcClient.destroy();
         }
 
-       try{
+        try {
             ChatPingAlarmManager.onDestroy();
-       }catch (Exception e) {
-           Toaster.longToast(e.toString());
-       }
+        } catch (Exception e) {
+            Toaster.longToast(e.toString());
+        }
 
         if (chatService != null) {
             chatService.logout(new QBEntityCallback<Void>() {
@@ -461,6 +580,4 @@ public class ProfileFragment extends Fragment {
     public void enableUserInteraction() {
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
-
-
 }

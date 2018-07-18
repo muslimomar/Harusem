@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.william.harusem.R;
+import com.example.william.harusem.common.Common;
 import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.ui.activities.AttachmentImageActivity;
 import com.example.william.harusem.util.ResourceUtils;
@@ -24,6 +25,7 @@ import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.model.QBUser;
 import com.squareup.picasso.Picasso;
 
+import java.util.Collections;
 import java.util.List;
 
 
@@ -35,6 +37,7 @@ public class DialogsAdapter extends BaseSelectableListAdapter<QBChatDialog> {
 
     public DialogsAdapter(Context context, List<QBChatDialog> dialogs) {
         super(context, dialogs);
+
     }
 
     @Override
@@ -50,11 +53,11 @@ public class DialogsAdapter extends BaseSelectableListAdapter<QBChatDialog> {
             holder.dialogImageView = (ImageView) convertView.findViewById(R.id.dialog_circle_iv);
             holder.unreadCounterTextView = (TextView) convertView.findViewById(R.id.text_dialog_unread_count);
             holder.lastMessageTimeTv = (TextView) convertView.findViewById(R.id.last_message_time_tv);
-
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+
 
         final QBChatDialog dialog = getItem(position);
 

@@ -93,7 +93,14 @@ public class QBFriendListHelper {
     }
 
     private boolean isFriend(QBRosterEntry entry) {
-        return entry.getType().equals(RosterPacket.ItemType.both);
+
+        if(entry == null) {
+            return false;
+        }
+
+        boolean isSubscribedToUser = entry.getType() == RosterPacket.ItemType.from;
+        boolean isBothSubscribed = entry.getType() == RosterPacket.ItemType.both;
+        return isSubscribedToUser || isBothSubscribed;
     }
 
     public boolean isFriend(int userId) {

@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.william.harusem.R;
+import com.example.william.harusem.common.Common;
 import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.ui.adapters.UsersAdapter;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
@@ -196,6 +197,7 @@ public class SearchFragment extends Fragment {
 
                 ArrayList<QBUser> qbUserWithoutCurrent = new ArrayList<>();
                 for (QBUser user : qbUsers) {
+
                     if (!user.getLogin().equals(QBChatService.getInstance().getUser().getLogin()) && !user.getId().equals(54941857)) {
                         qbUserWithoutCurrent.add(user);
                     }

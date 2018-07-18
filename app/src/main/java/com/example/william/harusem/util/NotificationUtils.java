@@ -71,7 +71,7 @@ public class NotificationUtils {
         return new NotificationCompat.Builder(context, CHANNEL_ONE_ID)
                 .setSmallIcon(icon)
                 .setContentTitle("HARUSEM")
-                .setContentText(friendName + context.getString(R.string.push_accepted))
+                .setContentText(friendName + "" + context.getString(R.string.push_accepted))
                 .setAutoCancel(true)
                 .setSound(defaultSoundsUri)
                 .setColor(context.getResources().getColor(R.color.colorAccent))
