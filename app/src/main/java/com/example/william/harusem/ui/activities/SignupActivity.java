@@ -232,7 +232,7 @@ public class SignupActivity extends AppCompatActivity {
         qbUser.setFullName(name);
         qbUser.setEmail(email);
 
-        UserData userData = new UserData(selectedLanguage, selectedLearningLanguage, selectedLanguageLevel, countryTv.getText().toString().trim());
+        UserData userData = new UserData(selectedLanguage, selectedLearningLanguage, selectedLanguageLevel, countryTv.getText().toString().trim(),name);
         String json = new Gson().toJson(userData);
         qbUser.setCustomData(json);
         Log.d("customdata", "custom data: " + json);

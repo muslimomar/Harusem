@@ -24,6 +24,7 @@ import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.example.william.harusem.R;
 import com.example.william.harusem.models.UserData;
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 import com.mukesh.countrypicker.Country;
 import com.mukesh.countrypicker.CountryPicker;
 import com.quickblox.chat.QBChatService;
@@ -101,12 +102,12 @@ public class ProfileActivity extends AppCompatActivity {
         privacyListsManager = QBChatService.getInstance().getPrivacyListsManager();
 
         Intent intent = getIntent();
-        friendUserName = intent.getStringExtra("name");
-        nameTV.setText(friendUserName);
 
-        //UserId Setting for intent
+
+        //User ID Getter for getting user data
         userID = String.valueOf(intent.getStringExtra("user_id"));
         Log.v("UserID", "User id is : " + userID);
+
 
         initPrivacyListListener();
 
@@ -367,6 +368,8 @@ public class ProfileActivity extends AppCompatActivity {
         QBUsers.getUser(Integer.parseInt(userID)).performAsync(new QBEntityCallback<QBUser>() {
             @Override
             public void onSuccess(QBUser user, Bundle bundle) {
+                friendUserName = user.getFullName();
+                nameTV.setText(friendUserName);
                 getUserCustomData(user);
                 hideProgressBar(progressBar);
                 showLayout();
@@ -395,7 +398,6 @@ public class ProfileActivity extends AppCompatActivity {
                     });
                 } else {
                     userThumbIv.setImageResource(R.drawable.placeholder_user);
-                    getUserCountry(user);
 
                     // hide the progess bar and show the layout
                     hideProgressBar(progressBar);
@@ -441,93 +443,104 @@ public class ProfileActivity extends AppCompatActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     public void getUserCustomData(QBUser user) {
-        String customData = user.getCustomData();
 
-        if (customData != null) {
+        try {
+            String customData = user.getCustomData();
 
-            UserData retrievedData = new Gson().fromJson(customData, UserData.class);
+            if (customData != null) {
 
-            // Mother Language
-            String motherLanguage = retrievedData.getMotherLanguage();
-            motherLanguageTv.setText(motherLanguage);
-            motherLanguagePb.setProgressColor(ContextCompat.getColor(this, R.color.pb_color));
-            motherLanguagePb.setSecondaryProgressColor(ContextCompat.getColor(this, R.color.pb_sec_color));
-            motherLanguagePb.setSecondaryProgress(97);
-            motherLanguagePb.setProgressBackgroundColor(ContextCompat.getColor(this, R.color.pb_bg_color));
-            motherLanguagePb.setRadius(10);
-            motherLanguagePb.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    Toast.makeText(getApplicationContext(), motherLanguage + " is my mother language!", Toast.LENGTH_SHORT).show();
-                    return false;
+                UserData retrievedData = new Gson().fromJson(customData, UserData.class);
+                // Mother Language
+                String motherLanguage = retrievedData.getMotherLanguage();
+                motherLanguageTv.setText(motherLanguage);
+                motherLanguagePb.setProgressColor(ContextCompat.getColor(this, R.color.pb_color));
+                motherLanguagePb.setSecondaryProgressColor(ContextCompat.getColor(this, R.color.pb_sec_color));
+                motherLanguagePb.setSecondaryProgress(97);
+                motherLanguagePb.setProgressBackgroundColor(ContextCompat.getColor(this, R.color.pb_bg_color));
+                motherLanguagePb.setRadius(10);
+                motherLanguagePb.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        Toast.makeText(getApplicationContext(), motherLanguage + " is my mother language!", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                });
+                motherLanguagePb.setMax(100);
+                motherLanguagePb.setProgress(85);
+                motherLanguagePb.setReverse(false);
+                motherLanguagePb.setPadding(5);
+
+                //Learning Languague
+                String learningLanguage = retrievedData.getLearningLanguage();
+                String languageLevel = retrievedData.getSelectedLanguageLevel();
+                learningLanguageTv.setText(learningLanguage);
+                learningLanguagePb.setMax(100);
+                learningLanguagePb.setReverse(false);
+                learningLanguagePb.setRadius(10);
+                learningLanguagePb.setPadding(5);
+                learningLanguagePb.setSecondaryProgressColor(ContextCompat.getColor(this, R.color.pb_sec_color));
+                learningLanguagePb.setProgressColor(ContextCompat.getColor(this, R.color.pb_color));
+                learningLanguagePb.setProgressBackgroundColor(ContextCompat.getColor(this, R.color.pb_bg_color));
+                switch (languageLevel) {
+                    case "Beginner":
+                        learningLanguagePb.setProgress(30);
+                        learningLanguagePb.setSecondaryProgress(45);
+                        learningLanguagePb.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                Toast.makeText(getApplicationContext(), "I'm still Beginner!", Toast.LENGTH_SHORT).show();
+                                return false;
+                            }
+                        });
+                        break;
+                    case "Intermediate":
+                        learningLanguagePb.setProgress(50);
+                        learningLanguagePb.setSecondaryProgress(65);
+                        learningLanguagePb.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                Toast.makeText(getApplicationContext(), "I'm Intermediate", Toast.LENGTH_SHORT).show();
+                                return false;
+                            }
+                        });
+
+                        break;
+                    case "Advanced":
+                        learningLanguagePb.setProgress(75);
+                        learningLanguagePb.setSecondaryProgress(90);
+                        learningLanguagePb.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                Toast.makeText(getApplicationContext(), "My level is Advanced!", Toast.LENGTH_SHORT).show();
+                                return false;
+                            }
+                        });
+
+                        break;
                 }
-            });
-            motherLanguagePb.setMax(100);
-            motherLanguagePb.setProgress(85);
-            motherLanguagePb.setReverse(false);
-            motherLanguagePb.setPadding(5);
 
-            //Learning Languague
-            String learningLanguage = retrievedData.getLearningLanguage();
-            String languageLevel = retrievedData.getSelectedLanguageLevel();
-            learningLanguageTv.setText(learningLanguage);
-            learningLanguagePb.setMax(100);
-            learningLanguagePb.setReverse(false);
-            learningLanguagePb.setRadius(10);
-            learningLanguagePb.setPadding(5);
-            learningLanguagePb.setSecondaryProgressColor(ContextCompat.getColor(this, R.color.pb_sec_color));
-            learningLanguagePb.setProgressColor(ContextCompat.getColor(this, R.color.pb_color));
-            learningLanguagePb.setProgressBackgroundColor(ContextCompat.getColor(this, R.color.pb_bg_color));
-            switch (languageLevel) {
-                case "Beginner":
-                    learningLanguagePb.setProgress(30);
-                    learningLanguagePb.setSecondaryProgress(45);
-                    learningLanguagePb.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            Toast.makeText(getApplicationContext(), "I'm still Beginner!", Toast.LENGTH_SHORT).show();
-                            return false;
-                        }
-                    });
-                    break;
-                case "Intermediate":
-                    learningLanguagePb.setProgress(50);
-                    learningLanguagePb.setSecondaryProgress(65);
-                    learningLanguagePb.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            Toast.makeText(getApplicationContext(), "I'm Intermediate", Toast.LENGTH_SHORT).show();
-                            return false;
-                        }
-                    });
+                String country = retrievedData.getUserCountry();
 
-                    break;
-                case "Advanced":
-                    learningLanguagePb.setProgress(75);
-                    learningLanguagePb.setSecondaryProgress(90);
-                    learningLanguagePb.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            Toast.makeText(getApplicationContext(), "My level is Advanced!", Toast.LENGTH_SHORT).show();
-                            return false;
-                        }
-                    });
+                CountryPicker countryPicker =
+                        new CountryPicker.Builder().with(this).build();
 
-                    break;
+                List<Country> allCountries = countryPicker.getAllCountries();
+                int id = 0;
+                for (Country c : allCountries) {
+                    if (c.getName().equalsIgnoreCase(country))
+                        id = c.getFlag();
+                }
+                if (country != null) {
+                    flagIv.setImageResource(id);
+                } else {
+                    Toast.makeText(this, "User might not have country", Toast.LENGTH_SHORT).show();
+                }
             }
 
-            String country = retrievedData.getUserCountry();
-
-            CountryPicker countryPicker =
-                    new CountryPicker.Builder().with(this).build();
-
-            List<Country> allCountries = countryPicker.getAllCountries();
-            int id = 0;
-            for (Country c : allCountries) {
-                if (c.getName().equalsIgnoreCase(country))
-                    id = c.getFlag();
-            }
-            flagIv.setImageResource(id);
+        } catch (JsonParseException e) {
+            Toast.makeText(this, "ERROR! USER MIGHT NOT HAVE CUSTOM DATA!", Toast.LENGTH_SHORT).show();
         }
+
+
     }
 }
