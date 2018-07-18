@@ -119,6 +119,7 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
                 notifyItemRemoved(usersList.indexOf(user));
                 showSnackBar(view, "Request Accepted");
                 sendNotification(user, view, position);
+                redirectToProfileActivity(user);
             }
 
             @Override
@@ -160,11 +161,9 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
             }
         });
     }
-
     private void redirectToProfileActivity(QBUser user) {
         Intent intent = new Intent(context, ProfileActivity.class);
         intent.putExtra("user_id", "" + user.getId());
-        intent.putExtra("name", user.getFullName());
         context.startActivity(intent);
     }
 
