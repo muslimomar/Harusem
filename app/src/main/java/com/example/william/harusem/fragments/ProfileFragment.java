@@ -147,7 +147,7 @@ public class ProfileFragment extends Fragment {
                 .performAsync(new QBEntityCallback<QBUser>() {
                     @Override
                     public void onSuccess(QBUser user, Bundle bundle) {
-                        getUserCustomData(user);
+//                        getUserCustomData(user);
 
                         QBUsersHolder.getInstance().putUser(user);
 
@@ -218,7 +218,6 @@ public class ProfileFragment extends Fragment {
         String customData = user.getCustomData();
 
         if (customData != null) {
-
 
             UserData retrievedData = new Gson().fromJson(customData, UserData.class);
 

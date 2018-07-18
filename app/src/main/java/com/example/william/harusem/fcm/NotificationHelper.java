@@ -18,6 +18,8 @@ public class NotificationHelper {
     public static final String FRIEND_REQUEST_SENDER_FULL_NAME = "data.friendname";
     public static final String FRIEND_REQUEST_ACCEPTED_FULL_NAME = "data.opponent_name";
     public static final String MESSAGE_QB_CHAT_MESSAGE = "data.qb.chat.message";
+    public static final String CALL_MESSAGE = "data.call.message";
+    public static final String CALL_LIST_OCCUPANT = "data.call.occupants";
 
     public static QBEvent createPushEvent(List<Integer> userIdsList, String message, String fullName, String dialogId) {
         StringifyArrayList<Integer> userIds = new StringifyArrayList<>();

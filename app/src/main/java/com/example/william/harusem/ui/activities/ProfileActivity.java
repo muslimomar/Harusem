@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,8 +60,8 @@ public class ProfileActivity extends AppCompatActivity {
     CircleImageView userImageView;
     @BindView(R.id.flag)
     ImageView flagIv;
-    @BindView(R.id.fragment_activity_tab_layout)
-    LinearLayout linearLayout;
+    @BindView(R.id.to_be_hide_layout)
+    RelativeLayout linearLayout;
     @BindView(R.id.card_view_friend_country)
     CardView cardView;
     @BindView(R.id.profile_activity_loading_pb)
@@ -367,7 +368,7 @@ public class ProfileActivity extends AppCompatActivity {
         QBUsers.getUser(Integer.parseInt(userID)).performAsync(new QBEntityCallback<QBUser>() {
             @Override
             public void onSuccess(QBUser user, Bundle bundle) {
-                getUserCustomData(user);
+//                getUserCustomData(user);
                 hideProgressBar(progressBar);
                 showLayout();
 
@@ -395,7 +396,6 @@ public class ProfileActivity extends AppCompatActivity {
                     });
                 } else {
                     userThumbIv.setImageResource(R.drawable.placeholder_user);
-                    getUserCountry(user);
 
                     // hide the progess bar and show the layout
                     hideProgressBar(progressBar);
