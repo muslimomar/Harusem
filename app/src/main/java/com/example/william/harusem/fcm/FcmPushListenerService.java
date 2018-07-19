@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.SplashActivity;
+import com.example.william.harusem.services.CallService;
 import com.example.william.harusem.ui.activities.ChatActivity;
 import com.example.william.harusem.ui.activities.FriendRequestsActivity;
 import com.example.william.harusem.ui.activities.MainActivity;
@@ -15,6 +16,7 @@ import com.example.william.harusem.util.SharedPrefsHelper;
 import com.google.firebase.messaging.RemoteMessage;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.messages.services.fcm.QBFcmPushListenerService;
+import com.quickblox.users.model.QBUser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +29,11 @@ public class FcmPushListenerService extends QBFcmPushListenerService {
     private static final int NOTIFICATION_ID2 = 2;
     String friendRequestName;
     private static final String TAG = FcmPushListenerService.class.getSimpleName();
+
+
+    private void startLoginService(QBUser qbUser){
+        CallService.start(this, qbUser);
+    }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -42,58 +49,67 @@ public class FcmPushListenerService extends QBFcmPushListenerService {
             String friendAcceptedOponentName = data.get(NotificationHelper.FRIEND_REQUEST_ACCEPTED_FULL_NAME);
             String userID = data.get(NotificationHelper.USER_ID_PUSH);
 
-            Log.v("tatyhaha", " " + friendAcceptedOponentName + " has accepted your friend request!");
-            SharedPrefsHelper prefsHelper = SharedPrefsHelper.getInstance();
-            prefsHelper.savePushDialogId(dialogId);
-            prefsHelper.saveFriendRequests(userID);
-            String title = sender;
-            String text = message;
 
-            Log.v("onReceive Notify", "name is: " + friendRequestName);
-
-
-            //Push friendrequests array
-
-            ArrayList<String> pushFriendRequests = prefsHelper.getRequestsArray();
-
-
-            // generate the title for one friend request
-
-
-            // Push messages array
-            ArrayList<String> pushMessages = prefsHelper.getMessagesArray();
-
-            // generate title (one conversation)
-            if (pushMessages == null) {
-                pushMessages = new ArrayList<>();
-                pushMessages.add(message);
-            } else {
-                pushMessages.add(message);
-                int messagesSize = pushMessages.size();
-                if (messagesSize > 1) {
-                    title += " " + getString(R.string.message_size, messagesSize);
+            String callMessage = data.get(NotificationHelper.CALL_MESSAGE);
+            if(callMessage != null && !callMessage.isEmpty()) {
+                SharedPrefsHelper sharedPrefsHelper = SharedPrefsHelper.getInstance();
+                if (sharedPrefsHelper.hasQbUser()) {
+                    QBUser qbUser = sharedPrefsHelper.getQbUser();
+                    startLoginService(qbUser);
                 }
-            }
-            // generate title (multiple conversations)
-            int dialogsSize = prefsHelper.getPushDialogIds().size();
-            if (dialogsSize > 1) {
-                title = getString(R.string.dialogs_size, dialogsSize);
-                text = "";
-            }
-            prefsHelper.saveMessagesArray(pushMessages);
+            }else {
 
-            // showFriendRequestNotification("aaaa");
+                Log.v("tatyhaha", " " + friendAcceptedOponentName + " has accepted your friend request!");
+                SharedPrefsHelper prefsHelper = SharedPrefsHelper.getInstance();
+                prefsHelper.savePushDialogId(dialogId);
+                prefsHelper.saveFriendRequests(userID);
+                String title = sender;
+                String text = message;
+
+                Log.v("onReceive Notify", "name is: " + friendRequestName);
+
+
+                //Push friendrequests array
+
+                ArrayList<String> pushFriendRequests = prefsHelper.getRequestsArray();
+
+
+                // generate the title for one friend request
+                // Push messages array
+                ArrayList<String> pushMessages = prefsHelper.getMessagesArray();
+
+
+                // generate title (one conversation)
+                if (pushMessages == null) {
+                    pushMessages = new ArrayList<>();
+                    pushMessages.add(message);
+                } else {
+                    pushMessages.add(message);
+                    int messagesSize = pushMessages.size();
+                    if (messagesSize > 1) {
+                        title += " " + getString(R.string.message_size, messagesSize);
+                    }
+                }
+                // generate title (multiple conversations)
+                int dialogsSize = prefsHelper.getPushDialogIds().size();
+                if (dialogsSize > 1) {
+                    title = getString(R.string.dialogs_size, dialogsSize);
+                    text = "";
+                }
+                prefsHelper.saveMessagesArray(pushMessages);
+
+                // showFriendRequestNotification("aaaa");
 
 //            showNotification(text, title, dialogId);
-            if (friendRequestName != null) {
-                showFriendRequestNotification(friendRequestName);
-            } else if (text != null) {
+                if (friendRequestName != null) {
+                    showFriendRequestNotification(friendRequestName);
+                } else if (text != null) {
 
-                showNotification(text, title, dialogId);
-            } else if (friendAcceptedOponentName != null) {
-                showAcceptedFriendNotification(friendAcceptedOponentName, userID);
+                    showNotification(text, title, dialogId);
+                } else if (friendAcceptedOponentName != null) {
+                    showAcceptedFriendNotification(friendAcceptedOponentName, userID);
+                }
             }
-
             Log.v("onReceive Notify", "receiveddddddddddd");
         }
     }
