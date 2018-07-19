@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,8 +10,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
+
 
         <ImageView
             android:layout_width="wrap_content"
@@ -19,6 +21,15 @@
             android:layout_marginTop="50dp"
             android:src="@drawable/harusem_logo"
 
+            />
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/avPb"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:indicatorName="BallGridPulseIndicator"
             />
 
         <EditText
@@ -30,23 +41,23 @@
             android:layout_marginRight="20dp"
             android:layout_marginTop="25dp"
             android:background="@drawable/edit_text_rectangle"
-            android:drawableLeft="@drawable/ic_account_24dp"
             android:drawablePadding="12dp"
+            android:drawableStart="@drawable/ic_account_24dp"
             android:hint="@string/email"
             android:paddingLeft="9dp"
             android:paddingRight="9dp"
             android:singleLine="true" />
 
         <EditText
-            android:id="@+id/password_et"
+            android:id="@+id/login_password_et"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/edit_text_rectangle"
-            android:drawableLeft="@drawable/ic_lock_black_24dp"
             android:drawablePadding="12dp"
+            android:drawableStart="@drawable/ic_lock_black_24dp"
             android:hint="@string/stars_hint"
             android:inputType="textWebPassword"
             android:paddingLeft="9dp"

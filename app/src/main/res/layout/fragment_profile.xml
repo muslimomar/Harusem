@@ -27,7 +27,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="@drawable/circle_ripple"
@@ -61,9 +61,10 @@
                     android:id="@+id/friends_count_value_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
                     android:alpha="0.8"
-                    android:layout_marginLeft="5dp"
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     tools:text="119" />
@@ -72,40 +73,20 @@
                     android:id="@+id/friends_count_key_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:alpha="0.8"
                     android:text="@string/friends"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:alpha="0.8"
-                    android:text="|"
-                    android:textColor="@color/white" />
 
-
-                <TextView
-                    android:id="@+id/points_count_value_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    android:alpha="0.8"
-                    tools:text="0"
-                    android:layout_marginLeft="5dp"
-                    android:textColor="@color/white"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/points_count_key_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:alpha="0.8"
-                    android:text="@string/points"
-                    android:textColor="@color/white"
-                    android:textSize="12sp" />
+                <ImageView
+                    android:id="@+id/profile_country_flag"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="5dp"
+                    android:src="@drawable/ic_flag" />
 
             </LinearLayout>
 
@@ -117,7 +98,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/friend_name_friend_detail"
                     android:layout_marginBottom="7dp"
                     android:orientation="horizontal"
                     android:padding="7dp">
@@ -130,20 +110,21 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/profile_mother_lang"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
-                            android:text="English"
-                            android:textColor="@color/white" />
+                            android:textColor="@color/white"
+                            tools:text="English" />
 
-                        <ProgressBar
-                            android:id="@+id/profile_fragment_english_progress_bar"
-                            style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal"
-                            android:layout_width="80dp"
-                            android:layout_height="wrap_content"
+
+                        <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+                            android:id="@+id/profile_mother_lang_pb"
+                            android:layout_width="70dp"
+                            android:layout_height="14dp"
                             android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="10dp"
-                            android:background="@drawable/profile_fragment_progress_style" />
+                            android:layout_marginTop="5dp"
+                            app:rcBackgroundPadding="5dp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -153,20 +134,22 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/profile_learning_lang"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
-                            android:text="Tukish"
-                            android:textColor="@color/white" />
+                            android:textColor="@color/white"
+                            tools:text="Tukish" />
 
-                        <ProgressBar
-                            android:id="@+id/profile_fragment_turkish_progress_bar"
-                            style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal"
-                            android:layout_width="80dp"
-                            android:layout_height="wrap_content"
+
+                        <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+                            android:id="@+id/profile_learn_lang_pb"
+                            android:layout_width="70dp"
+                            android:layout_height="14dp"
                             android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="10dp"
-                            android:background="@drawable/profile_fragment_progress_style" />
+                            android:layout_marginTop="5dp"
+                            app:rcBackgroundPadding="5dp" />
+
                     </LinearLayout>
 
                 </LinearLayout>
@@ -192,8 +175,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-                android:drawableStart="@drawable/ic_account_profile"
                 android:drawablePadding="@dimen/profile_drawable_padding"
+                android:drawableStart="@drawable/ic_account_profile"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:padding="8dp"
@@ -208,8 +191,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_between_options_profile"
                 android:clickable="true"
-                android:drawableStart="@drawable/ic_password_profile"
                 android:drawablePadding="@dimen/profile_drawable_padding"
+                android:drawableStart="@drawable/ic_password_profile"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:padding="8dp"
@@ -229,8 +212,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="true"
-                    android:drawableStart="@drawable/ic_notification_profile"
                     android:drawablePadding="@dimen/profile_drawable_padding"
+                    android:drawableStart="@drawable/ic_notification_profile"
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackgroundBorderless"
                     android:padding="8dp"
@@ -254,8 +237,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_between_options_profile"
                 android:clickable="true"
-                android:drawableStart="@drawable/ic_friends_profile"
                 android:drawablePadding="@dimen/profile_drawable_padding"
+                android:drawableStart="@drawable/ic_friends_profile"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:padding="8dp"
@@ -272,8 +255,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_between_options_profile"
                 android:clickable="true"
-                android:drawableStart="@drawable/ic_block"
                 android:drawablePadding="@dimen/profile_drawable_padding"
+                android:drawableStart="@drawable/ic_block"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:padding="8dp"
@@ -297,8 +280,8 @@
                     android:id="@+id/log_out_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_log_out_profile"
                     android:drawablePadding="@dimen/profile_drawable_padding"
+                    android:drawableStart="@drawable/ic_log_out_profile"
                     android:drawableTint="@color/dark_red"
                     android:foreground="?attr/selectableItemBackgroundBorderless"
                     android:padding="8dp"

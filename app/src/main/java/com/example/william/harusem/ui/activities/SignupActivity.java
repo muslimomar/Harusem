@@ -22,7 +22,9 @@ import android.widget.Toast;
 import com.example.william.harusem.R;
 import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.holder.QBUsersHolder;
+import com.example.william.harusem.models.UserData;
 import com.example.william.harusem.util.SharedPrefsHelper;
+import com.google.gson.Gson;
 import com.mukesh.countrypicker.Country;
 import com.mukesh.countrypicker.CountryPicker;
 import com.mukesh.countrypicker.OnCountryPickerListener;
@@ -52,13 +54,21 @@ public class SignupActivity extends AppCompatActivity {
     TextView countryTv;
     @BindView(R.id.name_et)
     EditText nameEt;
-
-    @BindView(R.id.language_english_tv)
-    Spinner englishLanguageTv;
-    @BindView(R.id.language_turkish_tv)
-    Spinner turkishLanguageTv;
-
-    String englishLevel, turkishLevel;
+    @BindView(R.id.mother_language)
+    Spinner motherLanguage;
+    @BindView(R.id.language_level)
+    Spinner languageLevel;
+    @BindView(R.id.language_level_tv)
+    TextView languageLevelTv;
+    String[] languagesArray;
+    String[] levelsArray;
+    String[] learningLanguagesArray;
+    boolean isSelected = false;
+    String selectedLanguage, selectedLanguageLevel, selectedLearningLanguage, arabicLevel, englishLevel, turkishLevel;
+    @BindView(R.id.learning_language_tv)
+    TextView learningLanguageTv;
+    @BindView(R.id.learning_language)
+    Spinner learningLanguage;
 
     public static String getEditTextString(EditText editText) {
         return editText.getText().toString().trim();
@@ -69,32 +79,61 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
-
         hideSoftKeyboard();
-
-        spinnerEnglish();
-        spinnerTurkish();
+        spinnerMotherLanguage();
+        spinnerLearnLanguage();
+        spinnerLevel();
     }
 
-    public void spinnerEnglish() {
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.spinner_array, android.R.layout.simple_spinner_item);
-// Specify the layout to use when the list of choices appears
+    private void spinnerMotherLanguage() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.mother_languages_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
-        englishLevel = getString(R.string.beginner);
-        englishLanguageTv.setAdapter(adapter);
-        englishLanguageTv.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+        languagesArray = getResources().getStringArray(R.array.mother_languages_array);
+        motherLanguage.setAdapter(adapter);
+        motherLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    englishLevel = getString(R.string.beginner);
-                } else if (position == 1) {
-                    englishLevel = getString(R.string.intermediate);
+                selectedLanguage = motherLanguage.getSelectedItem().toString();
+                if (selectedLanguage.equals("Select your mother language")) {
+                    learningLanguage.setVisibility(View.INVISIBLE);
+                    learningLanguageTv.setVisibility(View.INVISIBLE);
+                    languageLevel.setVisibility(View.INVISIBLE);
+                    languageLevelTv.setVisibility(View.INVISIBLE);
+                } else {
+                    learningLanguage.setVisibility(View.VISIBLE);
+                    learningLanguageTv.setVisibility(View.VISIBLE);
+                    learningLanguage.setSelection(0);
+                    Toast.makeText(SignupActivity.this, "Selected language is : " + selectedLanguage, Toast.LENGTH_SHORT).show();
+                }
+            }
 
-                } else if (position == 2) {
-                    englishLevel = getString(R.string.advanced);
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Toast.makeText(SignupActivity.this, "Please select your mother Language!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void spinnerLearnLanguage() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.learning_language_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        learningLanguagesArray = getResources().getStringArray(R.array.learning_language_array);
+        learningLanguage.setAdapter(adapter);
+        learningLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedLearningLanguage = learningLanguage.getSelectedItem().toString();
+                if (selectedLearningLanguage.equals("Select learning language")) {
+                    languageLevel.setVisibility(View.INVISIBLE);
+                    languageLevelTv.setVisibility(View.INVISIBLE);
+                    languageLevel.setVisibility(View.INVISIBLE);
+                } else {
+                    languageLevel.setVisibility(View.VISIBLE);
+                    //learningLanguageTv.setVisibility(View.VISIBLE);
+                    languageLevelTv.setVisibility(View.VISIBLE);
+                    Toast.makeText(SignupActivity.this, "Learning Language is: " + selectedLearningLanguage, Toast.LENGTH_SHORT).show();
+
                 }
             }
 
@@ -103,33 +142,32 @@ public class SignupActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
-    public void spinnerTurkish() {
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.spinner_array, android.R.layout.simple_spinner_item);
-// Specify the layout to use when the list of choices appears
+    private void spinnerLevel() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.levels_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
-        turkishLevel = getString(R.string.beginner);
-        turkishLanguageTv.setAdapter(adapter);
-        turkishLanguageTv.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        levelsArray = getResources().getStringArray(R.array.levels_array);
+        languageLevel.setAdapter(adapter);
+        languageLevel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    turkishLevel = getString(R.string.beginner);
-                } else if (position == 1) {
-                    turkishLevel = getString(R.string.intermediate);
 
-                } else if (position == 2) {
-                    turkishLevel = getString(R.string.advanced);
+                selectedLanguageLevel = languageLevel.getSelectedItem().toString();
+                if (selectedLanguageLevel.equals("Select your level")) {
+                    languageLevel.setVisibility(View.INVISIBLE);
+                    languageLevelTv.setVisibility(View.INVISIBLE);
+                    learningLanguage.setSelection(0);
+                } else {
+                    languageLevel.setVisibility(View.VISIBLE);
+                    languageLevelTv.setVisibility(View.VISIBLE);
+                    Toast.makeText(SignupActivity.this, "Language level is: " + selectedLanguageLevel, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
     }
@@ -168,6 +206,19 @@ public class SignupActivity extends AppCompatActivity {
             return;
         }
 
+        if (selectedLanguage.equals("Select your mother language")) {
+            Toast.makeText(this, "Please select your language!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (selectedLanguageLevel.equals("Select your level")) {
+            Toast.makeText(this, "Please select your language level!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (selectedLearningLanguage.equals("Select learning language")) {
+            Toast.makeText(this, "Please desired learning language!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         createAccount(getEditTextString(emailEt), getEditTextString(passwordEt), getEditTextString(nameEt));
     }
@@ -180,7 +231,11 @@ public class SignupActivity extends AppCompatActivity {
         final QBUser qbUser = new QBUser(email, pass);
         qbUser.setFullName(name);
         qbUser.setEmail(email);
-        qbUser.setCustomData(countryTv.getText().toString().trim());
+
+        UserData userData = new UserData(selectedLanguage, selectedLearningLanguage, selectedLanguageLevel, countryTv.getText().toString().trim(),name);
+        String json = new Gson().toJson(userData);
+        qbUser.setCustomData(json);
+        Log.d("customdata", "custom data: " + json);
         QBUsers.signUpSignInTask(qbUser).performAsync(new QBEntityCallback<QBUser>() {
 
             @Override
@@ -200,7 +255,7 @@ public class SignupActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = pref.edit();
                         editor.putString("QB_USER_FULL_NAME_FOR_NOTIFICATIONS", fullName);  // Saving string
                         editor.apply();
-                        Log.v("did_saved?","result: "+fullName);
+                        Log.v("did_saved?", "result: " + fullName);
                         redirectToMainActivity();
                     }
 

@@ -487,7 +487,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
         WebRtcSessionManager.getInstance(this).setCurrentSession(newQbRtcSession);
 
-        PushNotificationSender.sendPushMessage(occupants, currentUser.getFullName());
+        PushNotificationSender.sendPushMessage(occupants.get(0), currentUser.getFullName());
 
         CallActivity.start(this, false);
         Log.d(TAG, "conferenceType = " + conferenceType);
@@ -994,6 +994,8 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             case GROUP:
             case PUBLIC_GROUP:
                 statusSignIv.setVisibility(View.GONE);
+                videoCallBtn.setVisibility(View.GONE);
+                audioCallBtn.setVisibility(View.GONE);
                 joinGroupChat();
                 break;
             case PRIVATE:

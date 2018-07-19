@@ -12,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -88,6 +89,8 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     @BindView(R.id.layout_root)
     RelativeLayout layoutRoot;
     Unbinder unbinder;
+    @BindView(R.id.swipe_refresh)
+    SwipeRefreshLayout swipeRefreshLayout;
     private QBRequestGetBuilder requestBuilder;
     private Menu menu;
     private int skipRecords = 0;
@@ -243,6 +246,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
             @Override
             public void onError(QBResponseException e) {
                 progressDialog.dismiss();
+                swipeRefreshLayout.setRefreshing(false);
                 showErrorSnackbar(R.string.dlg_retry, e, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -490,6 +494,17 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
 
         requestBuilder = new QBRequestGetBuilder();
 
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent),
+                getResources().getColor(R.color.colorPrimary),
+                getResources().getColor(R.color.colorPrimaryDark));
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                requestBuilder.setSkip(skipRecords += ChatHelper.DIALOG_ITEMS_PER_PAGE);
+                loadDialogsFromQb(true, false);
+            }
+        });
     }
 
 
@@ -578,6 +593,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
                 if (getActivity() != null && isAdded()) {
                     isProcessingResultInProgress = false;
                     progressBar.setVisibility(View.GONE);
+                    swipeRefreshLayout.setRefreshing(false);
 
                     if (clearDialogHolder) {
                         QBChatDialogHolder.getInstance().clear();
