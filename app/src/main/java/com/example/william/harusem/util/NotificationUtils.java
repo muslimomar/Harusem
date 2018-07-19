@@ -17,6 +17,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.ui.activities.ChatActivity;
+import com.example.william.harusem.ui.activities.ProfileActivity;
 
 
 public class NotificationUtils {
@@ -53,27 +54,28 @@ public class NotificationUtils {
         notificationManager.notify(notificationId, notification);
     }
 
-    public static void showAcceptedFriendNotification(Context context, String friendName, int icon, int notificationId) {
+    public static void showAcceptedFriendNotification(Context context, Class<? extends Activity> activityClass, String friendName, int icon, int notificationId, String userId) {
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createChannelIfNotExist(notificationManager);
         }
-        Notification notification = buildAcceptedFriendRequestNotification(context, friendName, icon);
+        Notification notification = buildAcceptedFriendRequestNotification(context, activityClass, friendName, icon, userId);
         notificationManager.notify(notificationId, notification);
     }
 
-    private static Notification buildAcceptedFriendRequestNotification(Context context, String friendName, @DrawableRes int icon) {
+    private static Notification buildAcceptedFriendRequestNotification(Context context, Class<? extends Activity> activityClass, String friendName, @DrawableRes int icon, String userId) {
         Uri defaultSoundsUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         String newline = System.getProperty("line.separator");
 
         return new NotificationCompat.Builder(context, CHANNEL_ONE_ID)
                 .setSmallIcon(icon)
                 .setContentTitle("HARUSEM")
-                .setContentText(friendName + "" + context.getString(R.string.push_accepted))
+                .setContentText(friendName + " " + context.getString(R.string.push_accepted))
                 .setAutoCancel(true)
                 .setSound(defaultSoundsUri)
+                .setContentIntent(buildContentIntentForAcceptedFriend(context, activityClass,userId))
                 .setColor(context.getResources().getColor(R.color.colorAccent))
                 .build();
     }
@@ -142,5 +144,12 @@ public class NotificationUtils {
         //intent.putExtra(ChatActivity.EXTRA_DIALOG_ID);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         return PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    private static PendingIntent buildContentIntentForAcceptedFriend(Context context, Class<? extends Activity> activityClass, String profileId) {
+        Intent intent = new Intent(context, activityClass);
+        intent.putExtra("user_id", profileId);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 }

@@ -8,6 +8,7 @@ import com.example.william.harusem.SplashActivity;
 import com.example.william.harusem.ui.activities.ChatActivity;
 import com.example.william.harusem.ui.activities.FriendRequestsActivity;
 import com.example.william.harusem.ui.activities.MainActivity;
+import com.example.william.harusem.ui.activities.ProfileActivity;
 import com.example.william.harusem.util.ActivityLifecycle;
 import com.example.william.harusem.util.NotificationUtils;
 import com.example.william.harusem.util.SharedPrefsHelper;
@@ -16,6 +17,7 @@ import com.quickblox.chat.QBChatService;
 import com.quickblox.messages.services.fcm.QBFcmPushListenerService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,14 +40,27 @@ public class FcmPushListenerService extends QBFcmPushListenerService {
             String dialogId = data.get(NotificationHelper.MESSAGE_DIALOG_ID);
             friendRequestName = data.get(NotificationHelper.FRIEND_REQUEST_SENDER_FULL_NAME);
             String friendAcceptedOponentName = data.get(NotificationHelper.FRIEND_REQUEST_ACCEPTED_FULL_NAME);
+            String userID = data.get(NotificationHelper.USER_ID_PUSH);
 
-            Log.v("tatyhaha", "" + friendAcceptedOponentName + " Has accepted your friend request!");
+            Log.v("tatyhaha", " " + friendAcceptedOponentName + " has accepted your friend request!");
             SharedPrefsHelper prefsHelper = SharedPrefsHelper.getInstance();
             prefsHelper.savePushDialogId(dialogId);
+            prefsHelper.saveFriendRequests(userID);
             String title = sender;
             String text = message;
 
             Log.v("onReceive Notify", "name is: " + friendRequestName);
+
+
+            //Push friendrequests array
+
+            ArrayList<String> pushFriendRequests = prefsHelper.getRequestsArray();
+
+
+            // generate the title for one friend request
+
+
+            // Push messages array
             ArrayList<String> pushMessages = prefsHelper.getMessagesArray();
 
             // generate title (one conversation)
@@ -76,15 +91,19 @@ public class FcmPushListenerService extends QBFcmPushListenerService {
 
                 showNotification(text, title, dialogId);
             } else if (friendAcceptedOponentName != null) {
-                showAcceptedFriendNotification(friendAcceptedOponentName);
+                showAcceptedFriendNotification(friendAcceptedOponentName, userID);
             }
 
             Log.v("onReceive Notify", "receiveddddddddddd");
         }
     }
 
-    protected void showAcceptedFriendNotification(String acceptedFriendName) {
-        NotificationUtils.showAcceptedFriendNotification(this, acceptedFriendName, R.drawable.harusem_logo, NOTIFICATION_ID);
+    protected void showAcceptedFriendNotification(String acceptedFriendName, String userId) {
+        Class<? extends Activity> activity = ProfileActivity.class;
+        if (QBChatService.getInstance().isLoggedIn()) {
+            activity = getProfileActivity();
+        }
+        NotificationUtils.showAcceptedFriendNotification(this, activity, acceptedFriendName, R.drawable.harusem_logo, NOTIFICATION_ID, userId);
     }
 
     protected void showNotification(String message, String sender, String dialogId) {
@@ -119,7 +138,14 @@ public class FcmPushListenerService extends QBFcmPushListenerService {
 
     private Class<? extends Activity> getFriendRequestsActivity() {
         Class<? extends Activity> activity = FriendRequestsActivity.class;
+        Set<String> friendRequests = SharedPrefsHelper.getInstance().getFriendRequests();
         activity = FriendRequestsActivity.class;
+        return activity;
+    }
+
+    private Class<? extends Activity> getProfileActivity() {
+        Class<? extends Activity> activity = ProfileActivity.class;
+        activity = ProfileActivity.class;
         return activity;
     }
 }

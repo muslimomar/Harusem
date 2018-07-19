@@ -29,6 +29,7 @@ import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.core.helper.StringifyArrayList;
 import com.quickblox.messages.QBPushNotifications;
 import com.quickblox.messages.model.QBEvent;
+import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 import com.squareup.picasso.Picasso;
 
@@ -119,7 +120,6 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
                 notifyItemRemoved(usersList.indexOf(user));
                 showSnackBar(view, "Request Accepted");
                 sendNotification(user, view, position);
-                redirectToProfileActivity(user);
             }
 
             @Override
@@ -145,9 +145,10 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
     private void sendNotification(final QBUser user, final View view, final int position) {
         QBUser currentUser = QBUsersHolder.getInstance().getUserById(QBChatService.getInstance().getUser().getId());
         String currentt = currentUser.getFullName();
+        int currentUserId = QBChatService.getInstance().getUser().getId();
         StringifyArrayList<Integer> userIds = new StringifyArrayList<Integer>();
         userIds.add(user.getId());
-        QBEvent messageEvent = NotificationHelper.acceptedYourRequestPushEvent(userIds, currentt);
+        QBEvent messageEvent = NotificationHelper.acceptedYourRequestPushEvent(userIds, currentt,currentUserId);
 
         QBPushNotifications.createEvent(messageEvent).performAsync(new QBEntityCallback<QBEvent>() {
             @Override
