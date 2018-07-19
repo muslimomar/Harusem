@@ -35,18 +35,32 @@
                 android:layout_height="40dp"
                 android:background="@color/colorPrimary" />
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/friend_detail_image_view"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_user_new" />
+            <RelativeLayout
+                android:id="@+id/photo_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/friend_detail_image_view"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/circle_shape" />
+
+                <ProgressBar
+                    android:id="@+id/profile_pb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    />
+
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/friend_name_friend_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/friend_detail_image_view"
+                android:layout_below="@+id/photo_layout"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="7dp"
@@ -146,6 +160,7 @@
         android:layout_marginTop="25dp"
         card_view:cardCornerRadius="3dp"
         card_view:contentPadding="7dp"
+        tools:visibility="gone"
         >
 
         <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -155,10 +170,10 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_marginBottom="30dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical">
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="30dp">
 
                 <TextView
                     android:id="@+id/country_tv"
@@ -172,14 +187,26 @@
                 <ImageView
                     android:id="@+id/flag"
                     android:layout_width="40dp"
-                    android:layout_marginStart="5dp"
                     android:layout_height="35dp"
+                    android:layout_marginStart="5dp"
                     android:padding="1dp"
                     android:src="@drawable/ic_flag" />
 
             </LinearLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>
+
+
+    <RelativeLayout
+        android:id="@+id/to_be_hide_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        tools:visibility="visible"
+        >
+
+    </RelativeLayout>
+
 
     <ProgressBar
         android:id="@+id/profile_activity_loading_pb"
@@ -188,15 +215,8 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="visible"
-        tools:visibility="gone" />
+        android:indeterminateTint="@color/colorSecondary"
 
-    <RelativeLayout
-        android:id="@+id/to_be_hide_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
-        >
-
-    </RelativeLayout>
+        />
 
 </RelativeLayout>
