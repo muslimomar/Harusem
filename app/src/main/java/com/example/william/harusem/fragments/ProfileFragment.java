@@ -353,7 +353,7 @@ public class ProfileFragment extends Fragment {
         try {
             ChatPingAlarmManager.onDestroy();
         } catch (Exception e) {
-            Toaster.longToast(e.toString());
+            Log.e(TAG, "destroyRtcClientAndChat: ",e );
         }
 
         if (chatService != null) {
@@ -447,6 +447,7 @@ public class ProfileFragment extends Fragment {
         super.onResume();
         if (getActivity() != null && isAdded())
             getUnreadFriendRequests();
+        friendsCountValueTv.setText(String.valueOf(getFriendsCount()));
     }
 
     @OnClick(R.id.profile_circle_iv)

@@ -159,11 +159,11 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
     }
 
     private void setButtonName(Button button, QBUser user) {
-        if (friendListHelper.isFriendRequestAlreadySent(user.getId())) {
-            setRequestSentBtn(button);
-
-        } else if (friendListHelper.isFriend(user.getId())) {
+        if (friendListHelper.isFriend(user.getId())) {
             setMessageBtn(button);
+
+        } else if (friendListHelper.isFriendRequestAlreadySent(user.getId())) {
+            setRequestSentBtn(button);
 
         } else if (!friendListHelper.isFriendRequestAlreadySent(user.getId()) &&
                 !friendListHelper.isFriend(user.getId())) {

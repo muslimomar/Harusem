@@ -320,7 +320,7 @@
     <string name="full_name">Full Name</string>
     <string name="email">Email</string>
     <string name="country">Country</string>
-    <string name="friends">Friend | </string>
+    <string name="friends">Friends</string>
     <string name="points">Points    | </string>
     <string name="account">Account</string>
     <string name="friend_requests">Friend Requests</string>
