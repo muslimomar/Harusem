@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,6 +25,7 @@ import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.models.UserData;
 import com.example.william.harusem.util.SharedPrefsHelper;
+import com.example.william.harusem.util.Toaster;
 import com.google.gson.Gson;
 import com.mukesh.countrypicker.Country;
 import com.mukesh.countrypicker.CountryPicker;
@@ -33,6 +35,8 @@ import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,7 +73,6 @@ public class SignupActivity extends AppCompatActivity {
     TextView learningLanguageTv;
     @BindView(R.id.learning_language)
     Spinner learningLanguage;
-
     public static String getEditTextString(EditText editText) {
         return editText.getText().toString().trim();
     }
@@ -104,13 +107,14 @@ public class SignupActivity extends AppCompatActivity {
                     learningLanguage.setVisibility(View.VISIBLE);
                     learningLanguageTv.setVisibility(View.VISIBLE);
                     learningLanguage.setSelection(0);
-                    Toast.makeText(SignupActivity.this, "Selected language is : " + selectedLanguage, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignupActivity.this, getString(R.string.selected_moth_lang) + selectedLanguage, Toast.LENGTH_SHORT).show();
+                    isSelected =true;
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                Toast.makeText(SignupActivity.this, "Please select your mother Language!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignupActivity.this, R.string.pls_select_moth_lang, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -132,7 +136,7 @@ public class SignupActivity extends AppCompatActivity {
                     languageLevel.setVisibility(View.VISIBLE);
                     //learningLanguageTv.setVisibility(View.VISIBLE);
                     languageLevelTv.setVisibility(View.VISIBLE);
-                    Toast.makeText(SignupActivity.this, "Learning Language is: " + selectedLearningLanguage, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignupActivity.this, getString(R.string.learning_lang_is) + selectedLearningLanguage, Toast.LENGTH_SHORT).show();
 
                 }
             }
@@ -162,7 +166,7 @@ public class SignupActivity extends AppCompatActivity {
                 } else {
                     languageLevel.setVisibility(View.VISIBLE);
                     languageLevelTv.setVisibility(View.VISIBLE);
-                    Toast.makeText(SignupActivity.this, "Language level is: " + selectedLanguageLevel, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignupActivity.this, getString(R.string.lang_level_is) + selectedLanguageLevel, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -176,47 +180,56 @@ public class SignupActivity extends AppCompatActivity {
     private void onSignup() {
 
         if (getEditTextString(nameEt).isEmpty()) {
-            nameEt.setError("Please enter your full name!");
+            nameEt.setError(getString(R.string.pls_enter_full_name));
             nameEt.requestFocus();
             return;
         }
 
         if (getEditTextString(emailEt).isEmpty() ||
                 !isEmailValid(getEditTextString(emailEt))) {
-            emailEt.setError("Please enter a valid email address!");
+            emailEt.setError(getString(R.string.pls_enter_valid_email));
             emailEt.requestFocus();
             return;
         }
 
         if (getEditTextString(passwordEt).isEmpty()) {
-            passwordEt.setError("Please enter a valid password!");
+            passwordEt.setError(getString(R.string.enter_valid_pass));
             passwordEt.requestFocus();
             return;
         }
 
         if ((getEditTextString(passwordEt).length() < 8)) {
-            passwordEt.setError("Password is too short! (minimum is 8 characters)");
+            passwordEt.setError(getString(R.string.pass_too_short));
             passwordEt.requestFocus();
             return;
         }
 
         if (!getEditTextString(passConfirmEt).equals(getEditTextString(passwordEt))) {
-            passConfirmEt.setError("Confirm password should match the password!");
+            passConfirmEt.setError(getString(R.string.confirm_pass_notmatch));
             passConfirmEt.requestFocus();
             return;
         }
 
         if (selectedLanguage.equals("Select your mother language")) {
-            Toast.makeText(this, "Please select your language!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.select_yourlang, Toast.LENGTH_SHORT).show();
             return;
         }
-        if (selectedLanguageLevel.equals("Select your level")) {
-            Toast.makeText(this, "Please select your language level!", Toast.LENGTH_SHORT).show();
+        if (!selectedLanguage.equals("Select your level") && selectedLearningLanguage.equals("Select learning language")) {
+            Toast.makeText(this, R.string.select_learn_lang, Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (selectedLearningLanguage.equals("Select learning language")) {
-            Toast.makeText(this, "Please desired learning language!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.select_desired_learning_lang, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (selectedLanguageLevel.equals("Select your level")){
+            Toaster.shortToast(R.string.select_ur_level);
+            return;
+        }
+
+        if (selectedLanguage.equals(selectedLearningLanguage)){
+            Toaster.shortToast(R.string.ur_learning_lang_err);
             return;
         }
 
@@ -225,14 +238,14 @@ public class SignupActivity extends AppCompatActivity {
 
     private void createAccount(final String email, final String pass, String name) {
 
-        loadingPb = buildProgressDialog(this, "Please Wait..", "Loading........", false);
+        loadingPb = buildProgressDialog(this, getString(R.string.pls_wait), getString(R.string.loading), false);
         loadingPb.show();
 
         final QBUser qbUser = new QBUser(email, pass);
         qbUser.setFullName(name);
         qbUser.setEmail(email);
 
-        UserData userData = new UserData(selectedLanguage, selectedLearningLanguage, selectedLanguageLevel, countryTv.getText().toString().trim(),name);
+        UserData userData = new UserData(selectedLanguage, selectedLearningLanguage, selectedLanguageLevel, countryTv.getText().toString().trim(), name);
         String json = new Gson().toJson(userData);
         qbUser.setCustomData(json);
         Log.d("customdata", "custom data: " + json);

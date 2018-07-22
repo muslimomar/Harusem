@@ -231,7 +231,7 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     }
 
     private void createBotDialog() {
-        ProgressDialog progressDialog = Utils.buildProgressDialog(getActivity(), "Loading", "Initializing bot for the first time...", false);
+        ProgressDialog progressDialog = Utils.buildProgressDialog(getActivity(), getString(R.string.loading), getString(R.string.init_bot), false);
         progressDialog.show();
 
         ChatHelper.getInstance().createBotDialog(BOT_ID, new QBEntityCallback<QBChatDialog>() {

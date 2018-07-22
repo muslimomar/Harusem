@@ -1,6 +1,7 @@
 package com.example.william.harusem.ui.activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -45,7 +46,8 @@ import static com.example.william.harusem.util.Utils.buildProgressDialog;
 public class LoginActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 90;
     private static final String TAG = LoginActivity.class.getSimpleName();
-    ProgressDialog loadingPb;
+    com.example.william.harusem.dialog.ProgressDialog progressDialog = com.example.william.harusem.dialog.ProgressDialog.getInstance();
+    //ProgressDialog loadingPb;
 
     @BindView(R.id.email_et)
     EditText emailEt;
@@ -57,8 +59,6 @@ public class LoginActivity extends AppCompatActivity {
     Button signupBtn;
     @BindView(R.id.forgot_pass_tv)
     TextView forgotPassTv;
-    @BindView(R.id.avPb)
-    AVLoadingIndicatorView avPb;
 
 
     @Override
@@ -112,21 +112,21 @@ public class LoginActivity extends AppCompatActivity {
 
     private void onLogin() {
         if (getEditTextString(emailEt).isEmpty() && getEditTextString(passwordEt).isEmpty()) {
-            emailEt.setError("Please enter your email and password!");
+            emailEt.setError(getString(R.string.pls_enter_mail_and_pass));
             animateError(emailEt);
             animateError(passwordEt);
         }
 
         if (getEditTextString(emailEt).isEmpty() ||
                 !isEmailValid(getEditTextString(emailEt))) {
-            emailEt.setError("Please enter a valid email address!");
+            emailEt.setError(getString(R.string.enter_valid_mail));
             animateError(emailEt);
             return;
         }
 
         if (getEditTextString(passwordEt).isEmpty() ||
                 (getEditTextString(passwordEt).length() < 6)) {
-            passwordEt.setError("Please enter a valid password!");
+            passwordEt.setError(getString(R.string.valid_pass));
             animateError(passwordEt);
             return;
         }
@@ -142,8 +142,9 @@ public class LoginActivity extends AppCompatActivity {
 
         //loadingPb = buildProgressDialog(this, getString(R.string.please_wait), getString(R.string.dlg_loading), false);
         //loadingPb.show();
-        avPb.setIndicatorColor(getResources().getColor(R.color.colorPrimary));
-        avPb.show();
+        //avPb.setIndicatorColor(getResources().getColor(R.color.colorPrimary));
+        //avPb.show();
+        progressDialog.showProgress(LoginActivity.this);
 
         final QBUser user = new QBUser(email, pass);
 
@@ -155,7 +156,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Object o, Bundle bundle) {
                         //dismissDialog(loadingPb);
-                        avPb.hide();
+                        //avPb.hide();
                         qbUser.setPassword(user.getPassword());
                         SharedPrefsHelper.getInstance().saveQbUser(qbUser);
                         QBUsersHolder.getInstance().setSignInQbUser(qbUser);
@@ -167,8 +168,8 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onError(QBResponseException e) {
                         //dismissDialog(loadingPb);
-                        avPb.hide();
-                        buildAlertDialog("Login Failed", e.getMessage(), true, LoginActivity.this);
+                        //avPb.hide();
+                        buildAlertDialog(getString(R.string.login_failed), e.getMessage(), true, LoginActivity.this);
                     }
                 });
             }
@@ -176,8 +177,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onError(QBResponseException e) {
                 //dismissDialog(loadingPb);
-                avPb.hide();
-                buildAlertDialog("Login Failed", e.getMessage(), true, LoginActivity.this);
+                //avPb.hide();
+                progressDialog.hideProgress();
+                buildAlertDialog(getString(R.string.login_failed), e.getMessage(), true, LoginActivity.this);
             }
 
         });
@@ -228,11 +230,11 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void dismissDialog(ProgressDialog pb) {
-        if (pb.isShowing()) {
-            pb.dismiss();
-        }
-    }
+//    private void dismissDialog(ProgressDialog pb) {
+//        if (pb.isShowing()) {
+//            pb.dismiss();
+//        }
+//    }
 
 
     @Override

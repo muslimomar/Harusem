@@ -99,13 +99,13 @@ public class CreateGroupActivity extends AppCompatActivity {
         dialogsManager = new DialogsManager();
 
         if (isEditMode()) {
-            setTitle("Edit Group");
+            setTitle(getString(R.string.edit_group));
             fab.setVisibility(View.VISIBLE);
             groupCircleIv.setImageResource(R.drawable.circle_shape);
             participantsTv.setText(getString(R.string.participants, qbChatDialog.getOccupants().size() - 1));
             loadUserData();
         } else {
-            setTitle("New Group");
+            setTitle(getString(R.string.new_group));
             fab.setVisibility(View.GONE);
             groupCircleIv.setImageResource(R.drawable.camera_png);
             photoPb.setVisibility(View.GONE);
@@ -126,7 +126,7 @@ public class CreateGroupActivity extends AppCompatActivity {
     }
 
     private void loadUserData() {
-        ProgressDialog progressDialog = Utils.buildProgressDialog(this, "", "Please Wait...", false);
+        ProgressDialog progressDialog = Utils.buildProgressDialog(this, "", getString(R.string.please_wait), false);
         progressDialog.show();
         groupNameEt.setText(qbChatDialog.getName());
 
@@ -231,7 +231,7 @@ public class CreateGroupActivity extends AppCompatActivity {
     private void onGroupEdit() {
         String groupName = groupNameEt.getText().toString().trim();
         if (groupName.isEmpty()) {
-            Toaster.shortToast("Please type a name for the group!");
+            Toaster.shortToast(R.string.pls_type_group_name);
             return;
         }
 
@@ -248,7 +248,7 @@ public class CreateGroupActivity extends AppCompatActivity {
     private void onGroupCreate() {
         String groupName = groupNameEt.getText().toString().trim();
         if (groupName.isEmpty()) {
-            Toaster.shortToast("Please type a name for the group!");
+            Toaster.shortToast(R.string.pls_type_group);
             return;
         }
 
@@ -283,7 +283,7 @@ public class CreateGroupActivity extends AppCompatActivity {
 
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
-                ProgressDialog progressDialog = Utils.buildProgressDialog(this, "", "Please Wait...", false);
+                ProgressDialog progressDialog = Utils.buildProgressDialog(this, "", getString(R.string.please_wait), false);
                 progressDialog.show();
 
 
@@ -369,7 +369,7 @@ public class CreateGroupActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-        startActivityForResult(Intent.createChooser(intent, "Select a Picture"), REQUEST_CODE);
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.select_pic)), REQUEST_CODE);
     }
 
     @OnClick(R.id.fab)

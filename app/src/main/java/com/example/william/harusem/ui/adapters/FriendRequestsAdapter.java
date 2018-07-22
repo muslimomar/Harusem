@@ -96,7 +96,7 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
                 QBFriendRequestsHolder.getInstance().removeFriendRequest(user.getId());
                 usersList.remove(user);
                 notifyItemRemoved(usersList.indexOf(user));
-                showSnackBar(view, "Request Declined");
+                showSnackBar(view, context.getString(R.string.request_declined));
             }
 
             @Override
@@ -118,7 +118,7 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
                 QBFriendRequestsHolder.getInstance().removeFriendRequest(user.getId());
                 usersList.remove(user);
                 notifyItemRemoved(usersList.indexOf(user));
-                showSnackBar(view, "Request Accepted");
+                showSnackBar(view, context.getString(R.string.request_accepted));
                 sendNotification(user, view, position);
             }
 
