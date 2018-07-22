@@ -6,25 +6,20 @@ import android.util.Log;
 import com.example.william.harusem.R;
 import com.example.william.harusem.SplashActivity;
 import com.example.william.harusem.services.CallService;
-import com.example.william.harusem.ui.activities.CallActivity;
 import com.example.william.harusem.ui.activities.ChatActivity;
 import com.example.william.harusem.ui.activities.FriendRequestsActivity;
 import com.example.william.harusem.ui.activities.MainActivity;
+import com.example.william.harusem.ui.activities.ProfileActivity;
 import com.example.william.harusem.util.ActivityLifecycle;
 import com.example.william.harusem.util.NotificationUtils;
 import com.example.william.harusem.util.SharedPrefsHelper;
-import com.example.william.harusem.utils.PushNotificationSender;
-import com.example.william.harusem.utils.WebRtcSessionManager;
 import com.google.firebase.messaging.RemoteMessage;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.messages.services.fcm.QBFcmPushListenerService;
 import com.quickblox.users.model.QBUser;
-import com.quickblox.videochat.webrtc.QBRTCClient;
-import com.quickblox.videochat.webrtc.QBRTCSession;
-import com.quickblox.videochat.webrtc.QBRTCTypes;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,12 +30,25 @@ public class FcmPushListenerService extends QBFcmPushListenerService {
     String friendRequestName;
     private static final String TAG = FcmPushListenerService.class.getSimpleName();
 
+
+    private void startLoginService(QBUser qbUser){
+        CallService.start(this, qbUser);
+    }
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
         if (ActivityLifecycle.getInstance().isBackground()) {
             Map<String, String> data = remoteMessage.getData();
+
+            String sender = data.get(NotificationHelper.MESSAGE_SENDER);
+            String message = data.get(NotificationHelper.MESSAGE_CONTENT);
+            String dialogId = data.get(NotificationHelper.MESSAGE_DIALOG_ID);
+            friendRequestName = data.get(NotificationHelper.FRIEND_REQUEST_SENDER_FULL_NAME);
+            String friendAcceptedOponentName = data.get(NotificationHelper.FRIEND_REQUEST_ACCEPTED_FULL_NAME);
+            String userID = data.get(NotificationHelper.USER_ID_PUSH);
+
 
             String callMessage = data.get(NotificationHelper.CALL_MESSAGE);
             if(callMessage != null && !callMessage.isEmpty()) {
@@ -49,71 +57,69 @@ public class FcmPushListenerService extends QBFcmPushListenerService {
                     QBUser qbUser = sharedPrefsHelper.getQbUser();
                     startLoginService(qbUser);
                 }
+            }else {
 
-            }else{
-                getPushData(data);
+                Log.v("tatyhaha", " " + friendAcceptedOponentName + " has accepted your friend request!");
+                SharedPrefsHelper prefsHelper = SharedPrefsHelper.getInstance();
+                prefsHelper.savePushDialogId(dialogId);
+                prefsHelper.saveFriendRequests(userID);
+                String title = sender;
+                String text = message;
+
+                Log.v("onReceive Notify", "name is: " + friendRequestName);
+
+
+                //Push friendrequests array
+
+                ArrayList<String> pushFriendRequests = prefsHelper.getRequestsArray();
+
+
+                // generate the title for one friend request
+                // Push messages array
+                ArrayList<String> pushMessages = prefsHelper.getMessagesArray();
+
+
+                // generate title (one conversation)
+                if (pushMessages == null) {
+                    pushMessages = new ArrayList<>();
+                    pushMessages.add(message);
+                } else {
+                    pushMessages.add(message);
+                    int messagesSize = pushMessages.size();
+                    if (messagesSize > 1) {
+                        title += " " + getString(R.string.message_size, messagesSize);
+                    }
+                }
+                // generate title (multiple conversations)
+                int dialogsSize = prefsHelper.getPushDialogIds().size();
+                if (dialogsSize > 1) {
+                    title = getString(R.string.dialogs_size, dialogsSize);
+                    text = "";
+                }
+                prefsHelper.saveMessagesArray(pushMessages);
+
+                // showFriendRequestNotification("aaaa");
+
+//            showNotification(text, title, dialogId);
+                if (friendRequestName != null) {
+                    showFriendRequestNotification(friendRequestName);
+                } else if (text != null) {
+
+                    showNotification(text, title, dialogId);
+                } else if (friendAcceptedOponentName != null) {
+                    showAcceptedFriendNotification(friendAcceptedOponentName, userID);
+                }
             }
-
             Log.v("onReceive Notify", "receiveddddddddddd");
         }
     }
 
-
-    private void startLoginService(QBUser qbUser){
-        CallService.start(this, qbUser);
-    }
-    private void getPushData(Map<String, String> data) {
-
-        String sender = data.get(NotificationHelper.MESSAGE_SENDER);
-        String message = data.get(NotificationHelper.MESSAGE_CONTENT);
-        String dialogId = data.get(NotificationHelper.MESSAGE_DIALOG_ID);
-        friendRequestName = data.get(NotificationHelper.FRIEND_REQUEST_SENDER_FULL_NAME);
-        String friendAcceptedOponentName = data.get(NotificationHelper.FRIEND_REQUEST_ACCEPTED_FULL_NAME);
-
-        Log.v("tatyhaha", "" + friendAcceptedOponentName + " Has accepted your friend request!");
-        SharedPrefsHelper prefsHelper = SharedPrefsHelper.getInstance();
-        prefsHelper.savePushDialogId(dialogId);
-        String title = sender;
-        String text = message;
-
-        Log.v("onReceive Notify", "name is: " + friendRequestName);
-        ArrayList<String> pushMessages = prefsHelper.getMessagesArray();
-
-        // generate title (one conversation)
-        if (pushMessages == null) {
-            pushMessages = new ArrayList<>();
-            pushMessages.add(message);
-        } else {
-            pushMessages.add(message);
-            int messagesSize = pushMessages.size();
-            if (messagesSize > 1) {
-                title += " " + getString(R.string.message_size, messagesSize);
-            }
+    protected void showAcceptedFriendNotification(String acceptedFriendName, String userId) {
+        Class<? extends Activity> activity = ProfileActivity.class;
+        if (QBChatService.getInstance().isLoggedIn()) {
+            activity = getProfileActivity();
         }
-        // generate title (multiple conversations)
-        int dialogsSize = prefsHelper.getPushDialogIds().size();
-        if (dialogsSize > 1) {
-            title = getString(R.string.dialogs_size, dialogsSize);
-            text = "";
-        }
-        prefsHelper.saveMessagesArray(pushMessages);
-
-        // showFriendRequestNotification("aaaa");
-
-//            showNotification(text, title, dialogId);
-        if (friendRequestName != null) {
-            showFriendRequestNotification(friendRequestName);
-        } else if (text != null) {
-
-            showNotification(text, title, dialogId);
-        } else if (friendAcceptedOponentName != null) {
-            showAcceptedFriendNotification(friendAcceptedOponentName);
-        }
-
-    }
-
-    protected void showAcceptedFriendNotification(String acceptedFriendName) {
-        NotificationUtils.showAcceptedFriendNotification(this, acceptedFriendName, R.drawable.harusem_logo, NOTIFICATION_ID);
+        NotificationUtils.showAcceptedFriendNotification(this, activity, acceptedFriendName, R.drawable.harusem_logo, NOTIFICATION_ID, userId);
     }
 
     protected void showNotification(String message, String sender, String dialogId) {
@@ -148,8 +154,14 @@ public class FcmPushListenerService extends QBFcmPushListenerService {
 
     private Class<? extends Activity> getFriendRequestsActivity() {
         Class<? extends Activity> activity = FriendRequestsActivity.class;
+        Set<String> friendRequests = SharedPrefsHelper.getInstance().getFriendRequests();
         activity = FriendRequestsActivity.class;
         return activity;
     }
 
+    private Class<? extends Activity> getProfileActivity() {
+        Class<? extends Activity> activity = ProfileActivity.class;
+        activity = ProfileActivity.class;
+        return activity;
+    }
 }

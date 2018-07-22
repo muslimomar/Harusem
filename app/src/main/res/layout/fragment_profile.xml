@@ -75,7 +75,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:alpha="0.8"
-                    android:text="@string/friends"
+                    android:text="@string/friends_profile"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
 

@@ -109,7 +109,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
     private void redirectToProfileActivity(QBUser user) {
         Intent intent = new Intent(context, ProfileActivity.class);
         intent.putExtra("user_id", "" + user.getId());
-        intent.putExtra("name", user.getFullName());
         context.startActivity(intent);
     }
 

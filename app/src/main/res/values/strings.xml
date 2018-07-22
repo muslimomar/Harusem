@@ -390,7 +390,7 @@
     <string name="cant_send_msg_blocked">You can\'t send message to this user!</string>
     <string name="img_too_big">Error, selected image is too large</string>
     <string name="push_accepted">has accepted your friend request</string>
-    <string name="push_wants_friend">Wants to be your friend</string>
+    <string name="push_wants_friend">wants to be your friend</string>
     <string name="forget_password">Forget password?</string>
     <string name="e_mail_address">E-mail address</string>
     <string name="reset_password">Reset Password</string>
@@ -400,6 +400,7 @@
     <string name="mother_language">Mother Language</string>
     <string name="learning_language">Learning Language</string>
     <string name="language_level">Learning Language Level</string>
+    <string name="friends_profile">Friends |</string>
 
 
 </resources>

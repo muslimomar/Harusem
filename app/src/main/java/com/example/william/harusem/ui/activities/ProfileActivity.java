@@ -30,6 +30,7 @@ import com.mukesh.countrypicker.CountryPicker;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBPrivacyListsManager;
 import com.quickblox.chat.listeners.QBPrivacyListListener;
+import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBPrivacyList;
 import com.quickblox.chat.model.QBPrivacyListItem;
 import com.quickblox.content.QBContent;
@@ -49,6 +50,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.example.william.harusem.ui.activities.ChatActivity.EXTRA_DIALOG;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -83,6 +86,7 @@ public class ProfileActivity extends AppCompatActivity {
     @BindView(R.id.profile_pb)
     ProgressBar profilePb;
     private Menu menu;
+    public static final String EXTRA_PROFILE_ID = "profileId";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,12 +100,13 @@ public class ProfileActivity extends AppCompatActivity {
             supportActionBar.setElevation(0);
         }
 
+
         privacyListsManager = QBChatService.getInstance().getPrivacyListsManager();
 
         Intent intent = getIntent();
 
-
         //User ID Getter for getting user data
+
         userID = String.valueOf(intent.getStringExtra("user_id"));
         Log.v("UserID", "User id is : " + userID);
 

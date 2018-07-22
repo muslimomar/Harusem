@@ -218,7 +218,7 @@ public class ProfileFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     public void getUserCustomData(QBUser user) {
 
-        try{
+        try {
             String customData = user.getCustomData();
 
             UserData retrievedData = new Gson().fromJson(customData, UserData.class);
@@ -308,8 +308,8 @@ public class ProfileFragment extends Fragment {
                 profileCountryFlag.setImageResource(id);
             }
             // Try your GSON thing
-        } catch (JsonParseException e){
-            Toast.makeText(getContext(), "ERROR! USER MIGHT NOT HAVE CUSTOM DATA!", Toast.LENGTH_SHORT).show();
+        } catch (JsonParseException e) {
+            Log.v("error", "customdata" + e.getMessage());
         }
 
     }
