@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     AHBottomNavigation bottomNavigation;
 
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_DIALOG && resultCode == RESULT_OK) {
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
             switchFragment(fragment);
 
 
+
+
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        bottomNavigation.setBehaviorTranslationEnabled(false);
         setupBottomNavigation();
         switchFromNotification();
     }

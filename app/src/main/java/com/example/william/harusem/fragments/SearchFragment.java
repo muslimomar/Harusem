@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.example.william.harusem.R;
 import com.example.william.harusem.common.Common;
 import com.example.william.harusem.holder.QBUsersHolder;
