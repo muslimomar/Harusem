@@ -3,6 +3,8 @@ package com.example.william.harusem.ui.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -15,14 +17,15 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.example.william.harusem.R;
 import com.example.william.harusem.models.UserData;
+import com.example.william.harusem.util.ErrorUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.mukesh.countrypicker.Country;
@@ -30,7 +33,6 @@ import com.mukesh.countrypicker.CountryPicker;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBPrivacyListsManager;
 import com.quickblox.chat.listeners.QBPrivacyListListener;
-import com.quickblox.chat.model.QBChatDialog;
 import com.quickblox.chat.model.QBPrivacyList;
 import com.quickblox.chat.model.QBPrivacyListItem;
 import com.quickblox.content.QBContent;
@@ -51,8 +53,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.example.william.harusem.ui.activities.ChatActivity.EXTRA_DIALOG;
-
 public class ProfileActivity extends AppCompatActivity {
 
     private static final String TAG = ProfileActivity.class.getSimpleName();
@@ -64,8 +64,8 @@ public class ProfileActivity extends AppCompatActivity {
     CircleImageView userImageView;
     @BindView(R.id.flag)
     ImageView flagIv;
-    @BindView(R.id.fragment_activity_tab_layout)
-    LinearLayout linearLayout;
+    @BindView(R.id.to_be_hide_layout)
+    View toBeHideLayout;
     @BindView(R.id.card_view_friend_country)
     CardView cardView;
     @BindView(R.id.profile_activity_loading_pb)
@@ -85,6 +85,8 @@ public class ProfileActivity extends AppCompatActivity {
     RoundCornerProgressBar learningLanguagePb;
     @BindView(R.id.profile_pb)
     ProgressBar profilePb;
+    @BindView(R.id.root_layout)
+    RelativeLayout layoutRoot;
     private Menu menu;
     public static final String EXTRA_PROFILE_ID = "profileId";
 
@@ -100,6 +102,8 @@ public class ProfileActivity extends AppCompatActivity {
             supportActionBar.setElevation(0);
         }
 
+        hideLayout();
+        profilePb.setVisibility(View.VISIBLE);
 
         privacyListsManager = QBChatService.getInstance().getPrivacyListsManager();
 
@@ -366,13 +370,11 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void getUserImageView(CircleImageView userThumbIv) {
-        hideLayout();
 
         QBUsers.getUser(Integer.parseInt(userID)).performAsync(new QBEntityCallback<QBUser>() {
             @Override
             public void onSuccess(QBUser user, Bundle bundle) {
                 showLayout();
-                profilePb.setVisibility(View.VISIBLE);
                 friendUserName = user.getFullName();
                 nameTV.setText(friendUserName);
                 getUserCustomData(user);
@@ -389,7 +391,6 @@ public class ProfileActivity extends AppCompatActivity {
                                     .centerCrop()
                                     .into(userThumbIv);
                             profilePb.setVisibility(View.GONE);
-
                             // hide the progess bar and show the layout
                         }
 
@@ -397,10 +398,11 @@ public class ProfileActivity extends AppCompatActivity {
                         public void onError(QBResponseException e) {
                             Log.e("Profile Activity", "onError: ", e);
                             profilePb.setVisibility(View.GONE);
-                            userThumbIv.setImageResource(R.drawable.placeholder_user);
+                            userThumbIv.setImageResource(R.drawable.ic_user_new);
                         }
                     });
                 } else {
+                    profilePb.setVisibility(View.GONE);
                     userThumbIv.setImageResource(R.drawable.ic_user_new);
 
                     // hide the progess bar and show the layout
@@ -409,7 +411,14 @@ public class ProfileActivity extends AppCompatActivity {
 
             @Override
             public void onError(QBResponseException e) {
-                showLayout();
+                profilePb.setVisibility(View.GONE);
+                userThumbIv.setImageResource(R.drawable.ic_user_new);
+                showErrorSnackbar(R.string.dlg_retry, e, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                             getUserImageView(userThumbIv);
+                    }
+                });
 
             }
         });
@@ -426,13 +435,13 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void hideLayout() {
-        linearLayout.setVisibility(View.GONE);
+        toBeHideLayout.setVisibility(View.VISIBLE);
         cardView.setVisibility(View.GONE);
         showProgressBar(progressBar);
     }
 
     public void showLayout() {
-        linearLayout.setVisibility(View.VISIBLE);
+        toBeHideLayout.setVisibility(View.GONE);
         cardView.setVisibility(View.VISIBLE);
         hideProgressBar(progressBar);
     }
@@ -538,6 +547,11 @@ public class ProfileActivity extends AppCompatActivity {
             Toast.makeText(this, "ERROR! USER MIGHT NOT HAVE CUSTOM DATA!", Toast.LENGTH_SHORT).show();
         }
 
+    }
 
+    protected Snackbar showErrorSnackbar(@StringRes int resId, Exception e,
+                                         View.OnClickListener clickListener) {
+        return ErrorUtils.showSnackbar(layoutRoot, resId, e,
+                R.string.dlg_retry, clickListener);
     }
 }

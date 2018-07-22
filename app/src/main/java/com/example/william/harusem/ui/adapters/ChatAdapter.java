@@ -154,13 +154,7 @@ public class ChatAdapter extends com.quickblox.ui.kit.chatmessage.adapter.QBMess
         QBChatMessage chatMessage = getItem(position);
         dateTextView.setText(TimeUtils.getDate(chatMessage.getDateSent() * 1000));
 
-        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) dateTextView.getLayoutParams();
-        if (position == 0) {
-            lp.topMargin = (int) context.getResources().getDimension(R.dimen.chat_date_header_top_margin);
-        } else {
-            lp.topMargin = 0;
-        }
-        dateTextView.setLayoutParams(lp);
+
     }
 
     @Override

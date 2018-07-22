@@ -185,11 +185,11 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
                 @Override
                 public void onError(QBResponseException e) {
                     Log.e("FriendsAdapter", "onError: ", e);
-                    userThumbIv.setImageResource(R.drawable.placeholder_user);
+                    userThumbIv.setImageResource(R.drawable.ic_user_new);
                 }
             });
         } else {
-            userThumbIv.setImageResource(R.drawable.placeholder_user);
+            userThumbIv.setImageResource(R.drawable.ic_user_new);
         }
 
 

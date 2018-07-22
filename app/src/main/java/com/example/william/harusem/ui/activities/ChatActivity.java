@@ -1651,6 +1651,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             intent.putExtra("user_id", qbChatDialog.getRecipientId().toString());
             intent.putExtra("name", qbChatDialog.getName());
             startActivity(intent);
+
         }
     }
 

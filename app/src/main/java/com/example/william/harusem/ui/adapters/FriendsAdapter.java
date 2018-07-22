@@ -89,11 +89,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
                 @Override
                 public void onError(QBResponseException e) {
                     Log.e("FriendsAdapter", "onError: ", e);
-                    holder.userThumbIv.setImageResource(R.drawable.placeholder_user);
+                    holder.userThumbIv.setImageResource(R.drawable.ic_user_new);
                 }
             });
         } else {
-            holder.userThumbIv.setImageResource(R.drawable.placeholder_user);
+            holder.userThumbIv.setImageResource(R.drawable.ic_user_new);
         }
 
 

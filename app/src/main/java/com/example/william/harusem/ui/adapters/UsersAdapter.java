@@ -105,11 +105,11 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
                 @Override
                 public void onError(QBResponseException e) {
                     Log.e(TAG, "onError: ", e);
-                    holder.userThumbIv.setImageResource(R.drawable.placeholder_user);
+                    holder.userThumbIv.setImageResource(R.drawable.ic_user_new);
                 }
             });
         } else {
-            holder.userThumbIv.setImageResource(R.drawable.placeholder_user);
+            holder.userThumbIv.setImageResource(R.drawable.ic_user_new);
         }
 
         setButtonName(holder.button, user);

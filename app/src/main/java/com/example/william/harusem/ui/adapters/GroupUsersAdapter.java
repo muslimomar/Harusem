@@ -88,11 +88,11 @@ public class GroupUsersAdapter extends BaseAdapter {
                 @Override
                 public void onError(QBResponseException e) {
                     Log.e(TAG, "onError: ", e);
-                    participantPhotoIv.setImageResource(R.drawable.placeholder_user);
+                    participantPhotoIv.setImageResource(R.drawable.ic_user_new);
                 }
             });
         } else {
-            participantPhotoIv.setImageResource(R.drawable.placeholder_user);
+            participantPhotoIv.setImageResource(R.drawable.ic_user_new);
         }
     }
 
