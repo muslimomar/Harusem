@@ -108,8 +108,10 @@ public class QBFriendListHelper {
         if (entry == null) {
             return false;
         }
-        return entry.getType().equals(RosterPacket.ItemType.both);
 
+        boolean isSubscribedToUser = entry.getType() == RosterPacket.ItemType.from;
+        boolean isBothSubscribed = entry.getType() == RosterPacket.ItemType.both;
+        return isSubscribedToUser || isBothSubscribed;
     }
 
     private class SubscriptionListener implements QBSubscriptionListener {

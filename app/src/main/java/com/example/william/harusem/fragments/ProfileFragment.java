@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
+import com.example.william.harusem.BlockingActivity;
 import com.example.william.harusem.R;
 import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.holder.QBChatDialogHolder;
@@ -351,7 +352,7 @@ public class ProfileFragment extends Fragment {
         try {
             ChatPingAlarmManager.onDestroy();
         } catch (Exception e) {
-            Toaster.longToast(e.toString());
+            Log.e(TAG, "destroyRtcClientAndChat: ",e );
         }
 
         if (chatService != null) {
@@ -445,6 +446,7 @@ public class ProfileFragment extends Fragment {
         super.onResume();
         if (getActivity() != null && isAdded())
             getUnreadFriendRequests();
+        friendsCountValueTv.setText(String.valueOf(getFriendsCount()));
     }
 
     @OnClick(R.id.profile_circle_iv)
@@ -578,5 +580,9 @@ public class ProfileFragment extends Fragment {
 
     public void enableUserInteraction() {
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    @OnClick(R.id.blocking_tv) public void setBlockingTv(View view) {
+        startActivity(new Intent(getActivity(), BlockingActivity.class));
     }
 }

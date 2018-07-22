@@ -345,16 +345,19 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
     }
 
     private void deleteDialog(final QBChatDialog dialog) {
-
+        ProgressDialog progressDialog = Utils.buildProgressDialog(getActivity(), "", "Please Wait...", false);
+        progressDialog.show();
         ChatHelper.getInstance().deleteDialog(dialog, new QBEntityCallback<Void>() {
             @Override
             public void onSuccess(Void aVoid, Bundle bundle) {
+                progressDialog.dismiss();
                 QBChatDialogHolder.getInstance().deleteDialog(dialog);
                 updateDialogsAdapter();
             }
 
             @Override
             public void onError(QBResponseException e) {
+                progressDialog.dismiss();
                 showErrorSnackbar(R.string.dialogs_deletion_error, e,
                         new View.OnClickListener() {
                             @Override

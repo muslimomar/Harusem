@@ -1128,7 +1128,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
                     QBUsers.getUser(dialog.getRecipientId()).performAsync(new QBEntityCallback<QBUser>() {
                         @Override
                         public void onSuccess(QBUser user, Bundle bundle) {
-                            Integer fileId = recipient.getFileId();
+                            Integer fileId = user.getFileId();
                             if (fileId != null) {
                                 getRecipientPhoto(fileId, dialogAvatar);
                             } else {
@@ -1648,7 +1648,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     public void setDialogAvatar(View view) {
         if (qbChatDialog != null && qbChatDialog.getType() == QBDialogType.PRIVATE) {
             Intent intent = new Intent(this, ProfileActivity.class);
-            intent.putExtra("user_id", qbChatDialog.getRecipientId());
+            intent.putExtra("user_id", qbChatDialog.getRecipientId().toString());
             intent.putExtra("name", qbChatDialog.getName());
             startActivity(intent);
         }

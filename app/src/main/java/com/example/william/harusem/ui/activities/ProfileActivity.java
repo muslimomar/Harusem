@@ -55,6 +55,7 @@ import static com.example.william.harusem.ui.activities.ChatActivity.EXTRA_DIALO
 
 public class ProfileActivity extends AppCompatActivity {
 
+    private static final String TAG = ProfileActivity.class.getSimpleName();
     @BindView(R.id.friend_name_friend_detail)
     TextView nameTV;
     @BindView(R.id.country_tv)
@@ -69,9 +70,6 @@ public class ProfileActivity extends AppCompatActivity {
     CardView cardView;
     @BindView(R.id.profile_activity_loading_pb)
     ProgressBar progressBar;
-
-
-    private static final String TAG = ProfileActivity.class.getSimpleName();
     QBPrivacyListsManager privacyListsManager;
     QBPrivacyListListener privacyListListener;
 
@@ -85,6 +83,8 @@ public class ProfileActivity extends AppCompatActivity {
     RoundCornerProgressBar motherLanguagePb;
     @BindView(R.id.learning_language_pb)
     RoundCornerProgressBar learningLanguagePb;
+    @BindView(R.id.profile_pb)
+    ProgressBar profilePb;
     private Menu menu;
     public static final String EXTRA_PROFILE_ID = "profileId";
 
@@ -93,9 +93,6 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         ButterKnife.bind(this);
-
-        showProgressBar(progressBar);
-        hideLayout();
 
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
@@ -369,15 +366,16 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void getUserImageView(CircleImageView userThumbIv) {
+        hideLayout();
 
         QBUsers.getUser(Integer.parseInt(userID)).performAsync(new QBEntityCallback<QBUser>() {
             @Override
             public void onSuccess(QBUser user, Bundle bundle) {
+                showLayout();
+                profilePb.setVisibility(View.VISIBLE);
                 friendUserName = user.getFullName();
                 nameTV.setText(friendUserName);
                 getUserCustomData(user);
-                hideProgressBar(progressBar);
-                showLayout();
 
                 if (user.getFileId() != null) {
                     int profilePicId = user.getFileId();
@@ -390,28 +388,28 @@ public class ProfileActivity extends AppCompatActivity {
                                     .resize(50, 50)
                                     .centerCrop()
                                     .into(userThumbIv);
+                            profilePb.setVisibility(View.GONE);
 
                             // hide the progess bar and show the layout
-
                         }
 
                         @Override
                         public void onError(QBResponseException e) {
                             Log.e("Profile Activity", "onError: ", e);
+                            profilePb.setVisibility(View.GONE);
                             userThumbIv.setImageResource(R.drawable.placeholder_user);
                         }
                     });
                 } else {
-                    userThumbIv.setImageResource(R.drawable.placeholder_user);
+                    userThumbIv.setImageResource(R.drawable.ic_user_new);
 
                     // hide the progess bar and show the layout
-                    hideProgressBar(progressBar);
-                    showLayout();
                 }
             }
 
             @Override
             public void onError(QBResponseException e) {
+                showLayout();
 
             }
         });
@@ -420,29 +418,23 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     private void showProgressBar(ProgressBar progressBar) {
-        if (ProfileActivity.this != null) {
-            progressBar.setVisibility(View.VISIBLE);
-        }
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     private void hideProgressBar(ProgressBar progressBar) {
-        if (ProfileActivity.this != null) {
-            if (progressBar.getVisibility() == View.VISIBLE) {
-                progressBar.setVisibility(View.GONE);
-            }
-        }
-
+        progressBar.setVisibility(View.GONE);
     }
 
     public void hideLayout() {
         linearLayout.setVisibility(View.GONE);
         cardView.setVisibility(View.GONE);
+        showProgressBar(progressBar);
     }
 
     public void showLayout() {
         linearLayout.setVisibility(View.VISIBLE);
         cardView.setVisibility(View.VISIBLE);
-
+        hideProgressBar(progressBar);
     }
 
 
