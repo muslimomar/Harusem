@@ -58,7 +58,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
                 friendListHelper.removeFriend(user, new QBEntityCallback<Void>() {
                     @Override
                     public void onSuccess(Void aVoid, Bundle bundle) {
-                        showSnackBar(view, "Friend Removed");
+                        showSnackBar(view, context.getString(R.string.friend_removed));
                         usersList.remove(usersList.indexOf(user));
                         notifyItemRemoved(position);
                     }

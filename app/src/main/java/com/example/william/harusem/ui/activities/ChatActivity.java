@@ -932,7 +932,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         chatMessage.setMarkable(true);
 
         if (!QBDialogType.PRIVATE.equals(qbChatDialog.getType()) && !qbChatDialog.isJoined()) {
-            Toaster.shortToast("You're still joining a group chat, please wait a bit");
+            Toaster.shortToast(R.string.still_joining);
             return;
         }
 
@@ -967,7 +967,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             }
         } catch (SmackException.NotConnectedException e) {
             Log.e(TAG, "sendChatMessage: ", e);
-            Toaster.shortToast("Can't send a message, You are not connected to chat");
+            Toaster.shortToast(R.string.cant_send_msg);
         }
 
         if (!isRecipientBot) {

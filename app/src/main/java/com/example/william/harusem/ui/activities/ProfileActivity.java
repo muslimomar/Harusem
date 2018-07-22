@@ -458,7 +458,7 @@ public class ProfileActivity extends AppCompatActivity {
                 motherLanguagePb.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
-                        Toast.makeText(getApplicationContext(), motherLanguage + " is my mother language!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), motherLanguage + getString(R.string.my_mother_lang), Toast.LENGTH_SHORT).show();
                         return false;
                     }
                 });
@@ -485,7 +485,7 @@ public class ProfileActivity extends AppCompatActivity {
                         learningLanguagePb.setOnTouchListener(new View.OnTouchListener() {
                             @Override
                             public boolean onTouch(View v, MotionEvent event) {
-                                Toast.makeText(getApplicationContext(), "I'm still Beginner!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), R.string.im_beginner, Toast.LENGTH_SHORT).show();
                                 return false;
                             }
                         });
@@ -496,7 +496,7 @@ public class ProfileActivity extends AppCompatActivity {
                         learningLanguagePb.setOnTouchListener(new View.OnTouchListener() {
                             @Override
                             public boolean onTouch(View v, MotionEvent event) {
-                                Toast.makeText(getApplicationContext(), "I'm Intermediate", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), R.string.intermediate_level, Toast.LENGTH_SHORT).show();
                                 return false;
                             }
                         });
@@ -508,7 +508,7 @@ public class ProfileActivity extends AppCompatActivity {
                         learningLanguagePb.setOnTouchListener(new View.OnTouchListener() {
                             @Override
                             public boolean onTouch(View v, MotionEvent event) {
-                                Toast.makeText(getApplicationContext(), "My level is Advanced!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), R.string.my_level, Toast.LENGTH_SHORT).show();
                                 return false;
                             }
                         });

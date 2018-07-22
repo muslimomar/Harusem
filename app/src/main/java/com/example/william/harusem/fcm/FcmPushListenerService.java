@@ -59,7 +59,7 @@ public class FcmPushListenerService extends QBFcmPushListenerService {
                 }
             }else {
 
-                Log.v("tatyhaha", " " + friendAcceptedOponentName + " has accepted your friend request!");
+                Log.v("tatyhaha", " " + friendAcceptedOponentName + getString(R.string.has_acccepted_friend_request));
                 SharedPrefsHelper prefsHelper = SharedPrefsHelper.getInstance();
                 prefsHelper.savePushDialogId(dialogId);
                 prefsHelper.saveFriendRequests(userID);
@@ -117,7 +117,7 @@ public class FcmPushListenerService extends QBFcmPushListenerService {
     protected void showAcceptedFriendNotification(String acceptedFriendName, String userId) {
         Class<? extends Activity> activity = ProfileActivity.class;
         if (QBChatService.getInstance().isLoggedIn()) {
-            activity = getProfileActivity();
+            //activity = getProfileActivity();
         }
         NotificationUtils.showAcceptedFriendNotification(this, activity, acceptedFriendName, R.drawable.harusem_logo, NOTIFICATION_ID, userId);
     }
@@ -136,7 +136,7 @@ public class FcmPushListenerService extends QBFcmPushListenerService {
     protected void showFriendRequestNotification(String friendRequestName) {
         Class<? extends Activity> activity = SplashActivity.class;
         if (QBChatService.getInstance().isLoggedIn()) {
-            activity = getFriendRequestsActivity();
+            //activity = getFriendRequestsActivity();
         }
         NotificationUtils.showFriendRequestNotification(this, activity,
                 friendRequestName,
