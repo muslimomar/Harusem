@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     tools:context="com.example.william.harusem.fragments.SearchFragment">
 
     <FrameLayout
@@ -36,26 +37,32 @@
     </FrameLayout>
 
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/search_recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar_container"
-        android:scrollbars="vertical"
-        android:divider="#806326"
-        android:dividerHeight="1dp">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar_container">
 
-    </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/search_recyclerview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:divider="#806326"
+            android:dividerHeight="1dp"
+            android:scrollbars="vertical">
 
-    <!--<Button-->
-    <!--android:id="@+id/all_users_btn"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentBottom="true"-->
-    <!--android:background="@color/colorPrimaryDark"-->
-    <!--android:padding="20dp"-->
-    <!--android:text="All Users"-->
-    <!--android:textColor="@color/white"-->
-    <!--android:textSize="20sp" />-->
+        </android.support.v7.widget.RecyclerView>
+
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/search_loading_pb"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="visible"
+        tools:visibility="gone" />
+
 
 </RelativeLayout>
