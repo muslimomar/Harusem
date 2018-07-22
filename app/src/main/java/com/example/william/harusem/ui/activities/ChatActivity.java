@@ -767,17 +767,20 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         Menu menu = popup.getMenu();
         MenuItem menuItemLeave = menu.findItem(R.id.menu_chat_action_leave);
         MenuItem menuItemViewProfile = menu.findItem(R.id.menu_chat_action_view_profile);
+        MenuItem menuItemGroupEdit = menu.findItem(R.id.menu_chat_action_group_edit);
         MenuItem menuItemGroupInfo = menu.findItem(R.id.menu_chat_action_group_info);
         if (qbChatDialog.getType() == QBDialogType.PRIVATE) {
             menuItemLeave.setVisible(false);
+            menuItemGroupEdit.setVisible(false);
             menuItemGroupInfo.setVisible(false);
         } else {
             menuItemViewProfile.setVisible(false);
             if (qbChatDialog.getUserId().equals(QBChatService.getInstance().getUser().getId())) {
                 // if group owner
-                menuItemGroupInfo.setVisible(true);
+                menuItemGroupEdit.setVisible(true);
             } else {
-                menuItemGroupInfo.setVisible(false);
+                menuItemGroupEdit.setVisible(false);
+                menuItemGroupInfo.setVisible(true);
             }
         }
 
@@ -1388,7 +1391,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     public boolean onMenuItemClick(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.menu_chat_action_group_info:
+            case R.id.menu_chat_action_group_edit:
                 Intent intent = new Intent(this, CreateGroupActivity.class);
                 intent.putExtra(EXTRA_DIALOG, qbChatDialog);
                 startActivityForResult(intent, REQUEST_CODE_SELECT_PEOPLE);
@@ -1401,10 +1404,20 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
                 return true;
             case R.id.menu_chat_action_view_profile:
                 redirectToProfileActivity();
+                return true;
+            case R.id.menu_chat_action_group_info:
+               redirectToGroupInfo();
+                return true;
             default:
                 return true;
         }
 
+    }
+
+    private void redirectToGroupInfo() {
+        Intent intent = new Intent(this, GroupInfoActivity.class);
+        intent.putExtra(EXTRA_DIALOG, qbChatDialog);
+        startActivity(intent);
     }
 
     private void redirectToProfileActivity() {

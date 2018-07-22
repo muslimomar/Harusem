@@ -451,6 +451,7 @@
     <string name="good_level">Good! Your level is Intermediate!</string>
     <string name="amazing_level">Amazing! Your level is Advanced!</string>
     <string name="init_bot">Initializing bot for the first time...</string>
+    <string name="group_info">Group Info</string>
 
 
 </resources>

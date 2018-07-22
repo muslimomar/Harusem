@@ -32,7 +32,7 @@ import java.util.List;
 public class DialogsAdapter extends BaseSelectableListAdapter<QBChatDialog> {
     private static final String TAG = DialogsAdapter.class.getSimpleName();
     private static final String EMPTY_STRING = "";
-    private static final int DIALOG_IMAGE = 2;
+    public static final int DIALOG_IMAGE = 2;
     private String dialogImage = "";
 
     public DialogsAdapter(Context context, List<QBChatDialog> dialogs) {
