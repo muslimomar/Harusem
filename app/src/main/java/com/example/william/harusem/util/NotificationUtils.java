@@ -75,7 +75,7 @@ public class NotificationUtils {
                 .setContentText(friendName + " " + context.getString(R.string.push_accepted))
                 .setAutoCancel(true)
                 .setSound(defaultSoundsUri)
-                .setContentIntent(buildContentIntentForAcceptedFriend(context, activityClass,userId))
+                //.setContentIntent(buildContentIntentForAcceptedFriend(context, activityClass,userId))
                 .setColor(context.getResources().getColor(R.color.colorAccent))
                 .build();
     }
@@ -146,10 +146,10 @@ public class NotificationUtils {
         return PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    private static PendingIntent buildContentIntentForAcceptedFriend(Context context, Class<? extends Activity> activityClass, String profileId) {
-        Intent intent = new Intent(context, activityClass);
-        intent.putExtra("user_id", profileId);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    }
+//    private static PendingIntent buildContentIntentForAcceptedFriend(Context context, Class<? extends Activity> activityClass, String profileId) {
+//        //Intent intent = new Intent(context, activityClass);
+//        //intent.putExtra("user_id", profileId);
+//        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//    }
 }

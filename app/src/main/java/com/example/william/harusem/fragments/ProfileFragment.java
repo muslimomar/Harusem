@@ -149,7 +149,6 @@ public class ProfileFragment extends Fragment {
                 .performAsync(new QBEntityCallback<QBUser>() {
                     @Override
                     public void onSuccess(QBUser user, Bundle bundle) {
-                        getUserCustomData(user);
 
                         QBUsersHolder.getInstance().putUser(user);
 
@@ -157,7 +156,7 @@ public class ProfileFragment extends Fragment {
                             nameTv.setText(user.getFullName());
 
                             getUnreadFriendRequests();
-
+                            getUserCustomData(user);
                             friendsCountValueTv.setText(String.valueOf(getFriendsCount()));
                         }
 
@@ -236,7 +235,7 @@ public class ProfileFragment extends Fragment {
                 profileMotherLangPb.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
-                        Toast.makeText(getContext(), "I am Native speaker!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.native_speaker, Toast.LENGTH_SHORT).show();
                         return false;
                     }
                 });
@@ -263,7 +262,7 @@ public class ProfileFragment extends Fragment {
                         profileLearnLangPb.setOnTouchListener(new View.OnTouchListener() {
                             @Override
                             public boolean onTouch(View v, MotionEvent event) {
-                                Toast.makeText(getContext(), "Keep Learning! Your level is beginner!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), R.string.keep_learning, Toast.LENGTH_SHORT).show();
                                 return false;
                             }
                         });
@@ -274,7 +273,7 @@ public class ProfileFragment extends Fragment {
                         profileLearnLangPb.setOnTouchListener(new View.OnTouchListener() {
                             @Override
                             public boolean onTouch(View v, MotionEvent event) {
-                                Toast.makeText(getContext(), "Good! Your level is Intermediate!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), R.string.good_level, Toast.LENGTH_SHORT).show();
                                 return false;
                             }
                         });
@@ -286,7 +285,7 @@ public class ProfileFragment extends Fragment {
                         profileLearnLangPb.setOnTouchListener(new View.OnTouchListener() {
                             @Override
                             public boolean onTouch(View v, MotionEvent event) {
-                                Toast.makeText(getContext(), "Amazing! Your level is Advanced!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), R.string.amazing_level, Toast.LENGTH_SHORT).show();
                                 return false;
                             }
                         });

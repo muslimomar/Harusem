@@ -37,7 +37,7 @@ public class PasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password);
         ButterKnife.bind(this);
-        setTitle("Change Password");
+        setTitle(getString(R.string.change_pass));
 
 
     }
@@ -65,26 +65,26 @@ public class PasswordActivity extends AppCompatActivity {
     }
 
     private void changePassword() {
-        final ProgressDialog progressDialog = Utils.buildProgressDialog(this, "", "Updating Password...", false);
+        final ProgressDialog progressDialog = Utils.buildProgressDialog(this, "", getString(R.string.updating_pass), false);
 
         String oldPass = oldPasswordEt.getText().toString().trim();
         String newPass = newPasswordEt.getText().toString().trim();
         String confNewPass = confirmNewPasswordEt.getText().toString().trim();
 
         if (oldPass.isEmpty()) {
-            oldPasswordEt.setError("Please fill out this field!");
+            oldPasswordEt.setError(getString(R.string.pls_fill_this_filed));
             oldPasswordEt.requestFocus();
             return;
         }
 
         if (newPasswordEt.length() < 8) {
-            newPasswordEt.setError("Password is too short! minimum is 8 characters");
+            newPasswordEt.setError(getString(R.string.pass_too_short_8));
             newPasswordEt.requestFocus();
             return;
         }
 
         if (!confNewPass.equals(newPass)) {
-            confirmNewPasswordEt.setError("Confirm password should match the new password!");
+            confirmNewPasswordEt.setError(getString(R.string.confirm_pass_should_match));
             confirmNewPasswordEt.requestFocus();
             return;
         }

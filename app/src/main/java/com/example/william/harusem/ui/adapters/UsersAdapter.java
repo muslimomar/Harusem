@@ -196,7 +196,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
             @Override
             public void onSuccess(Void aVoid, Bundle bundle) {
                 setAddFriendBtn(addFriendBtn);
-                showSnackBar(view, "Friend Removed");
+                showSnackBar(view, context.getString(R.string.friend_removed2));
             }
 
             @Override
@@ -212,7 +212,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
             @Override
             public void onSuccess(Void aVoid, Bundle bundle) {
                 notifyItemChanged(position);
-                showSnackBar(view, "Request Cancelled");
+                showSnackBar(view, context.getString(R.string.request_cancled));
             }
 
             @Override
@@ -228,7 +228,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
             public void onSuccess(Void aVoid, Bundle bundle) {
                 setRequestSentBtn(addFriendBtn);
 
-                showSnackBar(view, "Request Sent");
+                showSnackBar(view, context.getString(R.string.request_sent));
             }
 
             @Override
