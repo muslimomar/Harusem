@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.example.william.harusem.R;
@@ -53,6 +54,8 @@ public class SearchFragment extends Fragment {
     RecyclerView recyclerView;
     @BindView(R.id.search_loading_pb)
     ProgressBar searchLoadingPb;
+    @BindView(R.id.recycler_viewRL)
+    RelativeLayout relativeLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -248,6 +251,7 @@ public class SearchFragment extends Fragment {
 
     private void configRecyclerView() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         recyclerView.setLayoutManager(mLayoutManager);
@@ -260,11 +264,11 @@ public class SearchFragment extends Fragment {
     }
 
     public void hideLayout() {
-        recyclerView.setVisibility(View.GONE);
+        relativeLayout.setVisibility(View.GONE);
     }
 
     public void showLayout() {
-        recyclerView.setVisibility(View.VISIBLE);
+        relativeLayout.setVisibility(View.VISIBLE);
     }
 
     private void hideProgressBar(ProgressBar progressBar) {
