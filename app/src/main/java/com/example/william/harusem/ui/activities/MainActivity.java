@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     AHBottomNavigation bottomNavigation;
 
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_DIALOG && resultCode == RESULT_OK) {
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
             fragment.setArguments(bundle);
             switchFragment(fragment);
             bottomNavigation.setCurrentItem(0);
+
+
 
         }
 

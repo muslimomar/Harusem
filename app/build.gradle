@@ -99,6 +99,7 @@ dependencies {
     compile "com.quickblox:quickblox-android-sdk-chat:3.8.1"
     compile "com.quickblox:quickblox-android-sdk-messages:3.8.1"
     implementation "com.quickblox:quickblox-android-sdk-content:3.8.1"
+    compile "com.quickblox:quickblox-android-sdk-customobjects:3.3.3"
 
     // Text as Drawable
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
