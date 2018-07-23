@@ -107,7 +107,6 @@ public class SignupActivity extends AppCompatActivity {
                     learningLanguage.setVisibility(View.VISIBLE);
                     learningLanguageTv.setVisibility(View.VISIBLE);
                     learningLanguage.setSelection(0);
-                    Toast.makeText(SignupActivity.this, getString(R.string.selected_moth_lang) + selectedLanguage, Toast.LENGTH_SHORT).show();
                     isSelected =true;
                 }
             }
@@ -136,8 +135,6 @@ public class SignupActivity extends AppCompatActivity {
                     languageLevel.setVisibility(View.VISIBLE);
                     //learningLanguageTv.setVisibility(View.VISIBLE);
                     languageLevelTv.setVisibility(View.VISIBLE);
-                    Toast.makeText(SignupActivity.this, getString(R.string.learning_lang_is) + selectedLearningLanguage, Toast.LENGTH_SHORT).show();
-
                 }
             }
 
@@ -166,7 +163,6 @@ public class SignupActivity extends AppCompatActivity {
                 } else {
                     languageLevel.setVisibility(View.VISIBLE);
                     languageLevelTv.setVisibility(View.VISIBLE);
-                    Toast.makeText(SignupActivity.this, getString(R.string.lang_level_is) + selectedLanguageLevel, Toast.LENGTH_SHORT).show();
                 }
             }
 
