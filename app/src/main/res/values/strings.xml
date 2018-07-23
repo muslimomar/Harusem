@@ -259,12 +259,28 @@
     <string name="voice_attach">9099CryptoVoice attachment988</string>
     <string name="photo_attach">9099CryptoPhoto988</string>
 
-    <string-array name="spinner_array">
+    <string-array name="levels_array">
+        <item>Select your level</item>
         <item>Beginner</item>
         <item>Intermediate</item>
         <item>Advanced</item>
     </string-array>
 
+
+    <string-array name="mother_languages_array">
+        <item>Select your mother language</item>
+        <item>English</item>
+        <item>Arabic</item>
+        <item>Turkish</item>
+    </string-array>
+
+
+    <string-array name="learning_language_array">
+        <item>Select learning language</item>
+        <item>English</item>
+        <item>Turkish</item>
+        <item>Arabic</item>
+    </string-array>
     <string name="beginner">beginner</string>
     <string name="intermediate">intermediate</string>
     <string name="advanced">advanced</string>
@@ -305,7 +321,7 @@
     <string name="email">Email</string>
     <string name="country">Country</string>
     <string name="friends">Friends</string>
-    <string name="points">Points</string>
+    <string name="points">Points    | </string>
     <string name="account">Account</string>
     <string name="friend_requests">Friend Requests</string>
     <string name="blocking_list">Blocking List</string>
@@ -349,7 +365,6 @@
     <string name="still_joining_group">You\'re still joining a group chat, please wait a bit</string>
     <string name="cant_send_message_not_connected">Can\'t send a message, You are not connected to chat</string>
     <string name="cant_send_blocked">You can\'t send message to this user!</string>
-    <string name="new_group">New Group</string>
     <string name="type_group_name">Please type a name for the group!</string>
     <string name="please_wait_2">Please Wait...</string>
     <string name="img_large">Error, selected image is too large</string>
@@ -359,7 +374,6 @@
     <string name="stars_hint">********</string>
     <string name="add_friend">Add Friend</string>
     <string name="msg_user">Message</string>
-    <string name="request_sent">Request Sent</string>
     <string name="loading_load">Loading...</string>
     <string name="accept">Accept</string>
     <string name="decline">Decline</string>
@@ -367,20 +381,78 @@
     <string name="error_uploading_photo">Error uploading photo!</string>
     <string name="password_reset_string">We just need your registered email address to send you password reset</string>
     <string name="error_resetting_password">Error reseting password</string>
-    <string name="you_unblocked_user">You have unblocked your user</string>
+    <string name="you_unblocked_user">You have unblocked the user</string>
     <string name="you_blocked_user">you have blocked the user</string>
     <string name="file_size_err">Error size</string>
     <string name="signup_failed">Signup Failed</string>
     <string name="cant_send_msg_blocked">You can\'t send message to this user!</string>
     <string name="img_too_big">Error, selected image is too large</string>
     <string name="push_accepted">has accepted your friend request</string>
-    <string name="push_wants_friend">Wants to be your friend</string>
+    <string name="push_wants_friend">wants to be your friend</string>
     <string name="forget_password">Forget password?</string>
     <string name="e_mail_address">E-mail address</string>
     <string name="reset_password">Reset Password</string>
     <string name="err_valid_mail">Please enter a valid email!</string>
     <string name="done">Success</string>
     <string name="link_sent_pw">We have sent you instructions to reset your password!</string>
+    <string name="mother_language">Mother Language</string>
+    <string name="learning_language">Learning Language</string>
+    <string name="language_level">Learning Language Level</string>
+    <string name="friends_profile">Friends |</string>
+    <string name="my_level">My level is Advanced!</string>
+    <string name="intermediate_level">I\'m Intermediate</string>
+    <string name="im_beginner">I\'m still Beginner!</string>
+    <string name="my_mother_lang">is my mother language!</string>
+    <string name="selected_moth_lang">Selected language is :</string>
+    <string name="pls_select_moth_lang">Please select your mother Language!</string>
+    <string name="learning_lang_is">Learning Language is:</string>
+    <string name="lang_level_is">Language level is:</string>
+    <string name="pls_enter_full_name">Please enter your full name!</string>
+    <string name="pls_enter_valid_email">Please enter a valid email address!</string>
+    <string name="enter_valid_pass">Please enter a valid password!</string>
+    <string name="pass_too_short">Password is too short! (minimum is 8 characters)</string>
+    <string name="confirm_pass_notmatch">Confirm password should match the password!</string>
+    <string name="select_yourlang">Please select your language!</string>
+    <string name="select_learn_lang">Please select your learning language!</string>
+    <string name="select_desired_learning_lang">Please desired learning language!</string>
+    <string name="select_ur_level">Please select your language level</string>
+    <string name="ur_learning_lang_err">Your learning language should be different than your mother language</string>
+    <string name="pls_wait">Please Wait..</string>
+    <string name="loading">Loading........</string>
+    <string name="has_acccepted_friend_request">has accepted your friend request!</string>
+    <string name="friend_removed">Friend Removed</string>
+    <string name="friend_removed2">Friend Removed</string>
+    <string name="request_cancled">Request Cancelled</string>
+    <string name="request_sent">Request Sent</string>
+    <string name="request_declined">Request Declined</string>
+    <string name="request_accepted">Request Accepted</string>
+    <string name="change_pass">Change Password</string>
+    <string name="updating_pass">Updating Password...</string>
+    <string name="pls_fill_this_filed">Please fill out this field!</string>
+    <string name="pass_too_short_8">Password is too short! minimum is 8 characters</string>
+    <string name="confirm_pass_should_match">Confirm password should match the new password!</string>
+    <string name="reset_failed">Reset Failed</string>
+    <string name="no_email_in_system">No such email in our system!</string>
+    <string name="reset_failed2">Reset Failed</string>
+    <string name="edit_group">Edit Group</string>
+    <string name="new_group">New Group</string>
+    <string name="pls_type_group_name">Please type a name for the group!</string>
+    <string name="pls_type_group">Please type a name for the group!</string>
+    <string name="select_pic">Select a Picture</string>
+    <string name="pls_enter_mail_and_pass">Please enter your email and password!</string>
+    <string name="enter_valid_mail">Please enter a valid email address!</string>
+    <string name="valid_pass">Please enter a valid password!</string>
+    <string name="login_failed">Login Failed</string>
+    <string name="still_joining">You\'re still joining a group chat, please wait a bit</string>
+    <string name="cant_send_msg">Can\'t send a message, You are not connected to chat</string>
+    <string name="friend_requests_ti">Friend Requests</string>
+    <string name="native_speaker">I am native speaker!</string>
+    <string name="keep_learning">Keep Learning! Your level is beginner!</string>
+    <string name="good_level">Good! Your level is Intermediate!</string>
+    <string name="amazing_level">Amazing! Your level is Advanced!</string>
+    <string name="init_bot">Initializing bot for the first time...</string>
+    <string name="group_info">Group Info</string>
+    <string name="you_don_t_have_any_blocked_users">You don\'t have any blocked users!</string>
 
 
 </resources>

@@ -30,7 +30,7 @@ public class FriendRequestsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_requests);
         ButterKnife.bind(this);
-        setTitle("Friend Requests");
+        setTitle(getString(R.string.friend_requests_ti));
         ActionBar actionBar = getSupportActionBar();  //Geri image için bu satır kullanıldı
         actionBar.setDisplayHomeAsUpEnabled(true);
         configRecyclerView();

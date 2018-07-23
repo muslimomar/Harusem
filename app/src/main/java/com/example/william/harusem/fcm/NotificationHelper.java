@@ -18,6 +18,8 @@ public class NotificationHelper {
     public static final String FRIEND_REQUEST_SENDER_FULL_NAME = "data.friendname";
     public static final String FRIEND_REQUEST_ACCEPTED_FULL_NAME = "data.opponent_name";
     public static final String MESSAGE_QB_CHAT_MESSAGE = "data.qb.chat.message";
+    public static final String USER_ID_PUSH = "data.qb.current.userid";
+    public static final String CALL_MESSAGE = "data.call.message";
 
     public static QBEvent createPushEvent(List<Integer> userIdsList, String message, String fullName, String dialogId) {
         StringifyArrayList<Integer> userIds = new StringifyArrayList<>();
@@ -63,7 +65,7 @@ public class NotificationHelper {
         return event;
     }
 
-    public static QBEvent acceptedYourRequestPushEvent(List<Integer> userIdsList, String fullName) {
+    public static QBEvent acceptedYourRequestPushEvent(List<Integer> userIdsList, String fullName, int userId) {
         StringifyArrayList<Integer> userIds = new StringifyArrayList<>();
         userIds.addAll(userIdsList);
         QBEvent event = new QBEvent();
@@ -74,6 +76,7 @@ public class NotificationHelper {
         JSONObject json = new JSONObject();
         try {
             json.put(FRIEND_REQUEST_ACCEPTED_FULL_NAME, fullName);
+            json.put(USER_ID_PUSH, userId);
         } catch (JSONException e) {
             e.printStackTrace();
         }

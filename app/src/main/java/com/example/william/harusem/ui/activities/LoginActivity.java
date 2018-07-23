@@ -1,6 +1,7 @@
 package com.example.william.harusem.ui.activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,8 +17,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.example.william.harusem.R;
 import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.holder.QBUsersHolder;
@@ -28,6 +30,7 @@ import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,11 +46,12 @@ import static com.example.william.harusem.util.Utils.buildProgressDialog;
 public class LoginActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 90;
     private static final String TAG = LoginActivity.class.getSimpleName();
-    ProgressDialog loadingPb;
+    com.example.william.harusem.dialog.ProgressDialog progressDialog = com.example.william.harusem.dialog.ProgressDialog.getInstance();
+    //ProgressDialog loadingPb;
 
     @BindView(R.id.email_et)
     EditText emailEt;
-    @BindView(R.id.password_et)
+    @BindView(R.id.login_password_et)
     EditText passwordEt;
     @BindView(R.id.login_btn)
     Button loginBtn;
@@ -64,7 +68,6 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         requestPerms();
 //        initializeFramework();
-
         hideActionBar();
 
         hideSoftKeyboard();
@@ -108,27 +111,40 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void onLogin() {
+        if (getEditTextString(emailEt).isEmpty() && getEditTextString(passwordEt).isEmpty()) {
+            emailEt.setError(getString(R.string.pls_enter_mail_and_pass));
+            animateError(emailEt);
+            animateError(passwordEt);
+        }
+
         if (getEditTextString(emailEt).isEmpty() ||
                 !isEmailValid(getEditTextString(emailEt))) {
-            emailEt.setError("Please enter a valid email address!");
-            emailEt.requestFocus();
+            emailEt.setError(getString(R.string.enter_valid_mail));
+            animateError(emailEt);
             return;
         }
 
         if (getEditTextString(passwordEt).isEmpty() ||
                 (getEditTextString(passwordEt).length() < 6)) {
-            passwordEt.setError("Please enter a valid password!");
-            passwordEt.requestFocus();
+            passwordEt.setError(getString(R.string.valid_pass));
+            animateError(passwordEt);
             return;
         }
-
         login(getEditTextString(emailEt), getEditTextString(passwordEt));
+    }
 
+    public void animateError(EditText field) {
+        YoYo.with(Techniques.Shake).duration(700)
+                .playOn(field);
     }
 
     private void login(final String email, final String pass) {
-        loadingPb = buildProgressDialog(this, getString(R.string.please_wait), getString(R.string.dlg_loading), false);
-        loadingPb.show();
+
+        //loadingPb = buildProgressDialog(this, getString(R.string.please_wait), getString(R.string.dlg_loading), false);
+        //loadingPb.show();
+        //avPb.setIndicatorColor(getResources().getColor(R.color.colorPrimary));
+        //avPb.show();
+        progressDialog.showProgress(LoginActivity.this);
 
         final QBUser user = new QBUser(email, pass);
 
@@ -139,7 +155,8 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onSuccess(Object o, Bundle bundle) {
-                        dismissDialog(loadingPb);
+                        //dismissDialog(loadingPb);
+                        //avPb.hide();
                         qbUser.setPassword(user.getPassword());
                         SharedPrefsHelper.getInstance().saveQbUser(qbUser);
                         QBUsersHolder.getInstance().setSignInQbUser(qbUser);
@@ -150,21 +167,26 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(QBResponseException e) {
-                        dismissDialog(loadingPb);
-                        buildAlertDialog("Login Failed", e.getMessage(), true, LoginActivity.this);
+                        //dismissDialog(loadingPb);
+                        //avPb.hide();
+                        buildAlertDialog(getString(R.string.login_failed), e.getMessage(), true, LoginActivity.this);
                     }
                 });
             }
 
             @Override
             public void onError(QBResponseException e) {
-                dismissDialog(loadingPb);
-                buildAlertDialog("Login Failed", e.getMessage(), true, LoginActivity.this);
+                //dismissDialog(loadingPb);
+                //avPb.hide();
+                progressDialog.hideProgress();
+                buildAlertDialog(getString(R.string.login_failed), e.getMessage(), true, LoginActivity.this);
             }
 
         });
 
     }
+
+    ;
 
     private void hideActionBar() {
 
@@ -208,11 +230,11 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void dismissDialog(ProgressDialog pb) {
-        if (pb.isShowing()) {
-            pb.dismiss();
-        }
-    }
+//    private void dismissDialog(ProgressDialog pb) {
+//        if (pb.isShowing()) {
+//            pb.dismiss();
+//        }
+//    }
 
 
     @Override

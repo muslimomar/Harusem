@@ -19,6 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:windowSoftInputMode="adjustPan"
             android:name=".ui.activities.MainActivity"
             android:theme="@style/NoActionBar" />
         <activity
@@ -135,6 +136,7 @@
                 android:value=".ui.activities.LoginActivity" />
 
         </activity>
+        <activity android:name=".ui.activities.GroupInfoActivity" />
 
     </application>
 

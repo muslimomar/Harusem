@@ -1,6 +1,8 @@
 package com.example.william.harusem.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -19,9 +21,9 @@ import android.widget.RelativeLayout;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.example.william.harusem.R;
-import com.example.william.harusem.common.Common;
 import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.ui.adapters.UsersAdapter;
+import com.example.william.harusem.util.ErrorUtils;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.core.Consts;
@@ -52,10 +54,15 @@ public class SearchFragment extends Fragment {
     Toolbar toolbar;
     @BindView(R.id.search_recyclerview)
     RecyclerView recyclerView;
-    @BindView(R.id.search_loading_pb)
-    ProgressBar searchLoadingPb;
+
     @BindView(R.id.recycler_viewRL)
     RelativeLayout relativeLayout;
+
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
+    @BindView(R.id.root_layout)
+    RelativeLayout rootLayout;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,14 +70,15 @@ public class SearchFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         unbinder = ButterKnife.bind(this, view);
-        showProgressBar(searchLoadingPb);
-        hideLayout();
+
 
         if (getActivity() != null) {
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         }
         setHasOptionsMenu(true);
 
+        showPb();
+        hideLayout();
         if (getActivity() != null && isAdded()) {
             retrieveAllUser(1);
         }
@@ -103,14 +111,16 @@ public class SearchFragment extends Fragment {
 
                             ArrayList<QBUser> qbUserWithoutCurrent = new ArrayList<>();
                             for (QBUser user : qbUsers) {
+
                                 if (!user.getLogin().equals(QBChatService.getInstance().getUser().getLogin()) && !user.getId().equals(BOT_ID)) {
+
                                     qbUserWithoutCurrent.add(user);
                                 }
                             }
 
                             updateAdapter(qbUserWithoutCurrent);
 
-                            hideProgressBar(searchLoadingPb);
+                            hidePb();
                             showLayout();
                         }
 
@@ -135,13 +145,17 @@ public class SearchFragment extends Fragment {
                     QBUsers.getUsersByFullName(newText, null).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
                         @Override
                         public void onSuccess(ArrayList<QBUser> qbUsers, Bundle bundle) {
+                            hidePb();
+                            showLayout();
 
 
                             QBUsersHolder.getInstance().putUsers(qbUsers);
 
                             ArrayList<QBUser> qbUserWithoutCurrent = new ArrayList<>();
                             for (QBUser user : qbUsers) {
+
                                 if (!user.getLogin().equals(QBChatService.getInstance().getUser().getLogin()) && !user.getId().equals(BOT_ID)) {
+
                                     qbUserWithoutCurrent.add(user);
                                 }
                             }
@@ -198,6 +212,7 @@ public class SearchFragment extends Fragment {
 
 
     public void retrieveAllUser(int page) {
+
         QBPagedRequestBuilder pagedRequestBuilder = new QBPagedRequestBuilder();
         pagedRequestBuilder.setPage(page);
         pagedRequestBuilder.setPerPage(100);
@@ -206,12 +221,17 @@ public class SearchFragment extends Fragment {
         QBUsers.getUsers(pagedRequestBuilder).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
             @Override
             public void onSuccess(ArrayList<QBUser> qbUsers, Bundle bundle) {
+                hidePb();
+                showLayout();
+
                 QBUsersHolder.getInstance().putUsers(qbUsers);
 
                 ArrayList<QBUser> qbUserWithoutCurrent = new ArrayList<>();
                 for (QBUser user : qbUsers) {
 
+
                     if (!user.getLogin().equals(QBChatService.getInstance().getUser().getLogin()) && !user.getId().equals(BOT_ID)) {
+
                         qbUserWithoutCurrent.add(user);
                     }
 
@@ -222,20 +242,25 @@ public class SearchFragment extends Fragment {
                 int currentPage = bundle.getInt(Consts.CURR_PAGE);
                 int totalEntries = bundle.getInt(Consts.TOTAL_ENTRIES);
 
+
                 if(userNumber < totalEntries){
                     retrieveAllUser(currentPage+1);
+
                 }
 
                 updateAdapter(qbUserWithoutCurrent);
 
-                hideProgressBar(searchLoadingPb);
-                showLayout();
 
             }
 
             @Override
             public void onError(QBResponseException e) {
-                Log.e(TAG, "1 onError: ", e);
+                showErrorSnackbar(R.string.dlg_retry, e, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        retrieveAllUser(1);
+                    }
+                });
             }
         });
 
@@ -257,11 +282,13 @@ public class SearchFragment extends Fragment {
         recyclerView.setLayoutManager(mLayoutManager);
     }
 
-    private void showProgressBar(ProgressBar progressBar) {
+
+    public void showPb() {
         if (getActivity() != null && isAdded()) {
             progressBar.setVisibility(View.VISIBLE);
         }
     }
+
 
     public void hideLayout() {
         relativeLayout.setVisibility(View.GONE);
@@ -271,14 +298,19 @@ public class SearchFragment extends Fragment {
         relativeLayout.setVisibility(View.VISIBLE);
     }
 
-    private void hideProgressBar(ProgressBar progressBar) {
+    public void hidePb() {
         if (getActivity() != null && isAdded()) {
             if (progressBar.getVisibility() == View.VISIBLE) {
                 progressBar.setVisibility(View.GONE);
             }
         }
-
     }
 
+
+    protected Snackbar showErrorSnackbar(@StringRes int resId, Exception e,
+                                         View.OnClickListener clickListener) {
+        return ErrorUtils.showSnackbar(rootLayout, resId, e,
+                R.string.dlg_retry, clickListener);
+    }
 
 }

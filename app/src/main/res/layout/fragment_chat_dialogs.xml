@@ -42,11 +42,16 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar_container">
 
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
          <ListView
                 android:id="@+id/list_chat_dialogs"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true" />
+        </android.support.v4.widget.SwipeRefreshLayout>
 
     </RelativeLayout>
 
@@ -57,7 +62,9 @@
         android:layout_centerInParent="true"
         android:visibility="gone"
         tools:visibility="visible"
-        style="?android:attr/progressBarStyleLarge" />
+        style="?android:attr/progressBarStyleLarge"
+
+        />
 
 
 </RelativeLayout>

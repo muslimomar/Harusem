@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:background="@color/gray"
-    android:fillViewport="true"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="10dp"
@@ -78,16 +77,15 @@
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="Country" />
+                android:text="@string/country" />
 
             <TextView
                 android:id="@+id/country_tv"
                 style="@style/Base.Widget.AppCompat.Spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
                 android:gravity="center_vertical"
-                android:text="Turkey"
+                android:text="@string/turkey"
                 android:textColor="@color/black" />
         </LinearLayout>
 
@@ -103,22 +101,17 @@
                 android:orientation="horizontal">
 
                 <TextView
-
-                    android:layout_width="120dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
-
-                    android:text="Mather Language" />
-
-
+                    android:text="@string/mother_language" />
 
 
                 <Spinner
-                    android:id="@+id/language_english_tv"
+                    android:id="@+id/mother_language"
                     style="@style/Base.Widget.AppCompat.Spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
                     android:layout_marginTop="30dp"
                     android:text="@string/beginner"
                     android:textColor="@color/black" />
@@ -130,23 +123,50 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="120dp"
+                    android:id="@+id/learning_language_tv"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
-                    android:text="Learned Language" />
-
+                    android:text="@string/learning_language"
+                    android:visibility="visible" />
 
 
                 <Spinner
-                    android:id="@+id/language_turkish_tv"
+                    android:id="@+id/learning_language"
+                    style="@style/Base.Widget.AppCompat.Spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:text="@string/beginner"
+                    android:textColor="@color/black"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/language_level_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:text="@string/language_level"
+                    android:visibility="visible" />
+
+
+                <Spinner
+                    android:id="@+id/language_level"
                     style="@style/Base.Widget.AppCompat.Spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
                     android:layout_marginTop="30dp"
                     android:text="@string/beginner"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:visibility="visible" />
             </LinearLayout>
+
 
         </LinearLayout>
 

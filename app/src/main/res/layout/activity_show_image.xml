@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_root"
     style="@style/MatchParent"
     android:background="@color/colorPrimary">
@@ -7,13 +8,18 @@
         android:id="@+id/placeholder_iv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="80dp" />
+        android:padding="80dp"
+        tools:visibility="visible"
+        />
 
     <ImageView
         android:id="@+id/image_full_view"
         style="@style/MatchParent"
         android:layout_gravity="center"
-        android:adjustViewBounds="true" />
+        android:adjustViewBounds="true"
+        tools:visibility="visible"
+        tools:src="@drawable/profile_placeholder"
+        />
 
     <ProgressBar
         android:id="@+id/progress_bar_show_image"
@@ -21,7 +27,7 @@
         android:layout_gravity="center"
         android:indeterminateTint="@color/colorSecondary"
         android:visibility="visible"
-
+        tools:visibility="gone"
         />
 
 </FrameLayout>

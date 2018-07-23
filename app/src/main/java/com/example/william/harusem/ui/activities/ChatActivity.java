@@ -197,6 +197,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     Chronometer recordChronometer;
     @BindView(R.id.chat_audio_record_bucket_imageview)
     ImageView bucketView;
+    @BindView(R.id.more_iv) ImageButton moreIv;
     QBFriendListHelper qbFriendListHelper;
     QBChatDialogTypingListener typingListener;
     private boolean isRunForCall;
@@ -334,6 +335,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             videoCallBtn.setVisibility(View.GONE);
             audioCallBtn.setVisibility(View.GONE);
             statusSignIv.setVisibility(View.GONE);
+            moreIv.setVisibility(View.GONE);
 
             int dimension = (int) getResources().getDimension(R.dimen.chat_layout_padding);
             bottomBar.setPadding(0, dimension, 0, dimension);
@@ -487,7 +489,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
         WebRtcSessionManager.getInstance(this).setCurrentSession(newQbRtcSession);
 
-        PushNotificationSender.sendPushMessage(occupants, currentUser.getFullName());
+        PushNotificationSender.sendPushMessage(occupants.get(0), currentUser.getFullName());
 
         CallActivity.start(this, false);
         Log.d(TAG, "conferenceType = " + conferenceType);
@@ -767,17 +769,20 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         Menu menu = popup.getMenu();
         MenuItem menuItemLeave = menu.findItem(R.id.menu_chat_action_leave);
         MenuItem menuItemViewProfile = menu.findItem(R.id.menu_chat_action_view_profile);
+        MenuItem menuItemGroupEdit = menu.findItem(R.id.menu_chat_action_group_edit);
         MenuItem menuItemGroupInfo = menu.findItem(R.id.menu_chat_action_group_info);
         if (qbChatDialog.getType() == QBDialogType.PRIVATE) {
             menuItemLeave.setVisible(false);
+            menuItemGroupEdit.setVisible(false);
             menuItemGroupInfo.setVisible(false);
         } else {
             menuItemViewProfile.setVisible(false);
             if (qbChatDialog.getUserId().equals(QBChatService.getInstance().getUser().getId())) {
                 // if group owner
-                menuItemGroupInfo.setVisible(true);
+                menuItemGroupEdit.setVisible(true);
             } else {
-                menuItemGroupInfo.setVisible(false);
+                menuItemGroupEdit.setVisible(false);
+                menuItemGroupInfo.setVisible(true);
             }
         }
 
@@ -932,7 +937,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         chatMessage.setMarkable(true);
 
         if (!QBDialogType.PRIVATE.equals(qbChatDialog.getType()) && !qbChatDialog.isJoined()) {
-            Toaster.shortToast("You're still joining a group chat, please wait a bit");
+            Toaster.shortToast(R.string.still_joining);
             return;
         }
 
@@ -967,7 +972,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             }
         } catch (SmackException.NotConnectedException e) {
             Log.e(TAG, "sendChatMessage: ", e);
-            Toaster.shortToast("Can't send a message, You are not connected to chat");
+            Toaster.shortToast(R.string.cant_send_msg);
         }
 
         if (!isRecipientBot) {
@@ -994,6 +999,8 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             case GROUP:
             case PUBLIC_GROUP:
                 statusSignIv.setVisibility(View.GONE);
+                videoCallBtn.setVisibility(View.GONE);
+                audioCallBtn.setVisibility(View.GONE);
                 joinGroupChat();
                 break;
             case PRIVATE:
@@ -1126,7 +1133,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
                     QBUsers.getUser(dialog.getRecipientId()).performAsync(new QBEntityCallback<QBUser>() {
                         @Override
                         public void onSuccess(QBUser user, Bundle bundle) {
-                            Integer fileId = recipient.getFileId();
+                            Integer fileId = user.getFileId();
                             if (fileId != null) {
                                 getRecipientPhoto(fileId, dialogAvatar);
                             } else {
@@ -1386,7 +1393,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     public boolean onMenuItemClick(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.menu_chat_action_group_info:
+            case R.id.menu_chat_action_group_edit:
                 Intent intent = new Intent(this, CreateGroupActivity.class);
                 intent.putExtra(EXTRA_DIALOG, qbChatDialog);
                 startActivityForResult(intent, REQUEST_CODE_SELECT_PEOPLE);
@@ -1399,10 +1406,20 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
                 return true;
             case R.id.menu_chat_action_view_profile:
                 redirectToProfileActivity();
+                return true;
+            case R.id.menu_chat_action_group_info:
+               redirectToGroupInfo();
+                return true;
             default:
                 return true;
         }
 
+    }
+
+    private void redirectToGroupInfo() {
+        Intent intent = new Intent(this, GroupInfoActivity.class);
+        intent.putExtra(EXTRA_DIALOG, qbChatDialog);
+        startActivity(intent);
     }
 
     private void redirectToProfileActivity() {
@@ -1644,11 +1661,12 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
     @OnClick(R.id.dialog_avatar)
     public void setDialogAvatar(View view) {
-        if (qbChatDialog != null && qbChatDialog.getType() == QBDialogType.PRIVATE) {
+        if (qbChatDialog != null && qbChatDialog.getType() == QBDialogType.PRIVATE && qbChatDialog.getRecipientId() != BOT_ID) {
             Intent intent = new Intent(this, ProfileActivity.class);
-            intent.putExtra("user_id", qbChatDialog.getRecipientId());
+            intent.putExtra("user_id", qbChatDialog.getRecipientId().toString());
             intent.putExtra("name", qbChatDialog.getName());
             startActivity(intent);
+
         }
     }
 

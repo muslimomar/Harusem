@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.example.william.harusem.Harusem;
+import com.example.william.harusem.models.Attachment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.quickblox.core.helper.StringifyArrayList;
 import com.quickblox.users.model.QBUser;
 
 import java.lang.reflect.Type;
+import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,9 +24,11 @@ public class SharedPrefsHelper {
     private static final String QB_USER_FULL_NAME = "qb_user_full_name";
     private static final String QB_USER_TAGS = "qb_user_tags";
     private static final String QB_PUSH_DIALOG_ID = "qb_dialog_id";
+    private static final String QB_PUSH_FRIEND_REQUESTS = "qb_push_push_friend_requests";
     private static final String QB_USER_CUSTOM_DATA = "qb_user_custom_data";
     private static final String QB_USER_EMAIL = "qb_user_email";
     private static final String MESSAGES_ARRAY = "messages_array";
+    private static final String PUSH_FRIEND_REQUESTS_ARRAY="friend_requests_array";
     public static final String QB_USER_FULL_NAME_FOR_NOTIFICATIONS = "qb_user_full_name_for_notify";
     private static SharedPrefsHelper instance;
 
@@ -50,6 +54,15 @@ public class SharedPrefsHelper {
         }
     }
 
+
+    public ArrayList<String> getRequestsArray(){
+        Gson gson = new Gson();
+        String requestsGson = sharedPreferences.getString(PUSH_FRIEND_REQUESTS_ARRAY,null);
+        Type type = new TypeToken<ArrayList<String>>(){
+        }.getType();
+        return gson.fromJson(requestsGson,type);
+    }
+
     public ArrayList<String> getMessagesArray() {
         Gson gson = new Gson();
         String json = sharedPreferences.getString(MESSAGES_ARRAY, null);
@@ -66,6 +79,30 @@ public class SharedPrefsHelper {
         editor.commit();     // This line is IMPORTANT !!!
     }
 
+
+
+
+    //For Push Profile Message
+    public void saveFriendRequests(String friendRequest) {
+        Set<String> friendRequests = getFriendRequests();
+        if (friendRequests == null) {
+            friendRequests = new HashSet<>();
+        }
+        friendRequests.add(friendRequest);
+        saveFriendRequests(friendRequests);
+    }
+
+    public Set<String> getFriendRequests() {
+        return get(QB_PUSH_FRIEND_REQUESTS, null);
+    }
+
+    private void saveFriendRequests(Set<String> friendRequests) {
+        SharedPreferences.Editor editor = getEditor();
+        editor.putStringSet(QB_PUSH_FRIEND_REQUESTS, friendRequests);
+        editor.commit();
+    }
+
+    //For PushMessages
 
     public void savePushDialogId(String dialogId) {
         Set<String> dialogIdsSet = getPushDialogIds();

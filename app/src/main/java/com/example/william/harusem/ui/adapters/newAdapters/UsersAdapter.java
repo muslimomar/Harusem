@@ -84,11 +84,11 @@ public class UsersAdapter extends BaseListAdapter<QBUser> {
                 @Override
                 public void onError(QBResponseException e) {
                     Log.e("FriendsAdapter", "onError: ", e);
-                    userImageView.setImageResource(R.drawable.placeholder_user);
+                    userImageView.setImageResource(R.drawable.ic_user_new);
                 }
             });
         } else {
-            userImageView.setImageResource(R.drawable.placeholder_user);
+            userImageView.setImageResource(R.drawable.ic_user_new);
         }
 
     }

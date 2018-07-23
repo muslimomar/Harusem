@@ -105,11 +105,11 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
                 @Override
                 public void onError(QBResponseException e) {
                     Log.e(TAG, "onError: ", e);
-                    holder.userThumbIv.setImageResource(R.drawable.placeholder_user);
+                    holder.userThumbIv.setImageResource(R.drawable.ic_user_new);
                 }
             });
         } else {
-            holder.userThumbIv.setImageResource(R.drawable.placeholder_user);
+            holder.userThumbIv.setImageResource(R.drawable.ic_user_new);
         }
 
         setButtonName(holder.button, user);
@@ -159,11 +159,11 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
     }
 
     private void setButtonName(Button button, QBUser user) {
-        if (friendListHelper.isFriendRequestAlreadySent(user.getId())) {
-            setRequestSentBtn(button);
-
-        } else if (friendListHelper.isFriend(user.getId())) {
+        if (friendListHelper.isFriend(user.getId())) {
             setMessageBtn(button);
+
+        } else if (friendListHelper.isFriendRequestAlreadySent(user.getId())) {
+            setRequestSentBtn(button);
 
         } else if (!friendListHelper.isFriendRequestAlreadySent(user.getId()) &&
                 !friendListHelper.isFriend(user.getId())) {
@@ -196,7 +196,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
             @Override
             public void onSuccess(Void aVoid, Bundle bundle) {
                 setAddFriendBtn(addFriendBtn);
-                showSnackBar(view, "Friend Removed");
+                showSnackBar(view, context.getString(R.string.friend_removed2));
             }
 
             @Override
@@ -212,7 +212,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
             @Override
             public void onSuccess(Void aVoid, Bundle bundle) {
                 notifyItemChanged(position);
-                showSnackBar(view, "Request Cancelled");
+                showSnackBar(view, context.getString(R.string.request_cancled));
             }
 
             @Override
@@ -228,7 +228,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.MyViewHolder
             public void onSuccess(Void aVoid, Bundle bundle) {
                 setRequestSentBtn(addFriendBtn);
 
-                showSnackBar(view, "Request Sent");
+                showSnackBar(view, context.getString(R.string.request_sent));
             }
 
             @Override

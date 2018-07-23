@@ -1,14 +1,20 @@
 package com.example.william.harusem;
 
 import android.os.Bundle;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.ui.adapters.BlockingAdapter;
+import com.example.william.harusem.util.ErrorUtils;
 import com.quickblox.chat.JIDHelper;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBPrivacyListsManager;
@@ -34,14 +40,14 @@ public class BlockingActivity extends AppCompatActivity {
     private static final String TAG = BlockingActivity.class.getSimpleName();
     @BindView(R.id.block_list_view)
     RecyclerView blockListView;
-
     BlockingAdapter adapter;
-
-    @BindView(R.id.blocked_swipe)
-    SwipeRefreshLayout swipe;
-
     QBPrivacyListsManager privacyListsManager;
-
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
+    @BindView(R.id.root_layout)
+    RelativeLayout layoutRoot;
+    @BindView(R.id.empty_tv)
+    TextView emptyTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +56,9 @@ public class BlockingActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setTitle(getString(R.string.block_activity_block_list));
 
+
         privacyListsManager = QBChatService.getInstance().getPrivacyListsManager();
         configRecyclerView();
-
 
         fillAdapter();
     }
@@ -64,13 +70,15 @@ public class BlockingActivity extends AppCompatActivity {
     }
 
     private void fillAdapter() {
+        progressBar.setVisibility(View.VISIBLE);
         QBPrivacyList publicPrivacyList = getPublicPrivacyList();
 
         if (publicPrivacyList != null) {
             getBlockedUsers(publicPrivacyList);
+        } else {
+            progressBar.setVisibility(View.GONE);
+            showEmptyLayout();
         }
-
-
     }
 
     private void getBlockedUsers(QBPrivacyList publicPrivacyList) {
@@ -89,6 +97,7 @@ public class BlockingActivity extends AppCompatActivity {
             QBUsers.getUsersByIDs(collection, null).performAsync(new QBEntityCallback<ArrayList<QBUser>>() {
                 @Override
                 public void onSuccess(ArrayList<QBUser> qbUsers, Bundle bundle) {
+                    progressBar.setVisibility(View.GONE);
                     adapter = new BlockingAdapter(qbUsers, privacyListsManager);
                     blockListView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
@@ -96,14 +105,20 @@ public class BlockingActivity extends AppCompatActivity {
 
                 @Override
                 public void onError(QBResponseException e) {
-                    Log.e(TAG, "onError: ", e);
+                    progressBar.setVisibility(View.GONE);
+                    showErrorSnackbar(R.string.dlg_retry, e, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            fillAdapter();
+                        }
+                    });
                 }
             });
         } else {
             adapter = new BlockingAdapter(usersByIds, privacyListsManager);
             blockListView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
-
+            progressBar.setVisibility(View.GONE);
         }
 
     }
@@ -123,6 +138,22 @@ public class BlockingActivity extends AppCompatActivity {
         }
 
         return publicList;
+    }
+
+    protected Snackbar showErrorSnackbar(@StringRes int resId, Exception e,
+                                         View.OnClickListener clickListener) {
+        return ErrorUtils.showSnackbar(layoutRoot, resId, e,
+                R.string.dlg_retry, clickListener);
+    }
+
+    public void showEmptyLayout() {
+        emptyTv.setVisibility(View.VISIBLE);
+        blockListView.setVisibility(View.GONE);
+    }
+
+    public void hideEmptyLayout() {
+        emptyTv.setVisibility(View.GONE);
+        blockListView.setVisibility(View.VISIBLE);
     }
 
 }

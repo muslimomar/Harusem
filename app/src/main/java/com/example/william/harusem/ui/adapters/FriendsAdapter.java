@@ -58,7 +58,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
                 friendListHelper.removeFriend(user, new QBEntityCallback<Void>() {
                     @Override
                     public void onSuccess(Void aVoid, Bundle bundle) {
-                        showSnackBar(view, "Friend Removed");
+                        showSnackBar(view, context.getString(R.string.friend_removed));
                         usersList.remove(usersList.indexOf(user));
                         notifyItemRemoved(position);
                     }
@@ -89,11 +89,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
                 @Override
                 public void onError(QBResponseException e) {
                     Log.e("FriendsAdapter", "onError: ", e);
-                    holder.userThumbIv.setImageResource(R.drawable.placeholder_user);
+                    holder.userThumbIv.setImageResource(R.drawable.ic_user_new);
                 }
             });
         } else {
-            holder.userThumbIv.setImageResource(R.drawable.placeholder_user);
+            holder.userThumbIv.setImageResource(R.drawable.ic_user_new);
         }
 
 
@@ -109,7 +109,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
     private void redirectToProfileActivity(QBUser user) {
         Intent intent = new Intent(context, ProfileActivity.class);
         intent.putExtra("user_id", "" + user.getId());
-        intent.putExtra("name", user.getFullName());
         context.startActivity(intent);
     }
 

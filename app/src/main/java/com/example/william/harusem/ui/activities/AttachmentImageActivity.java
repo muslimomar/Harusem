@@ -65,7 +65,6 @@ public class AttachmentImageActivity extends AppCompatActivity {
 
         actionBar = getSupportActionBar();
 
-
         initUI();
         loadImage();
     }

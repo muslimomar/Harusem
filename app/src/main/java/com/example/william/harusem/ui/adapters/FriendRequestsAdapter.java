@@ -29,6 +29,7 @@ import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.core.helper.StringifyArrayList;
 import com.quickblox.messages.QBPushNotifications;
 import com.quickblox.messages.model.QBEvent;
+import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 import com.squareup.picasso.Picasso;
 
@@ -95,7 +96,7 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
                 QBFriendRequestsHolder.getInstance().removeFriendRequest(user.getId());
                 usersList.remove(user);
                 notifyItemRemoved(usersList.indexOf(user));
-                showSnackBar(view, "Request Declined");
+                showSnackBar(view, context.getString(R.string.request_declined));
             }
 
             @Override
@@ -117,7 +118,7 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
                 QBFriendRequestsHolder.getInstance().removeFriendRequest(user.getId());
                 usersList.remove(user);
                 notifyItemRemoved(usersList.indexOf(user));
-                showSnackBar(view, "Request Accepted");
+                showSnackBar(view, context.getString(R.string.request_accepted));
                 sendNotification(user, view, position);
             }
 
@@ -144,9 +145,10 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
     private void sendNotification(final QBUser user, final View view, final int position) {
         QBUser currentUser = QBUsersHolder.getInstance().getUserById(QBChatService.getInstance().getUser().getId());
         String currentt = currentUser.getFullName();
+        int currentUserId = QBChatService.getInstance().getUser().getId();
         StringifyArrayList<Integer> userIds = new StringifyArrayList<Integer>();
         userIds.add(user.getId());
-        QBEvent messageEvent = NotificationHelper.acceptedYourRequestPushEvent(userIds, currentt);
+        QBEvent messageEvent = NotificationHelper.acceptedYourRequestPushEvent(userIds, currentt,currentUserId);
 
         QBPushNotifications.createEvent(messageEvent).performAsync(new QBEntityCallback<QBEvent>() {
             @Override
@@ -160,11 +162,9 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
             }
         });
     }
-
     private void redirectToProfileActivity(QBUser user) {
         Intent intent = new Intent(context, ProfileActivity.class);
         intent.putExtra("user_id", "" + user.getId());
-        intent.putExtra("name", user.getFullName());
         context.startActivity(intent);
     }
 
@@ -185,11 +185,11 @@ public class FriendRequestsAdapter extends RecyclerView.Adapter<FriendRequestsAd
                 @Override
                 public void onError(QBResponseException e) {
                     Log.e("FriendsAdapter", "onError: ", e);
-                    userThumbIv.setImageResource(R.drawable.placeholder_user);
+                    userThumbIv.setImageResource(R.drawable.ic_user_new);
                 }
             });
         } else {
-            userThumbIv.setImageResource(R.drawable.placeholder_user);
+            userThumbIv.setImageResource(R.drawable.ic_user_new);
         }
 
 
