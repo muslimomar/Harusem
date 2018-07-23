@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.william.harusem.R;
+import com.example.william.harusem.SplashActivity;
 import com.example.william.harusem.ui.activities.MainActivity;
 
 import agency.tango.materialintroscreen.SlideFragment;
@@ -81,7 +82,7 @@ public class SlideThreeFragment extends SlideFragment {
             e.putBoolean("firstStart", false);
             e.apply();
 
-            Intent intent = new Intent(getActivity(), MainActivity.class);
+            Intent intent = new Intent(getActivity(), SplashActivity.class);
             startActivity(intent);
             getActivity().finish();
             return super.canMoveFurther();

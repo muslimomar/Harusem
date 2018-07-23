@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
+import com.example.william.harusem.SplashActivity;
 import com.example.william.harusem.ui.activities.MainActivity;
 
 /**
@@ -32,7 +33,7 @@ public class MaterialIntroActivity extends agency.tango.materialintroscreen.Mate
 
                 if (!isFirstStart) {
 
-                    final Intent i = new Intent(MaterialIntroActivity.this, MainActivity.class);
+                    final Intent i = new Intent(MaterialIntroActivity.this, SplashActivity.class);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

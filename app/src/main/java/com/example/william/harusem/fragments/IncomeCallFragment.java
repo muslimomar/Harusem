@@ -24,6 +24,9 @@ import com.example.william.harusem.utils.RingtonePlayer;
 import com.example.william.harusem.utils.UsersUtils;
 import com.example.william.harusem.utils.WebRtcSessionManager;
 import com.quickblox.chat.QBChatService;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 import com.quickblox.videochat.webrtc.QBRTCSession;
 import com.quickblox.videochat.webrtc.QBRTCTypes;
@@ -129,7 +132,21 @@ public class IncomeCallFragment extends Fragment implements Serializable, View.O
         TextView callerNameTextView = (TextView) view.findViewById(R.id.text_caller_name);
 
         QBUser callerUser = qbUsersHolder.getUserById(currentSession.getCallerID());
-        callerNameTextView.setText(UsersUtils.getUserNameOrId(callerUser, currentSession.getCallerID()));
+        if (callerUser != null) {
+            callerNameTextView.setText(UsersUtils.getUserNameOrId(callerUser, currentSession.getCallerID()));
+        } else {
+            getUserFromRest(currentSession.getCallerID(), new QBEntityCallback<QBUser>() {
+                @Override
+                public void onSuccess(QBUser user, Bundle bundle) {
+                    callerNameTextView.setText(user.getFullName());
+                }
+
+                @Override
+                public void onError(QBResponseException e) {
+                    Log.e(TAG, "onError: ", e);
+                }
+            });
+        }
 
         TextView otherIncUsersTextView = (TextView) view.findViewById(R.id.text_other_inc_users);
         otherIncUsersTextView.setText(getOtherIncUsersNames());
@@ -139,6 +156,10 @@ public class IncomeCallFragment extends Fragment implements Serializable, View.O
 
         rejectButton = (ImageButton) view.findViewById(R.id.image_button_reject_call);
         takeButton = (ImageButton) view.findViewById(R.id.image_button_accept_call);
+    }
+
+    private void getUserFromRest(Integer callerID, QBEntityCallback<QBUser> callback) {
+        QBUsers.getUser(callerID).performAsync(callback);
     }
 
     private void setVisibilityAlsoOnCallTextView() {
