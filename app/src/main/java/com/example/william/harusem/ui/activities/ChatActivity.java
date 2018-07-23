@@ -221,6 +221,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     private SystemPermissionHelper systemPermissionHelper;
     private Vibrator vibrator;
     private boolean isRecipientBot = false;
+    private boolean isUserBlocked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -293,6 +294,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             }
         });
 
+        isUserBlocked = isUserBlocked(qbChatDialog.getRecipientId().toString());
     }
 
     private void startInnerCall(Boolean getCallFlag) {
@@ -780,6 +782,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             if (qbChatDialog.getUserId().equals(QBChatService.getInstance().getUser().getId())) {
                 // if group owner
                 menuItemGroupEdit.setVisible(true);
+                menuItemGroupInfo.setVisible(false);
             } else {
                 menuItemGroupEdit.setVisible(false);
                 menuItemGroupInfo.setVisible(true);
@@ -1339,7 +1342,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         String text = messageInputEt.getText().toString().trim();
 
 
-        if (isUserBlocked(qbChatDialog.getRecipientId().toString())) {
+        if (isUserBlocked) {
             Toast.makeText(this, R.string.cant_send_msg_blocked, Toast.LENGTH_SHORT).show();
             messageInputEt.setText("");
             return;

@@ -155,7 +155,6 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
     private void startAudioManager() {
         ////////////////////////////////////////7
         audioManager.start((selectedAudioDevice, availableAudioDevices) -> {
-            Toaster.shortToast(getString(R.string.call_audio_switched) + selectedAudioDevice);
 
             if (onChangeAudioDeviceCallback != null) {
                 onChangeAudioDeviceCallback.audioDeviceChanged(selectedAudioDevice);

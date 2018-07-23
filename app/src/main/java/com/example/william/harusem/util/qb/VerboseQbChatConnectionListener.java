@@ -46,6 +46,12 @@ public class VerboseQbChatConnectionListener implements ConnectionListener {
         if (seconds % 5 == 0 && seconds != 0) {
             Log.i(TAG, "reconnectingIn(): " + seconds);
             snackbar = Snackbar.make(rootView, Harusem.getInstance().getString(R.string.reconnect_alert, seconds), Snackbar.LENGTH_INDEFINITE);
+            snackbar.setAction(R.string.dlg_retry, new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    reconnectingIn(0);
+                }
+            });
             snackbar.show();
         }
     }
