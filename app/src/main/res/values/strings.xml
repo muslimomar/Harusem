@@ -381,7 +381,7 @@
     <string name="error_uploading_photo">Error uploading photo!</string>
     <string name="password_reset_string">We just need your registered email address to send you password reset</string>
     <string name="error_resetting_password">Error reseting password</string>
-    <string name="you_unblocked_user">You have unblocked your user</string>
+    <string name="you_unblocked_user">You have unblocked the user</string>
     <string name="you_blocked_user">you have blocked the user</string>
     <string name="file_size_err">Error size</string>
     <string name="signup_failed">Signup Failed</string>
@@ -452,6 +452,7 @@
     <string name="amazing_level">Amazing! Your level is Advanced!</string>
     <string name="init_bot">Initializing bot for the first time...</string>
     <string name="group_info">Group Info</string>
+    <string name="you_don_t_have_any_blocked_users">You don\'t have any blocked users!</string>
 
 
 </resources>

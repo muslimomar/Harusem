@@ -77,6 +77,7 @@
     <color name="pb_sec_color">#15948D</color>
     <color name="pb_bg_color">#E9EAEC</color>
 
+    <color name="text_color_dark_grey">#6e6e6e</color>
 
 
 </resources>

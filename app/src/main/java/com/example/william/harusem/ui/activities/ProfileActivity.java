@@ -55,6 +55,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    public static final String EXTRA_PROFILE_ID = "profileId";
     private static final String TAG = ProfileActivity.class.getSimpleName();
     @BindView(R.id.friend_name_friend_detail)
     TextView nameTV;
@@ -72,7 +73,6 @@ public class ProfileActivity extends AppCompatActivity {
     ProgressBar progressBar;
     QBPrivacyListsManager privacyListsManager;
     QBPrivacyListListener privacyListListener;
-
     String userID;
     String friendUserName;
     @BindView(R.id.mother_language_tv)
@@ -88,7 +88,6 @@ public class ProfileActivity extends AppCompatActivity {
     @BindView(R.id.root_layout)
     RelativeLayout layoutRoot;
     private Menu menu;
-    public static final String EXTRA_PROFILE_ID = "profileId";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,7 +178,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.friend_blocking_icon:
-
                 if (isUserBlocked(userID)) {
                     unblockUser();
                     item.setTitle("UnBlock");
@@ -215,7 +213,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         checkBlockingStatus();
 
-        Toast.makeText(this, friendUserName + getString(R.string.you_unblocked_user), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.you_unblocked_user), Toast.LENGTH_SHORT).show();
 
     }
 
@@ -268,6 +266,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void updatePrivacyList(QBPrivacyList publicPrivacyList, int itemsSize) {
+
 
         try {
             privacyListsManager.declinePrivacyList();
@@ -331,6 +330,17 @@ public class ProfileActivity extends AppCompatActivity {
         } catch (SmackException.NoResponseException e) {
             e.printStackTrace();
         }
+
+        try {
+            privacyListsManager.applyPrivacyList(list);
+        } catch (SmackException.NotConnectedException e) {
+            e.printStackTrace();
+        } catch (XMPPException.XMPPErrorException e) {
+            e.printStackTrace();
+        } catch (SmackException.NoResponseException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private QBPrivacyList getPublicPrivacyList() {
@@ -416,7 +426,7 @@ public class ProfileActivity extends AppCompatActivity {
                 showErrorSnackbar(R.string.dlg_retry, e, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                             getUserImageView(userThumbIv);
+                        getUserImageView(userThumbIv);
                     }
                 });
 
@@ -554,4 +564,6 @@ public class ProfileActivity extends AppCompatActivity {
         return ErrorUtils.showSnackbar(layoutRoot, resId, e,
                 R.string.dlg_retry, clickListener);
     }
+
+
 }

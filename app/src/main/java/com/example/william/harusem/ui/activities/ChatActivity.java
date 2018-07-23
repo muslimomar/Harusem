@@ -197,6 +197,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     Chronometer recordChronometer;
     @BindView(R.id.chat_audio_record_bucket_imageview)
     ImageView bucketView;
+    @BindView(R.id.more_iv) ImageButton moreIv;
     QBFriendListHelper qbFriendListHelper;
     QBChatDialogTypingListener typingListener;
     private boolean isRunForCall;
@@ -334,6 +335,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             videoCallBtn.setVisibility(View.GONE);
             audioCallBtn.setVisibility(View.GONE);
             statusSignIv.setVisibility(View.GONE);
+            moreIv.setVisibility(View.GONE);
 
             int dimension = (int) getResources().getDimension(R.dimen.chat_layout_padding);
             bottomBar.setPadding(0, dimension, 0, dimension);
@@ -1659,7 +1661,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
     @OnClick(R.id.dialog_avatar)
     public void setDialogAvatar(View view) {
-        if (qbChatDialog != null && qbChatDialog.getType() == QBDialogType.PRIVATE) {
+        if (qbChatDialog != null && qbChatDialog.getType() == QBDialogType.PRIVATE && qbChatDialog.getRecipientId() != BOT_ID) {
             Intent intent = new Intent(this, ProfileActivity.class);
             intent.putExtra("user_id", qbChatDialog.getRecipientId().toString());
             intent.putExtra("name", qbChatDialog.getName());

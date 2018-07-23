@@ -114,5 +114,9 @@
         <item name="theme">@style/ThemeOverlay.AppCompat.ActionBar</item>
     </style>
 
+    <style name="EmptyTextView" parent="WrapContent" >
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/text_color_dark_grey</item>
+    </style>
 
 </resources>
