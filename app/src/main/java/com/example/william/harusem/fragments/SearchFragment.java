@@ -295,7 +295,9 @@ public class SearchFragment extends Fragment {
     }
 
     public void showLayout() {
-        relativeLayout.setVisibility(View.VISIBLE);
+        if (getActivity() != null && isAdded()){
+            relativeLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     public void hidePb() {
