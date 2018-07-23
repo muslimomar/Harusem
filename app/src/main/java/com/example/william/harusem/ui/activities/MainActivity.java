@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
             DialogsFragment fragment = new DialogsFragment();
             fragment.setArguments(bundle);
             switchFragment(fragment);
-
+            bottomNavigation.setCurrentItem(0);
 
 
 
