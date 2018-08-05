@@ -19,12 +19,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:windowSoftInputMode="adjustPan"
             android:name=".ui.activities.MainActivity"
-            android:theme="@style/NoActionBar" />
+            android:theme="@style/NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".slides.MaterialIntroActivity"
-            android:theme="@style/NoActionBar" >
+            android:theme="@style/NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -60,9 +60,7 @@
         </activity>
         <activity
             android:name=".SplashActivity"
-            android:theme="@style/NoActionBar">
-
-        </activity>
+            android:theme="@style/NoActionBar"></activity>
         <activity
             android:name=".ui.activities.FriendsActivity"
             android:theme="@style/NoActionBar" />
@@ -91,7 +89,6 @@
             android:name=".ui.activities.CallActivity"
             android:theme="@style/NoActionBar" />
         <activity android:name=".ui.activities.OpponentsActivity" />
-
 
         <meta-data
             android:name="com.quickblox.messages.TYPE"
@@ -131,15 +128,16 @@
 
         <activity android:name=".BlockingActivity" />
         <activity android:name=".ui.activities.CreateGroupActivity" />
-        <activity android:name=".ui.activities.ForgotPasswordActivity"
-            android:parentActivityName=".ui.activities.LoginActivity"
-            ><meta-data
+        <activity
+            android:name=".ui.activities.ForgotPasswordActivity"
+            android:parentActivityName=".ui.activities.LoginActivity">
+            <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.LoginActivity" />
-
         </activity>
         <activity android:name=".ui.activities.GroupInfoActivity" />
-
+        <activity android:name=".ui.activities.SpeakingActivity">
+        </activity>
     </application>
 
 </manifest>

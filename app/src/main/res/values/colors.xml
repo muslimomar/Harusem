@@ -79,5 +79,6 @@
 
     <color name="text_color_dark_grey">#6e6e6e</color>
 
+    <color name="pb_bg">#d4d9de</color>
 
 </resources>

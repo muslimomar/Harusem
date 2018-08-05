@@ -33,7 +33,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public class BlockingAdapter extends RecyclerView.Adapter<BlockingAdapter.MyViewHolder> {
-    //Model olarak MyViewHolder Kullanılacağını göz önünde bulundur.
+    //Model olarak SenderDialog Kullanılacağını göz önünde bulundur.
 
     private static final String TAG = BlockingAdapter.class.getSimpleName();
     private List<QBUser> usersList;

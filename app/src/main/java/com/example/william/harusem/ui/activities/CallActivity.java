@@ -165,7 +165,7 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
     private void startScreenSharing(final Intent data) {
         ScreenShareFragment screenShareFragment = ScreenShareFragment.newIntstance();
         ////////////////////////////fragment_container
-        FragmentExecuotr.addFragmentWithBackStack(getSupportFragmentManager(), R.id.fragment_container, screenShareFragment, ScreenShareFragment.TAG);
+        FragmentExecuotr.addFragmentWithBackStack(getSupportFragmentManager(), R.id.dialogs_recycler_view, screenShareFragment, ScreenShareFragment.TAG);
         currentSession.getMediaStreamManager().setVideoCapturer(new QBRTCScreenCapturer(data, null));
     }
 
@@ -365,11 +365,11 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
                     ((TextView) connectionView.findViewById(R.id.notification)).setText(text);
                     if (connectionView.getParent() == null) {
                         //////////////////////////////77
-                        ((ViewGroup) CallActivity.this.findViewById(R.id.fragment_container)).addView(connectionView);
+                        ((ViewGroup) CallActivity.this.findViewById(R.id.dialogs_recycler_view)).addView(connectionView);
                     }
                 } else {
                     ///////////////////////////////////////7
-                    ((ViewGroup) CallActivity.this.findViewById(R.id.fragment_container)).removeView(connectionView);
+                    ((ViewGroup) CallActivity.this.findViewById(R.id.dialogs_recycler_view)).removeView(connectionView);
                 }
             }
         });
@@ -617,7 +617,7 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
 
     private android.support.v4.app.Fragment getCurrentFragment() {
         ///////////////////////////////////////////////////////////////77
-        return getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        return getSupportFragmentManager().findFragmentById(R.id.dialogs_recycler_view);
     }
 
     private void addIncomeCallFragment() {
@@ -626,7 +626,7 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
         if (currentSession != null) {
             IncomeCallFragment fragment = new IncomeCallFragment();
             /////////////////////////////////////////////////////////////////
-            FragmentExecuotr.addFragment(getSupportFragmentManager(), R.id.fragment_container, fragment, INCOME_CALL_FRAGMENT);
+            FragmentExecuotr.addFragment(getSupportFragmentManager(), R.id.dialogs_recycler_view, fragment, INCOME_CALL_FRAGMENT);
         } else {
             Log.d(TAG, "SKIP addIncomeCallFragment method");
         }
@@ -639,7 +639,7 @@ public class CallActivity extends BaseActivity implements QBRTCClientSessionCall
                         : new AudioConversationFragment(),
                 isIncomingCall);
         /////////////////////////////////////////////777
-        FragmentExecuotr.addFragment(getSupportFragmentManager(), R.id.fragment_container, conversationFragment, conversationFragment.getClass().getSimpleName());
+        FragmentExecuotr.addFragment(getSupportFragmentManager(), R.id.dialogs_recycler_view, conversationFragment, conversationFragment.getClass().getSimpleName());
     }
 
     public SharedPreferences getDefaultSharedPrefs() {

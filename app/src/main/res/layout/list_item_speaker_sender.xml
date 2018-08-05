@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relative_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/mic_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="29dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="recipientAvatar"
+            android:focusable="true"
+            android:padding="5dp"
+            android:src="@drawable/ic_mic" />
+
+        <TextView
+            android:id="@+id/dialog_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/sender_dialog"
+            android:lineSpacingExtra="5dp"
+            android:padding="12dp"
+            android:textColor="#434c5c"
+            android:textSize="14sp"
+            tools:text="Hi! I’m the bank representative. How may I help you?" />
+
+        <ProgressBar
+            android:id="@+id/speaking_level_pb"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="12dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="12dp"
+            android:max="100"
+            android:progress="600"
+            android:progressDrawable="@drawable/progress_drawable" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>
