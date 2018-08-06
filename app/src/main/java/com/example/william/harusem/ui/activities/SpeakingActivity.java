@@ -1,41 +1,58 @@
 package com.example.william.harusem.ui.activities;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.example.william.harusem.R;
 import com.example.william.harusem.interfaces.WordListener;
 import com.example.william.harusem.models.SpeakingDialog;
+import com.example.william.harusem.ui.adapters.CategoryAdapter;
 import com.example.william.harusem.ui.adapters.SpeakingDialogsAdapter;
+import com.example.william.harusem.util.ErrorUtils;
 import com.example.william.harusem.util.SystemPermissionHelper;
+import com.example.william.harusem.util.Toaster;
+import com.example.william.harusem.util.Utils;
 import com.example.william.harusem.util.consts.Consts;
 import com.example.william.harusem.utils.PermissionsChecker;
+import com.quickblox.core.QBEntityCallback;
+import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.request.QBRequestGetBuilder;
+import com.quickblox.core.server.Performer;
+import com.quickblox.customobjects.QBCustomObjects;
+import com.quickblox.customobjects.model.QBCustomObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class SpeakingActivity extends AppCompatActivity implements WordListener {
 
     private static final int REQUEST_CODE_SPEECH_INPUT = 25;
     private static final String TAG = SpeakingActivity.class.getSimpleName();
+    int index = 1;
     @BindView(R.id.progress_bar_number)
     TextView progressBarNumber;
     @BindView(R.id.ic_back_iv)
@@ -49,6 +66,10 @@ public class SpeakingActivity extends AppCompatActivity implements WordListener 
     String retrievedSentenceClear;
     SpeakingDialogsAdapter mAdapter;
     int position;
+    String categoryName;
+    Realm realm;
+    @BindView(R.id.root_layout)
+    RelativeLayout rootLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,29 +79,96 @@ public class SpeakingActivity extends AppCompatActivity implements WordListener 
 
         configureActionBar();
         configureProgressBar();
+
+        realm = Realm.getDefaultInstance();
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            categoryName = bundle.getString(CategoryAdapter.EXTRAS_CATEGORY_NAME);
+        }
+
+
         configRecyclerView();
-        fillRecyclerView();
+        fillData();
     }
 
-    private void fillRecyclerView() {
-        List<SpeakingDialog> speakingDialogList = new ArrayList<>();
-        speakingDialogList.add(new SpeakingDialog(SpeakingDialogsAdapter.VIEW_TYPE_RECIPIENT, "Hi! I am the bank representative. How may I help you?"));
-        speakingDialogList.add(new SpeakingDialog(SpeakingDialogsAdapter.VIEW_TYPE_SENDER, "Hi! My name is John. I would like to open an account."));
-        speakingDialogList.add(new SpeakingDialog(SpeakingDialogsAdapter.VIEW_TYPE_RECIPIENT, "Well, can I have your phone number and ID No?"));
-        speakingDialogList.add(new SpeakingDialog(SpeakingDialogsAdapter.VIEW_TYPE_SENDER, "Yes, of course! I do not have a mobile phone nor an ID!"));
-        speakingDialogList.add(new SpeakingDialog(SpeakingDialogsAdapter.VIEW_TYPE_RECIPIENT, "Hi! I am the bank representative. How may I help you?"));
-        speakingDialogList.add(new SpeakingDialog(SpeakingDialogsAdapter.VIEW_TYPE_SENDER, "Hi! My name is John. I would like to open an account."));
-        speakingDialogList.add(new SpeakingDialog(SpeakingDialogsAdapter.VIEW_TYPE_RECIPIENT, "Well, can I have your phone number and ID No?"));
-        speakingDialogList.add(new SpeakingDialog(SpeakingDialogsAdapter.VIEW_TYPE_SENDER, "Yes, of course! I do not have a mobile phone nor an ID!"));
-        speakingDialogList.add(new SpeakingDialog(SpeakingDialogsAdapter.VIEW_TYPE_RECIPIENT, "Hi! I am the bank representative. How may I help you?"));
-        speakingDialogList.add(new SpeakingDialog(SpeakingDialogsAdapter.VIEW_TYPE_SENDER, "Hi! My name is John. I would like to open an account."));
-        speakingDialogList.add(new SpeakingDialog(SpeakingDialogsAdapter.VIEW_TYPE_RECIPIENT, "Well, can I have your phone number and ID No?"));
-        speakingDialogList.add(new SpeakingDialog(SpeakingDialogsAdapter.VIEW_TYPE_SENDER, "Yes, of course! I do not have a mobile phone nor an ID!"));
+    private void fillData() {
+        ProgressDialog progressDialog = Utils.buildProgressDialog(this, "", "Loading...", false);
+        progressDialog.show();
 
-        mAdapter = new SpeakingDialogsAdapter(this, speakingDialogList, this);
+        // download data for the first time
+        RealmResults<SpeakingDialog> speakingDialogsList = realm.where(SpeakingDialog.class).findAll();
+        if (speakingDialogsList.size() > 0) {
+            RealmResults<SpeakingDialog> speakingDialogs = realm.where(SpeakingDialog.class).equalTo("index", this.index).findAll();
+            refreshAdapter(speakingDialogs);
+            setDialogsNumber(this.index, speakingDialogsList.size());
+            progressDialog.dismiss();
+        } else {
+            getCustomData(progressDialog);
+
+        }
+
+
+    }
+
+    private void refreshAdapter(RealmResults<SpeakingDialog> speakingDialogs) {
+        mAdapter = new SpeakingDialogsAdapter(SpeakingActivity.this, speakingDialogs, SpeakingActivity.this);
         recyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+    }
 
-        progressBarNumber.setText(getString(R.string.speaking_dialogs_size, 2, speakingDialogList.size()));
+    private void setDialogsNumber(int i, int size) {
+        progressBarNumber.setText(getString(R.string.speaking_dialogs_size, i, size));
+        progressBar.setProgress(getProgressFromTotal(i, size));
+    }
+
+    private void getCustomData(ProgressDialog progressDialog) {
+        QBRequestGetBuilder requestBuilder = new QBRequestGetBuilder();
+        requestBuilder.sortAsc("Created at");
+        requestBuilder.setLimit(200);
+
+        Performer<ArrayList<QBCustomObject>> object = QBCustomObjects.getObjects("Bank_Category", requestBuilder);
+        object.performAsync(new QBEntityCallback<ArrayList<QBCustomObject>>() {
+            @Override
+            public void onSuccess(ArrayList<QBCustomObject> qbCustomObjects, Bundle bundle) {
+                ArrayList<SpeakingDialog> speakingDialogs = new ArrayList<>();
+                for (QBCustomObject object : qbCustomObjects) {
+                    Integer view_type = object.getInteger("view_type");
+                    String dialogText = object.getString("dialog_text");
+                    int index = object.getInteger("index");
+                    boolean isFinished = object.getBoolean("isFinished");
+                    speakingDialogs.add(new SpeakingDialog(view_type, index, dialogText, isFinished));
+                }
+
+                realm.beginTransaction();
+                realm.copyToRealmOrUpdate(speakingDialogs);
+                realm.commitTransaction();
+
+                RealmResults<SpeakingDialog> speakingDialogRealmResults = realm.where(SpeakingDialog.class).equalTo("index", SpeakingActivity.this.index).findAll();
+                refreshAdapter(speakingDialogRealmResults);
+                setDialogsNumber(SpeakingActivity.this.index, speakingDialogs.size());
+
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                showErrorSnackbar(R.string.dlg_retry, e, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        getCustomData(progressDialog);
+                    }
+                });
+                progressDialog.dismiss();
+            }
+        });
+
+    }
+
+    protected Snackbar showErrorSnackbar(@StringRes int resId, Exception e,
+                                         View.OnClickListener clickListener) {
+        return ErrorUtils.showSnackbar(rootLayout, resId, e,
+                R.string.dlg_retry, clickListener);
     }
 
     private void configRecyclerView() {
@@ -102,10 +190,8 @@ public class SpeakingActivity extends AppCompatActivity implements WordListener 
         progressBar.setProgressBackgroundColor(ContextCompat.getColor(this, R.color.pb_bg));
         progressBar.setRadius(15);
         progressBar.setMax(100);
-        progressBar.setProgress(85);
         progressBar.setReverse(false);
         progressBar.setPadding(0);
-
     }
 
     private void showQuitConfirmationDialog() {
@@ -169,28 +255,26 @@ public class SpeakingActivity extends AppCompatActivity implements WordListener 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_SPEECH_INPUT && resultCode == RESULT_OK && data != null) {
-            long startTime = System.currentTimeMillis();
             ArrayList<String> pronouncedSentences = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 //            String[] clearSpeechWordsArray = getSentenceAsClearArray(pronouncedSentences.get(0));
             String[] clearWordsArray = getSentenceAsClearArray(retrievedSentenceClear);
 
             ArrayList<String> matchedWords = getMatchedWordsList(pronouncedSentences, clearWordsArray);
 
-            int progress = getSuccessProgress(matchedWords.size(), clearWordsArray.length);
+            int progress = getProgressFromTotal(matchedWords.size(), clearWordsArray.length);
             SpeakingDialog dialogWithProgress = mAdapter.getItem(position);
+
+            realm.beginTransaction();
             dialogWithProgress.setSpeakProgressLevel(progress);
-            mAdapter.updateItem(position, dialogWithProgress);
+            dialogWithProgress.setFinished(true);
+            realm.copyToRealmOrUpdate(dialogWithProgress);
+            realm.commitTransaction();
+            mAdapter.updateItem(position);
 
-//            Log.i(TAG, "speechrecognition speech:" + Arrays.toString(clearSpeechWordsArray) + " - " + clearSpeechWordsArray.length);
-            Log.i(TAG, "retrievedtext speech:" + Arrays.toString(clearWordsArray) + " - " + clearWordsArray.length);
-            Log.i(TAG, "speech match: " + matchedWords.toString());
-            Log.i(TAG, "speech progress: " + progress);
-
-            Log.i(TAG, "onActivityResult: time " + (System.currentTimeMillis() - startTime));
         }
     }
 
-    private int getSuccessProgress(int percent, int total) {
+    private int getProgressFromTotal(int percent, int total) {
         return (int) (((double) percent / total) * 100);
     }
 
@@ -201,11 +285,22 @@ public class SpeakingActivity extends AppCompatActivity implements WordListener 
             String[] sentenceAsClearArray = getSentenceAsClearArray(myArray.get(j));
 
             ArrayList<String> tempMatch = new ArrayList<>();
-            for (int i = 0; i < sentenceAsClearArray.length; i++) {
-                if (sentenceAsClearArray[i].equalsIgnoreCase(totalArray[i])) {
-                    tempMatch.add(sentenceAsClearArray[i]);
+
+
+            if (totalArray.length > sentenceAsClearArray.length) {
+                for (int i = 0; i < sentenceAsClearArray.length; i++) {
+                    if (sentenceAsClearArray[i].equalsIgnoreCase(totalArray[i])) {
+                        tempMatch.add(sentenceAsClearArray[i]);
+                    }
+                }
+            } else {
+                for (int i = 0; i < totalArray.length; i++) {
+                    if (sentenceAsClearArray[i].equalsIgnoreCase(totalArray[i])) {
+                        tempMatch.add(sentenceAsClearArray[i]);
+                    }
                 }
             }
+
 
             if (tempMatch.size() > matchedWords.size()) {
                 matchedWords = tempMatch;
@@ -214,6 +309,28 @@ public class SpeakingActivity extends AppCompatActivity implements WordListener 
         }
 
         return matchedWords;
+    }
+
+    @OnClick(R.id.next_button)
+    public void setNextBtn(View view) {
+        if (!areDialogsFinished()) {
+            Toaster.shortToast("Please complete all the lessons to proceed!");
+            return;
+        }
+
+        index++;
+        fillData();
+    }
+
+    private boolean areDialogsFinished() {
+        List<SpeakingDialog> currentDialogs = mAdapter.getAllDialogs();
+        for (SpeakingDialog dialog : currentDialogs) {
+            if (dialog.getDialogType() == SpeakingDialogsAdapter.VIEW_TYPE_SENDER)
+                if (!dialog.isFinished()) {
+                    return false;
+                }
+        }
+        return true;
     }
 
 }

@@ -15,6 +15,8 @@ import com.quickblox.core.ServiceZone;
 import com.quickblox.messages.services.QBPushManager;
 
 import io.fabric.sdk.android.Fabric;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 import static com.example.william.harusem.common.Extras.ACCOUNT_KEY;
 import static com.example.william.harusem.common.Extras.APP_ID;
@@ -51,6 +53,13 @@ public class Harusem extends Application {
         initQbConfigs();
         initCredentials();
         ActivityLifecycle.init(this);
+        Realm.init(this);
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder()
+                .name("harusem.realm")
+                .schemaVersion(0)
+                .build();
+        Realm.setDefaultConfiguration(realmConfig);
+
         QBPushManager.getInstance().addListener(new QBPushManager.QBSubscribeListener() {
             @Override
             public void onSubscriptionCreated() {

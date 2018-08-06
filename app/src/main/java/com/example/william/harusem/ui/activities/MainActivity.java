@@ -1,7 +1,6 @@
 package com.example.william.harusem.ui.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,6 +12,7 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.example.william.harusem.R;
 import com.example.william.harusem.fragments.DialogsFragment;
+import com.example.william.harusem.fragments.CategoryFragment;
 import com.example.william.harusem.fragments.ProfileFragment;
 import com.example.william.harusem.fragments.SearchFragment;
 import com.quickblox.chat.model.QBChatDialog;
@@ -27,19 +27,17 @@ public class MainActivity extends AppCompatActivity {
     AHBottomNavigation bottomNavigation;
 
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_DIALOG && resultCode == RESULT_OK) {
             String dialogId = data.getStringExtra(ChatActivity.EXTRA_DIALOG_ID);
 
             Bundle bundle = new Bundle();
-            bundle.putString(ChatActivity.EXTRA_DIALOG_ID,dialogId);
+            bundle.putString(ChatActivity.EXTRA_DIALOG_ID, dialogId);
             DialogsFragment fragment = new DialogsFragment();
             fragment.setArguments(bundle);
             switchFragment(fragment);
             bottomNavigation.setCurrentItem(0);
-
 
 
         }
@@ -58,13 +56,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupBottomNavigation() {
+        bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
 
         AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.chats_nav_item, R.drawable.ic_chat_24dp, R.color.colorPrimary);
         AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.search_nav_item, R.drawable.ic_search_24dp, R.color.colorPrimary);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.account_nav_item, R.drawable.ic_account_24dp, R.color.colorPrimary);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.learn_nav_item, R.drawable.learn_ic, R.color.colorPrimary);
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.account_nav_item, R.drawable.ic_account_24dp, R.color.colorPrimary);
         bottomNavigation.addItem(item1);
         bottomNavigation.addItem(item2);
         bottomNavigation.addItem(item3);
+        bottomNavigation.addItem(item4);
 
         bottomNavigation.setDefaultBackgroundColor(Color.WHITE);
         bottomNavigation.setAccentColor(getResources().getColor(R.color.colorPrimary));
@@ -76,13 +77,15 @@ public class MainActivity extends AppCompatActivity {
                 Fragment selectedFragment = null;
                 switch (position) {
                     case 0:
-                        //set title
                         selectedFragment = new DialogsFragment();
                         break;
                     case 1:
                         selectedFragment = new SearchFragment();
                         break;
                     case 2:
+                        selectedFragment = new CategoryFragment();
+                        break;
+                    case 3:
                         selectedFragment = new ProfileFragment();
                         break;
                     default:

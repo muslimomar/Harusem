@@ -87,8 +87,7 @@ public class SpeakingDialogsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         return dialogsList.get(i);
     }
 
-    public void updateItem(int i, SpeakingDialog dialog) {
-        dialogsList.set(i, dialog);
+    public void updateItem(int i) {
         notifyItemChanged(i);
     }
 
@@ -152,5 +151,8 @@ public class SpeakingDialogsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
+    public List<SpeakingDialog> getAllDialogs() {
+        return dialogsList;
+    }
 
 }

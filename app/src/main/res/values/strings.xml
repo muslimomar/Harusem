@@ -454,5 +454,8 @@
     <string name="group_info">Group Info</string>
     <string name="you_don_t_have_any_blocked_users">You don\'t have any blocked users!</string>
     <string name="speaking_dialogs_size">%d/%d</string>
+    <string name="learn_nav_item">Learn</string>
+    <string name="dialogs_number">%d dialogs</string>
+    <string name="percentage">%d%%</string>
 
 </resources>
