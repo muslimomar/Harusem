@@ -1,29 +1,51 @@
 package com.example.william.harusem.models;
 
+import java.util.UUID;
+
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by william
  * on 05-08-2018.
  */
 
-public class Category {
-
+public class Category extends RealmObject {
+    @PrimaryKey
+    String id;
     int imageId;
-    String categoryName;
+    String categoryDisplayName;
     int dialogsCount;
-    int percentage;
     int bgColor;
+    int currentIndex;
+    String categoryApiName;
 
-    public Category(int imageId, String categoryName, int bgColor) {
+    public Category() {
+    }
+
+    public Category(int imageId, String categoryDisplayName, int bgColor) {
         this.imageId = imageId;
-        this.categoryName = categoryName;
+        this.categoryDisplayName = categoryDisplayName;
         this.bgColor = bgColor;
     }
 
-    public Category(int imageId, String categoryName, int dialogsCount, int percentage) {
+    public Category(int imageId, String categoryDisplayName, String categoryApiName, int dialogsCount, int bgColor, int currentIndex) {
         this.imageId = imageId;
-        this.categoryName = categoryName;
+        this.categoryDisplayName = categoryDisplayName;
         this.dialogsCount = dialogsCount;
-        this.percentage = percentage;
+        this.bgColor = bgColor;
+        this.currentIndex = currentIndex;
+        this.categoryApiName = categoryApiName;
+        this.id = UUID.randomUUID().toString();
+    }
+
+
+    public String getCategoryApiName() {
+        return categoryApiName;
+    }
+
+    public void setCategoryApiName(String categoryApiName) {
+        this.categoryApiName = categoryApiName;
     }
 
     public int getImageId() {
@@ -34,12 +56,12 @@ public class Category {
         this.imageId = imageId;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public String getCategoryDisplayName() {
+        return categoryDisplayName;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setCategoryDisplayName(String categoryDisplayName) {
+        this.categoryDisplayName = categoryDisplayName;
     }
 
     public int getDialogsCount() {
@@ -50,19 +72,19 @@ public class Category {
         this.dialogsCount = dialogsCount;
     }
 
-    public int getPercentage() {
-        return percentage;
-    }
-
-    public void setPercentage(int percentage) {
-        this.percentage = percentage;
-    }
-
     public int getBgColor() {
         return bgColor;
     }
 
     public void setBgColor(int bgColor) {
         this.bgColor = bgColor;
+    }
+
+    public int getCurrentIndex() {
+        return currentIndex;
+    }
+
+    public void setCurrentIndex(int currentIndex) {
+        this.currentIndex = currentIndex;
     }
 }

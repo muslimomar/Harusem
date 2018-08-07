@@ -7,18 +7,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.models.Category;
 import com.example.william.harusem.ui.activities.SpeakingActivity;
-import com.quickblox.users.model.QBUser;
 
 import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder> {
 
@@ -44,9 +40,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
 
         final Category category = categoryList.get(position);
 
-        holder.categoryNameTv.setText(category.getCategoryName());
+        holder.categoryNameTv.setText(category.getCategoryDisplayName());
         holder.categoryPhotoIv.setImageResource(category.getImageId());
-        holder.percentageTv.setText(context.getResources().getString(R.string.percentage, category.getPercentage()));
+        holder.percentageTv.setText(context.getResources().getString(R.string.percentage, 10));
         holder.dialogsCountTv.setText(context.getResources().getString(R.string.dialogs_number, category.getDialogsCount()));
         holder.cardView.setCardBackgroundColor(category.getBgColor());
 
@@ -54,7 +50,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, SpeakingActivity.class);
-                intent.putExtra(EXTRAS_CATEGORY_NAME, category.getCategoryName());
+                intent.putExtra(EXTRAS_CATEGORY_NAME, category.getCategoryApiName());
                 context.startActivity(intent);
             }
         });

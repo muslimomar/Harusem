@@ -3,6 +3,7 @@ package com.example.william.harusem.util;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 
 import com.example.william.harusem.R;
 
@@ -26,6 +27,19 @@ public class Utils {
         } else {
             builder.setCancelable(false);
         }
+        builder.create().show();
+    }
+
+    public static void buildAlertDialogButton(String title, String message, boolean isCancelable, Context context, String buttonString,
+                                              DialogInterface.OnClickListener onClickListener) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(message)
+                .setTitle(title);
+
+        builder.setCancelable(isCancelable);
+        builder.setPositiveButton(buttonString,onClickListener);
+
         builder.create().show();
     }
 
