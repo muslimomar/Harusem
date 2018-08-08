@@ -457,5 +457,7 @@
     <string name="learn_nav_item">Learn</string>
     <string name="dialogs_number">%d dialogs</string>
     <string name="percentage">%d%%</string>
+    <string name="lesson_number">LESSON %d</string>
+    <string name="lessons">Lessons</string>
 
 </resources>

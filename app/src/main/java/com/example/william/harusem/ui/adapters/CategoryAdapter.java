@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.models.Category;
-import com.example.william.harusem.ui.activities.SpeakingActivity;
+import com.example.william.harusem.ui.activities.LessonsActivity;
 
 import java.util.List;
 
@@ -43,14 +43,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
         holder.categoryNameTv.setText(category.getCategoryDisplayName());
         holder.categoryPhotoIv.setImageResource(category.getImageId());
         holder.percentageTv.setText(context.getResources().getString(R.string.percentage, 10));
-        holder.dialogsCountTv.setText(context.getResources().getString(R.string.dialogs_number, category.getDialogsCount()));
+        holder.dialogsCountTv.setText(context.getResources().getString(R.string.dialogs_number, category.getLessonsCount()));
         holder.cardView.setCardBackgroundColor(category.getBgColor());
-
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, SpeakingActivity.class);
-                intent.putExtra(EXTRAS_CATEGORY_NAME, category.getCategoryApiName());
+                Intent intent = new Intent(context, LessonsActivity.class);
+                intent.putExtra(EXTRAS_CATEGORY_NAME, category.getParentId());
                 context.startActivity(intent);
             }
         });
@@ -74,7 +73,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
             dialogsCountTv = view.findViewById(R.id.dialogs_count_tv);
             percentageTv = view.findViewById(R.id.total_score_tv);
             cardView = view.findViewById(R.id.card_view);
-
         }
     }
 }

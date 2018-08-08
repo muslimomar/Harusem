@@ -15,37 +15,29 @@ public class Category extends RealmObject {
     String id;
     int imageId;
     String categoryDisplayName;
-    int dialogsCount;
+    int lessonsCount;
     int bgColor;
-    int currentIndex;
-    String categoryApiName;
+    String parentId;
 
     public Category() {
     }
 
-    public Category(int imageId, String categoryDisplayName, int bgColor) {
+    public Category(int imageId, String categoryDisplayName, String parentId, int lessonsCount, int bgColor) {
         this.imageId = imageId;
         this.categoryDisplayName = categoryDisplayName;
+        this.lessonsCount = lessonsCount;
         this.bgColor = bgColor;
-    }
-
-    public Category(int imageId, String categoryDisplayName, String categoryApiName, int dialogsCount, int bgColor, int currentIndex) {
-        this.imageId = imageId;
-        this.categoryDisplayName = categoryDisplayName;
-        this.dialogsCount = dialogsCount;
-        this.bgColor = bgColor;
-        this.currentIndex = currentIndex;
-        this.categoryApiName = categoryApiName;
+        this.parentId = parentId;
         this.id = UUID.randomUUID().toString();
     }
 
 
-    public String getCategoryApiName() {
-        return categoryApiName;
+    public String getParentId() {
+        return parentId;
     }
 
-    public void setCategoryApiName(String categoryApiName) {
-        this.categoryApiName = categoryApiName;
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
     public int getImageId() {
@@ -64,12 +56,12 @@ public class Category extends RealmObject {
         this.categoryDisplayName = categoryDisplayName;
     }
 
-    public int getDialogsCount() {
-        return dialogsCount;
+    public int getLessonsCount() {
+        return lessonsCount;
     }
 
-    public void setDialogsCount(int dialogsCount) {
-        this.dialogsCount = dialogsCount;
+    public void setLessonsCount(int lessonsCount) {
+        this.lessonsCount = lessonsCount;
     }
 
     public int getBgColor() {
@@ -78,13 +70,5 @@ public class Category extends RealmObject {
 
     public void setBgColor(int bgColor) {
         this.bgColor = bgColor;
-    }
-
-    public int getCurrentIndex() {
-        return currentIndex;
-    }
-
-    public void setCurrentIndex(int currentIndex) {
-        this.currentIndex = currentIndex;
     }
 }

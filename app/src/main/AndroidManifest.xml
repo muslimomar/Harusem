@@ -60,7 +60,7 @@
         </activity>
         <activity
             android:name=".SplashActivity"
-            android:theme="@style/NoActionBar"></activity>
+            android:theme="@style/NoActionBar" />
         <activity
             android:name=".ui.activities.FriendsActivity"
             android:theme="@style/NoActionBar" />
@@ -136,8 +136,8 @@
                 android:value=".ui.activities.LoginActivity" />
         </activity>
         <activity android:name=".ui.activities.GroupInfoActivity" />
-        <activity android:name=".ui.activities.SpeakingActivity">
-        </activity>
+        <activity android:name=".ui.activities.SpeakingActivity"></activity>
+        <activity android:name=".ui.activities.LessonsActivity"></activity>
     </application>
 
 </manifest>

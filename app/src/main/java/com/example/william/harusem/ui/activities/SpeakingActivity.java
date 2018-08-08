@@ -54,6 +54,8 @@ import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
+import static com.example.william.harusem.common.Common.CATEGORY_API_NAME;
+
 public class SpeakingActivity extends AppCompatActivity implements WordListener {
 
     private static final int REQUEST_CODE_SPEECH_INPUT = 25;
@@ -104,7 +106,7 @@ public class SpeakingActivity extends AppCompatActivity implements WordListener 
 
         QBRequestGetBuilder requestGetBuilder = new QBRequestGetBuilder();
         requestGetBuilder.setLimit(1);
-        requestGetBuilder.ctn("category_api_name", categoryName);
+        requestGetBuilder.ctn(CATEGORY_API_NAME, categoryName);
         QBCustomObjects.getObjects("Categories_User_Data", requestGetBuilder).performAsync(new QBEntityCallback<ArrayList<QBCustomObject>>() {
             @Override
             public void onSuccess(ArrayList<QBCustomObject> qbCustomObjects, Bundle bundle) {
@@ -140,7 +142,7 @@ public class SpeakingActivity extends AppCompatActivity implements WordListener 
     private void createUserDataObject(ProgressDialog progressDialog) {
         QBCustomObject categoryUserData = new QBCustomObject();
         categoryUserData.setClassName("Categories_User_Data");
-        categoryUserData.putString("category_api_name", categoryName);
+        categoryUserData.putString(CATEGORY_API_NAME, categoryName);
         categoryUserData.putInteger("current_index", 1);
 
         QBCustomObjects.createObject(categoryUserData).performAsync(new QBEntityCallback<QBCustomObject>() {

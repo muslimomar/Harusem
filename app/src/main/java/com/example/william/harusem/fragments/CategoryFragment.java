@@ -33,6 +33,8 @@ import butterknife.Unbinder;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+import static com.example.william.harusem.common.Common.CATEGORY_API_NAME;
+
 public class CategoryFragment extends Fragment {
 
 
@@ -40,7 +42,6 @@ public class CategoryFragment extends Fragment {
     RecyclerView recyclerView;
     Unbinder unbinder;
     CategoryAdapter adapter;
-    ArrayList<Category> categories = new ArrayList<>();
     @BindView(R.id.root_layout)
     LinearLayout rootLayout;
     Realm realm;
@@ -75,16 +76,15 @@ public class CategoryFragment extends Fragment {
                     ArrayList<Category> categories = new ArrayList<>();
                     for (QBCustomObject custom : qbCustomObjects) {
                         Integer dialog_count = custom.getInteger("category_dialog_count");
-                        Integer current_index = custom.getInteger("current_index");
                         String displayName = custom.getString("category_name");
                         String category_color = custom.getString("category_color");
                         String icon = custom.getString("icon");
-                        String apiName = custom.getString("category_api_name");
+                        String parentId = custom.getParentId();
 
                         int resID = getResources().getIdentifier(icon,
                                 "drawable", getActivity().getPackageName());
 
-                        categories.add(new Category(resID, displayName, apiName, dialog_count, Color.parseColor(category_color), current_index));
+                        categories.add(new Category(resID, displayName, parentId, dialog_count, Color.parseColor(category_color)));
                     }
 
                     realm.beginTransaction();

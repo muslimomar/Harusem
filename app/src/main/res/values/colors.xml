@@ -80,5 +80,8 @@
     <color name="text_color_dark_grey">#6e6e6e</color>
 
     <color name="pb_bg">#d4d9de</color>
+    <color name="gray_dark">#b2b2b2</color>
+    <color name="disabled_gray">#ced0d1</color>
+    <color name="disabled_gray_2">#eaeaea</color>
 
 </resources>
