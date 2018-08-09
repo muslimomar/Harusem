@@ -19,17 +19,29 @@ public class Lesson extends RealmObject {
     boolean isFinished;
     boolean isLocked;
     String parentId;
+    String lessonApiId;
+    String publicLessonId;
 
     public Lesson() {
     }
 
-    public Lesson(int lessonNumber, String lessonTitle, boolean isFinished, boolean isLocked, String parentId) {
+    public Lesson(int lessonNumber, String lessonTitle, boolean isFinished, boolean isLocked, String parentId, String lessonApiId,String publicLessonId) {
         this.lessonNumber = lessonNumber;
         this.lessonTitle = lessonTitle;
         this.isFinished = isFinished;
         this.isLocked = isLocked;
         this.parentId = parentId;
+        this.lessonApiId = lessonApiId;
+        this.publicLessonId = publicLessonId;
         this.id = UUID.randomUUID().toString();
+    }
+
+    public String getPublicLessonId() {
+        return publicLessonId;
+    }
+
+    public void setPublicLessonId(String publicLessonId) {
+        this.publicLessonId = publicLessonId;
     }
 
     public String getId() {
@@ -78,5 +90,13 @@ public class Lesson extends RealmObject {
 
     public void setParentId(String parentId) {
         this.parentId = parentId;
+    }
+
+    public String getLessonApiId() {
+        return lessonApiId;
+    }
+
+    public void setLessonApiId(String lessonApiId) {
+        this.lessonApiId = lessonApiId;
     }
 }

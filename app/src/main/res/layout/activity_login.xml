@@ -37,7 +37,9 @@
             android:hint="@string/email"
             android:paddingLeft="9dp"
             android:paddingRight="9dp"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:text="mislimumer@gmail.com"
+            />
 
         <EditText
             android:id="@+id/login_password_et"
@@ -52,6 +54,7 @@
             android:hint="@string/stars_hint"
             android:inputType="textWebPassword"
             android:paddingLeft="9dp"
+            android:text="12345677"
             android:paddingRight="9dp"
             android:singleLine="true"
             android:textAlignment="viewStart" />

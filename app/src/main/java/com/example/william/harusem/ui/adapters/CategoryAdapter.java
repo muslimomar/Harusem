@@ -18,7 +18,8 @@ import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder> {
 
-    public static final String EXTRAS_CATEGORY_NAME = "extras_category_name";
+    public static final String EXTRAS_CATEGORY_API_ID = "extras_category_api_id";
+    public static final String EXTRAS_PUBLIC_CATEGORY_API_ID = "extras_public_category_api_id";
     private List<Category> categoryList;
     private Context context;
 
@@ -42,14 +43,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
 
         holder.categoryNameTv.setText(category.getCategoryDisplayName());
         holder.categoryPhotoIv.setImageResource(category.getImageId());
-        holder.percentageTv.setText(context.getResources().getString(R.string.percentage, 10));
+        holder.percentageTv.setText(context.getResources().getString(R.string.percentage, category.getProgress()));
         holder.dialogsCountTv.setText(context.getResources().getString(R.string.dialogs_number, category.getLessonsCount()));
         holder.cardView.setCardBackgroundColor(category.getBgColor());
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, LessonsActivity.class);
-                intent.putExtra(EXTRAS_CATEGORY_NAME, category.getParentId());
+                intent.putExtra(EXTRAS_CATEGORY_API_ID, category.getPublicCategoryId());
+                intent.putExtra(EXTRAS_PUBLIC_CATEGORY_API_ID,category.getApiId());
                 context.startActivity(intent);
             }
         });
@@ -75,4 +77,5 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
             cardView = view.findViewById(R.id.card_view);
         }
     }
+
 }

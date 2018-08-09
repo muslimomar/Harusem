@@ -18,9 +18,17 @@ public class SpeakingDialog extends RealmObject {
     String dialogText;
     int speakProgressLevel;
     int index;
-    boolean isFinished;
+    String parentId;
 
     public SpeakingDialog() {
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
     public int getIndex() {
@@ -31,20 +39,14 @@ public class SpeakingDialog extends RealmObject {
         this.index = index;
     }
 
-    public SpeakingDialog(int dialogType, int index, String dialogText,boolean isFinished) {
+    public SpeakingDialog(int dialogType, int index, String dialogText, String parentId) {
         this.dialogType = dialogType;
         this.dialogText = dialogText;
         this.index = index;
-        this.isFinished = isFinished;
+        this.parentId = parentId;
         this.id = UUID.randomUUID().toString();
     }
 
-    public SpeakingDialog(int dialogType, String dialogText, int speakProgressLevel) {
-        this.dialogType = dialogType;
-        this.dialogText = dialogText;
-        this.speakProgressLevel = speakProgressLevel;
-        this.id = UUID.randomUUID().toString();
-    }
 
     public String getId() {
         return id;
@@ -76,13 +78,5 @@ public class SpeakingDialog extends RealmObject {
 
     public void setDialogText(String dialogText) {
         this.dialogText = dialogText;
-    }
-
-    public boolean isFinished() {
-        return isFinished;
-    }
-
-    public void setFinished(boolean finished) {
-        isFinished = finished;
     }
 }

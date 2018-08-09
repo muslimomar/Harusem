@@ -1,5 +1,6 @@
 package com.example.william.harusem.ui.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
@@ -17,13 +18,19 @@ import com.example.william.harusem.util.Utils;
 
 import java.util.List;
 
+import io.realm.RealmResults;
+
 public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHolder> {
 
-    private String EXTRAS_LESSON_PARENT_ID = "extras_lesson_number";
-    private List<Lesson> lessonsList;
+    public static final int UPDATE_LESSONS_REQUEST_CODE = 48;
+    public static final String EXTRAS_PUBLIC_NEXT_LESSON_API_ID = "extras_next_lesson_api_id";
+    public static final String EXTRAS_PRIVATE_NEXT_LESSON_API_ID = "extras_private_next_lesson_api_id";
+    public static String EXTRAS_PUBLIC_LESSON_API_ID = "extras_lesson_api_id";
+    public static String EXTRAS_PRIVATE_LESSON_API_ID = "extras_private_lesson_api_id";
+    private RealmResults<Lesson> lessonsList;
     private Context context;
 
-    public LessonsAdapter(List<Lesson> lessonsList, Context context) {
+    public LessonsAdapter(RealmResults<Lesson> lessonsList, Context context) {
         this.lessonsList = lessonsList;
         this.context = context;
     }
@@ -70,11 +77,33 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
                     Utils.buildAlertDialog("Locked Level", "Complete the previous lesson to unlock this one", true, context);
                 } else {
                     Intent intent = new Intent(context, SpeakingActivity.class);
-                    intent.putExtra(EXTRAS_LESSON_PARENT_ID, lesson.getParentId());
-                    context.startActivity(intent);
+                    intent.putExtra(EXTRAS_PUBLIC_LESSON_API_ID, lesson.getPublicLessonId());
+                    // send next lesson api to unlock it when the current lesson is finished
+                    String nextPublicLessonApiId = getNextPublicLessonApiId(lessonsList, position);
+                    String nextPrivateLessonApiId = getNextPrivateLessonApiId(lessonsList, position);
+                    intent.putExtra(EXTRAS_PUBLIC_NEXT_LESSON_API_ID, nextPublicLessonApiId);
+                    intent.putExtra(EXTRAS_PRIVATE_NEXT_LESSON_API_ID, nextPrivateLessonApiId);
+                    intent.putExtra(EXTRAS_PRIVATE_LESSON_API_ID, lesson.getLessonApiId());
+                    ((Activity) context).startActivityForResult(intent, UPDATE_LESSONS_REQUEST_CODE);
                 }
             }
         });
+    }
+
+    private String getNextPublicLessonApiId(List<Lesson> lessonsList, int position) {
+        int nextLessonIndex = position + 1;
+        if (nextLessonIndex != lessonsList.size()) {
+            return lessonsList.get(nextLessonIndex).getPublicLessonId();
+        }
+        return "";
+    }
+
+    private String getNextPrivateLessonApiId(List<Lesson> lessonsList, int position) {
+        int nextLessonIndex = position + 1;
+        if (nextLessonIndex != lessonsList.size()) {
+            return lessonsList.get(nextLessonIndex).getLessonApiId();
+        }
+        return "";
     }
 
     @Override

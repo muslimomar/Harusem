@@ -4,8 +4,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.StringRes;
@@ -23,11 +21,9 @@ import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.example.william.harusem.R;
-import com.example.william.harusem.common.Common;
 import com.example.william.harusem.interfaces.WordListener;
-import com.example.william.harusem.models.Category;
 import com.example.william.harusem.models.SpeakingDialog;
-import com.example.william.harusem.ui.adapters.CategoryAdapter;
+import com.example.william.harusem.ui.adapters.LessonsAdapter;
 import com.example.william.harusem.ui.adapters.SpeakingDialogsAdapter;
 import com.example.william.harusem.util.ErrorUtils;
 import com.example.william.harusem.util.SystemPermissionHelper;
@@ -43,7 +39,6 @@ import com.quickblox.customobjects.QBCustomObjects;
 import com.quickblox.customobjects.model.QBCustomObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -51,10 +46,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
-import static com.example.william.harusem.common.Common.CATEGORY_API_NAME;
+import static com.example.william.harusem.common.Common.INDEX;
+import static com.example.william.harusem.common.Common.PARENT_ID;
+import static com.example.william.harusem.ui.adapters.LessonsAdapter.EXTRAS_PRIVATE_LESSON_API_ID;
+import static com.example.william.harusem.ui.adapters.LessonsAdapter.EXTRAS_PRIVATE_NEXT_LESSON_API_ID;
+import static com.example.william.harusem.ui.adapters.LessonsAdapter.EXTRAS_PUBLIC_LESSON_API_ID;
+import static com.example.william.harusem.ui.adapters.LessonsAdapter.EXTRAS_PUBLIC_NEXT_LESSON_API_ID;
 
 public class SpeakingActivity extends AppCompatActivity implements WordListener {
 
@@ -74,11 +73,13 @@ public class SpeakingActivity extends AppCompatActivity implements WordListener 
     String retrievedSentenceClear;
     SpeakingDialogsAdapter mAdapter;
     int position;
-    String categoryName;
+    String lessonApiId;
     Realm realm;
     @BindView(R.id.root_layout)
     RelativeLayout rootLayout;
-    private String customObjectId;
+    private String nextLessonApiId;
+    private String privateLessonApi;
+    private String privateNextLessonApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,94 +94,57 @@ public class SpeakingActivity extends AppCompatActivity implements WordListener 
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            categoryName = bundle.getString(CategoryAdapter.EXTRAS_CATEGORY_NAME);
+            lessonApiId = bundle.getString(EXTRAS_PUBLIC_LESSON_API_ID);
+            nextLessonApiId = bundle.getString(LessonsAdapter.EXTRAS_PUBLIC_NEXT_LESSON_API_ID);
+
+            privateLessonApi = bundle.getString(EXTRAS_PRIVATE_LESSON_API_ID);
+            privateNextLessonApi = bundle.getString(EXTRAS_PRIVATE_NEXT_LESSON_API_ID);
         }
 
         configRecyclerView();
-        updateCategory();
+        getData();
     }
 
-    private void updateCategory() {
+    private void getData() {
         ProgressDialog progressDialog = Utils.buildProgressDialog(SpeakingActivity.this, "", "Loading...", false);
         progressDialog.show();
-
-        QBRequestGetBuilder requestGetBuilder = new QBRequestGetBuilder();
-        requestGetBuilder.setLimit(1);
-        requestGetBuilder.ctn(CATEGORY_API_NAME, categoryName);
-        QBCustomObjects.getObjects("Categories_User_Data", requestGetBuilder).performAsync(new QBEntityCallback<ArrayList<QBCustomObject>>() {
-            @Override
-            public void onSuccess(ArrayList<QBCustomObject> qbCustomObjects, Bundle bundle) {
-                if (qbCustomObjects.size() > 0) {
-                    QBCustomObject customObject = qbCustomObjects.get(0);
-                    customObjectId = customObject.getCustomObjectId();
-                    index = customObject.getInteger("current_index");
-                    fillData(progressDialog);
-                } else {
-                    createUserDataObject(progressDialog);
-                }
-
-            }
-
-            @Override
-            public void onError(QBResponseException e) {
-                progressDialog.dismiss();
-                if (e.getHttpStatusCode() == Common.NOT_FOUND_HTTP_CODE) {
-                    createUserDataObject(progressDialog);
-                } else {
-                    Utils.buildAlertDialogButton("Error", e.getMessage(), false, SpeakingActivity.this, "OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            finish();
-                        }
-                    });
-                }
-            }
-        });
-
+        fillData(progressDialog);
     }
 
-    private void createUserDataObject(ProgressDialog progressDialog) {
-        QBCustomObject categoryUserData = new QBCustomObject();
-        categoryUserData.setClassName("Categories_User_Data");
-        categoryUserData.putString(CATEGORY_API_NAME, categoryName);
-        categoryUserData.putInteger("current_index", 1);
 
-        QBCustomObjects.createObject(categoryUserData).performAsync(new QBEntityCallback<QBCustomObject>() {
-            @Override
-            public void onSuccess(QBCustomObject customObject, Bundle bundle) {
-                customObjectId = customObject.getCustomObjectId();
-                fillData(progressDialog);
-            }
-
-            @Override
-            public void onError(QBResponseException e) {
-                Utils.buildAlertDialogButton("Error", e.getMessage(), false, SpeakingActivity.this, "OK", new DialogInterface.OnClickListener() {
+    private void fillData(ProgressDialog progressDialog) {
+        // download data for the first time
+        RealmResults<SpeakingDialog> speakingDialogsList = realm.where(SpeakingDialog.class).findAll();
+        if (speakingDialogsList.size() > 0) {
+            RealmResults<SpeakingDialog> speakingDialogs = getSelectedLesson();
+            refreshAdapter(speakingDialogs);
+            setDialogsNumber(this.index, getTotalIndexes());
+            dismissDialog(progressDialog);
+            if (speakingDialogs.size() == 0) {
+                Utils.buildAlertDialogButton("Error", "No data at this lesson", false, this, "OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         finish();
                     }
                 });
             }
-        });
-    }
-
-    private void fillData(ProgressDialog progressDialog) {
-
-        // download data for the first time
-        RealmResults<SpeakingDialog> speakingDialogsList = realm.where(SpeakingDialog.class).findAll();
-        if (speakingDialogsList.size() > 0) {
-            RealmResults<SpeakingDialog> speakingDialogs = realm.where(SpeakingDialog.class).equalTo("index", this.index).findAll();
-            refreshAdapter(speakingDialogs);
-            setDialogsNumber(this.index, getTotalIndexes());
-            progressDialog.dismiss();
         } else {
             getCustomData(progressDialog);
         }
 
     }
 
+    private RealmResults<SpeakingDialog> getSelectedLesson() {
+        return realm.where(SpeakingDialog.class)
+                .equalTo(PARENT_ID, lessonApiId)
+                .equalTo(INDEX, this.index)
+                .findAll();
+    }
+
     private int getTotalIndexes() {
-        return realm.where(SpeakingDialog.class).distinct("index").findAll().size();
+        return realm.where(SpeakingDialog.class)
+                .equalTo(PARENT_ID, lessonApiId)
+                .distinct("index").findAll().size();
     }
 
     private void refreshAdapter(RealmResults<SpeakingDialog> speakingDialogs) {
@@ -199,7 +163,7 @@ public class SpeakingActivity extends AppCompatActivity implements WordListener 
         requestBuilder.sortAsc("Created at");
         requestBuilder.setLimit(200);
 
-        Performer<ArrayList<QBCustomObject>> object = QBCustomObjects.getObjects(categoryName, requestBuilder);
+        Performer<ArrayList<QBCustomObject>> object = QBCustomObjects.getObjects("Category_Lessons_Dialogs", requestBuilder);
         object.performAsync(new QBEntityCallback<ArrayList<QBCustomObject>>() {
             @Override
             public void onSuccess(ArrayList<QBCustomObject> qbCustomObjects, Bundle bundle) {
@@ -208,30 +172,30 @@ public class SpeakingActivity extends AppCompatActivity implements WordListener 
                     Integer view_type = object.getInteger("view_type");
                     String dialogText = object.getString("dialog_text");
                     int index = object.getInteger("index");
-                    boolean isFinished = object.getBoolean("isFinished");
-                    speakingDialogs.add(new SpeakingDialog(view_type, index, dialogText, isFinished));
+                    String parentId = object.getParentId();
+                    speakingDialogs.add(new SpeakingDialog(view_type, index, dialogText, parentId));
                 }
 
                 realm.beginTransaction();
                 realm.copyToRealmOrUpdate(speakingDialogs);
                 realm.commitTransaction();
 
-                RealmResults<SpeakingDialog> speakingDialogRealmResults = realm.where(SpeakingDialog.class).equalTo("index", SpeakingActivity.this.index).findAll();
+                RealmResults<SpeakingDialog> speakingDialogRealmResults = realm.where(SpeakingDialog.class).equalTo(PARENT_ID, lessonApiId).equalTo(INDEX, SpeakingActivity.this.index).findAll();
                 refreshAdapter(speakingDialogRealmResults);
                 setDialogsNumber(SpeakingActivity.this.index, getTotalIndexes());
 
-                progressDialog.dismiss();
+                dismissDialog(progressDialog);
             }
 
             @Override
             public void onError(QBResponseException e) {
+                dismissDialog(progressDialog);
                 showErrorSnackbar(R.string.dlg_retry, e, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         getCustomData(progressDialog);
                     }
                 });
-                progressDialog.dismiss();
             }
         });
 
@@ -336,7 +300,6 @@ public class SpeakingActivity extends AppCompatActivity implements WordListener 
 
             realm.beginTransaction();
             dialogWithProgress.setSpeakProgressLevel(progress);
-            dialogWithProgress.setFinished(true);
             realm.copyToRealmOrUpdate(dialogWithProgress);
             realm.commitTransaction();
             mAdapter.updateItem(position);
@@ -383,44 +346,25 @@ public class SpeakingActivity extends AppCompatActivity implements WordListener 
 
     @OnClick(R.id.next_button)
     public void setNextBtn(View view) {
+        nextLesson();
+
+    }
+
+    private void nextLesson() {
+        if (!areDialogsFinished()) {
+            Toaster.shortToast("Please complete all the lessons to proceed!");
+            return;
+        }
+
         if (index == getTotalIndexes()) {
+            Intent intent = new Intent();
+            intent.putExtra(EXTRAS_PRIVATE_LESSON_API_ID, privateLessonApi);
+            intent.putExtra(EXTRAS_PRIVATE_NEXT_LESSON_API_ID, privateNextLessonApi);
+            setResult(RESULT_OK, intent);
             finish();
         } else {
-            if (!areDialogsFinished()) {
-                Toaster.shortToast("Please complete all the lessons to proceed!");
-                return;
-            }
-
             index++;
-            ProgressDialog progressDialog = Utils.buildProgressDialog(this, "", "Loading...", false);
-            progressDialog.show();
-
-
-            QBCustomObject record = new QBCustomObject();
-            record.setClassName("Categories_User_Data");
-            HashMap<String, Object> fields = new HashMap<String, Object>();
-            fields.put("current_index", index);
-            record.setFields(fields);
-            record.setCustomObjectId(customObjectId);
-            QBCustomObjects.updateObject(record).performAsync(new QBEntityCallback<QBCustomObject>() {
-                @Override
-                public void onSuccess(QBCustomObject customObject, Bundle bundle) {
-                    fillData(progressDialog);
-                }
-
-                @Override
-                public void onError(QBResponseException e) {
-                    progressDialog.dismiss();
-                    showErrorSnackbar(R.string.dlg_retry, e, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                        }
-                    });
-                }
-            });
-
-
+            fillData(null);
         }
     }
 
@@ -428,16 +372,18 @@ public class SpeakingActivity extends AppCompatActivity implements WordListener 
         List<SpeakingDialog> currentDialogs = mAdapter.getAllDialogs();
         for (SpeakingDialog dialog : currentDialogs) {
             if (dialog.getDialogType() == SpeakingDialogsAdapter.VIEW_TYPE_SENDER) {
-                if (!dialog.isFinished()) {
-                    return false;
-                }
-
                 if (dialog.getSpeakProgressLevel() < 50) {
                     return false;
                 }
             }
         }
         return true;
+    }
+
+    public void dismissDialog(ProgressDialog progressDialog) {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 
     @OnClick(R.id.ic_back_iv)

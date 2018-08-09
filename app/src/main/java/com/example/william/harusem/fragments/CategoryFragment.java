@@ -14,18 +14,20 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.example.william.harusem.R;
+import com.example.william.harusem.common.Common;
 import com.example.william.harusem.models.Category;
-import com.example.william.harusem.models.SpeakingDialog;
+import com.example.william.harusem.models.Lesson;
 import com.example.william.harusem.ui.adapters.CategoryAdapter;
 import com.example.william.harusem.util.ErrorUtils;
 import com.example.william.harusem.util.Utils;
+import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
-import com.quickblox.core.server.Performer;
 import com.quickblox.customobjects.QBCustomObjects;
 import com.quickblox.customobjects.model.QBCustomObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,7 +35,7 @@ import butterknife.Unbinder;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-import static com.example.william.harusem.common.Common.CATEGORY_API_NAME;
+import static com.example.william.harusem.common.Common.USERS_CATEGORY_DATA;
 
 public class CategoryFragment extends Fragment {
 
@@ -55,43 +57,129 @@ public class CategoryFragment extends Fragment {
         realm = Realm.getDefaultInstance();
         configRecyclerView();
 
-        RealmResults<Category> categoryRealmResults = realm.where(Category.class).findAll();
-        if (categoryRealmResults.size() > 0) {
-            refreshAdapter(categoryRealmResults);
-        } else {
-            fillData();
-        }
+        getDataFromSDK();
 
         return view;
     }
 
-    private void fillData() {
-        ProgressDialog progressDialog = Utils.buildProgressDialog(getContext(), "", "Loading...", false);
-        progressDialog.show();
+    private void getDataFromSDK() {
+        RealmResults<Category> realmResults = realm.where(Category.class).findAll();
+        if (realmResults.size() > 0) {
+            refreshAdapter(realmResults);
+        } else {
+            ProgressDialog progressDialog = Utils.buildProgressDialog(getContext(), "", "Loading...", false);
+            progressDialog.show();
+            getUserCategoryClass(progressDialog);
+        }
+    }
 
-        QBCustomObjects.getObjects("Categories").performAsync(new QBEntityCallback<ArrayList<QBCustomObject>>() {
+    private void getUserCategoryClass(ProgressDialog progressDialog) {
+        QBCustomObjects.getObjects(USERS_CATEGORY_DATA).performAsync(new QBEntityCallback<ArrayList<QBCustomObject>>() {
             @Override
             public void onSuccess(ArrayList<QBCustomObject> qbCustomObjects, Bundle bundle) {
                 if (getActivity() != null && isAdded()) {
-                    ArrayList<Category> categories = new ArrayList<>();
-                    for (QBCustomObject custom : qbCustomObjects) {
-                        Integer dialog_count = custom.getInteger("category_dialog_count");
-                        String displayName = custom.getString("category_name");
-                        String category_color = custom.getString("category_color");
-                        String icon = custom.getString("icon");
-                        String parentId = custom.getParentId();
+                    if (qbCustomObjects.size() > 0) {
 
-                        int resID = getResources().getIdentifier(icon,
-                                "drawable", getActivity().getPackageName());
-
-                        categories.add(new Category(resID, displayName, parentId, dialog_count, Color.parseColor(category_color)));
+                        storeSdkCustomData(qbCustomObjects);
+                        RealmResults<Category> realmResults = realm.where(Category.class).findAll();
+                        refreshAdapter(realmResults);
+                        progressDialog.dismiss();
+                    } else {
+                        getPublicCategories(progressDialog);
                     }
+                }
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                if (e.getHttpStatusCode() == Common.NOT_FOUND_HTTP_CODE) {
+                    if (getActivity() != null && isAdded()) {
+                        getPublicCategories(progressDialog);
+                    }
+                } else {
+                    progressDialog.dismiss();
+                    showErrorSnackbar(R.string.dlg_retry, e, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            getUserCategoryClass(progressDialog);
+                        }
+                    });
+                }
+
+            }
+        });
+
+    }
+
+    private void getPublicCategories(ProgressDialog progressDialog) {
+        QBCustomObjects.getObjects("Categories").performAsync(new QBEntityCallback<ArrayList<QBCustomObject>>() {
+            @Override
+            public void onSuccess(ArrayList<QBCustomObject> qbCustomObjects, Bundle bundle) {
+                List<QBCustomObject> categoriesCustomObjects = new ArrayList<>();
+                // add data to list, to store them in realm later
+                addUserCatgoriesData(categoriesCustomObjects, qbCustomObjects);
+                createUserCategoryClass(categoriesCustomObjects, progressDialog);
+
+            }
+
+            @Override
+            public void onError(QBResponseException e) {
+                progressDialog.dismiss();
+                showErrorSnackbar(R.string.dlg_retry, e, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        getDataFromSDK();
+                    }
+                });
+
+            }
+        });
+
+    }
+
+    private void createUserCategoryClass(List<QBCustomObject> categoriesCustomObjects, ProgressDialog progressDialog) {
+        QBCustomObjects.createObjects(categoriesCustomObjects).performAsync(new QBEntityCallback<ArrayList<QBCustomObject>>() {
+            @Override
+            public void onSuccess(ArrayList<QBCustomObject> customObjects, Bundle bundle) {
+                if (getActivity() != null && isAdded()) {
+                    ArrayList<Category> realmCategories = new ArrayList<>();
 
                     realm.beginTransaction();
-                    realm.copyToRealmOrUpdate(categories);
+                    for (QBCustomObject custom : customObjects) {
+                        Integer category_lessons_count = custom.getInteger("category_lessons_count");
+                        String category_name = custom.getString("category_name");
+                        String category_color = custom.getString("category_color");
+                        String icon = custom.getString("icon");
+                        String public_category_id = custom.getString("public_category_id");
+                        Integer progress = custom.getInteger("progress");
+                        String apiId = custom.getCustomObjectId();
+
+                        int resId = getResources().getIdentifier(icon,
+                                "drawable", getActivity().getPackageName());
+
+
+                        Category category = realm.where(Category.class).equalTo("apiId", apiId).findFirst();
+                        if (category != null) {
+                            category.setLessonsCount(category_lessons_count);
+                            category.setCategoryDisplayName(category_name);
+                            category.setBgColor(Color.parseColor(category_color));
+                            category.setImageId(resId);
+                            category.setPublicCategoryId(public_category_id);
+                            category.setProgress(progress);
+                            category.setApiId(apiId);
+                        } else {
+                            realmCategories.add(new Category(resId, category_name, category_lessons_count, Color.parseColor(category_color), apiId, progress, public_category_id));
+                        }
+
+                    }
+
+                    if (realmCategories.size() > 0) {
+                        realm.copyToRealmOrUpdate(realmCategories);
+                    }
                     realm.commitTransaction();
 
                     RealmResults<Category> realmResults = realm.where(Category.class).findAll();
+
                     refreshAdapter(realmResults);
                     progressDialog.dismiss();
                 }
@@ -103,13 +191,67 @@ public class CategoryFragment extends Fragment {
                 showErrorSnackbar(R.string.dlg_retry, e, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        fillData();
+                        getDataFromSDK();
                     }
                 });
             }
         });
 
     }
+
+    private void addUserCatgoriesData(List<QBCustomObject> categoriesCustomObjects, ArrayList<QBCustomObject> qbCustomObjects) {
+        for (QBCustomObject custom : qbCustomObjects) {
+            QBCustomObject userLessonData = new QBCustomObject();
+            userLessonData.setClassName(USERS_CATEGORY_DATA);
+            userLessonData.putInteger("category_lessons_count", custom.getInteger("category_lessons_count"));
+            userLessonData.putString("category_name", custom.getString("category_name"));
+            userLessonData.putString("category_color", custom.getString("category_color"));
+            userLessonData.putString("icon", custom.getString("icon"));
+            userLessonData.putString("public_category_id", custom.getCustomObjectId());
+            userLessonData.putInteger("progress", custom.getInteger("progress"));
+            userLessonData.setUserId(QBChatService.getInstance().getUser().getId());
+            userLessonData.setParentId(custom.getParentId());
+
+            categoriesCustomObjects.add(userLessonData);
+        }
+
+    }
+
+    private void storeSdkCustomData(ArrayList<QBCustomObject> qbCustomObjects) {
+        ArrayList<Category> realmCategories = new ArrayList<>();
+        realm.beginTransaction();
+        for (QBCustomObject custom : qbCustomObjects) {
+            Integer category_lessons_count = custom.getInteger("category_lessons_count");
+            String categoryName = custom.getString("category_name");
+            String category_color = custom.getString("category_color");
+            String icon = custom.getString("icon");
+            String apiId = custom.getCustomObjectId();
+            int progress = custom.getInteger("progress");
+            String publicCategoryApi = custom.getString("public_category_id");
+
+            int resID = getResources().getIdentifier(icon,
+                    "drawable", getActivity().getPackageName());
+
+            Category category = realm.where(Category.class).equalTo("apiId", apiId).findFirst();
+            if (category != null) {
+                category.setLessonsCount(category_lessons_count);
+                category.setCategoryDisplayName(categoryName);
+                category.setBgColor(Color.parseColor(category_color));
+                category.setImageId(resID);
+                category.setPublicCategoryId(publicCategoryApi);
+                category.setProgress(progress);
+                category.setApiId(apiId);
+            } else {
+                realmCategories.add(new Category(resID, categoryName, category_lessons_count, Color.parseColor(category_color), apiId, progress, publicCategoryApi));
+            }
+        }
+
+        if (realmCategories.size() > 0) {
+            realm.copyToRealmOrUpdate(realmCategories);
+        }
+        realm.commitTransaction();
+    }
+
 
     private void refreshAdapter(RealmResults<Category> categories) {
         adapter = new CategoryAdapter(categories, getActivity());
@@ -135,5 +277,15 @@ public class CategoryFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<Category> all = realm.where(Category.class).findAll();
+        CategoryAdapter adapter = new CategoryAdapter(all, getActivity());
+        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 }

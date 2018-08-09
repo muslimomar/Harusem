@@ -17,27 +17,38 @@ public class Category extends RealmObject {
     String categoryDisplayName;
     int lessonsCount;
     int bgColor;
-    String parentId;
+    String apiId;
+    int progress;
+    String publicCategoryId;
+
+    public String getPublicCategoryId() {
+        return publicCategoryId;
+    }
+
+    public void setPublicCategoryId(String publicCategoryId) {
+        this.publicCategoryId = publicCategoryId;
+    }
 
     public Category() {
     }
 
-    public Category(int imageId, String categoryDisplayName, String parentId, int lessonsCount, int bgColor) {
+    public Category(int imageId, String categoryDisplayName, int lessonsCount, int bgColor, String apiId, int progress,String publicCategoryId) {
         this.imageId = imageId;
         this.categoryDisplayName = categoryDisplayName;
         this.lessonsCount = lessonsCount;
         this.bgColor = bgColor;
-        this.parentId = parentId;
+        this.apiId = apiId;
+        this.progress = progress;
+        this.publicCategoryId = publicCategoryId;
         this.id = UUID.randomUUID().toString();
     }
 
-
-    public String getParentId() {
-        return parentId;
+    public String getApiId() {
+        return apiId;
     }
 
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
+    public void setApiId(String apiId) {
+        this.apiId = apiId;
     }
 
     public int getImageId() {
@@ -70,5 +81,13 @@ public class Category extends RealmObject {
 
     public void setBgColor(int bgColor) {
         this.bgColor = bgColor;
+    }
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
     }
 }
