@@ -153,7 +153,20 @@ public class LessonsActivity extends AppCompatActivity {
                     String lessonApiId = custom.getCustomObjectId();
                     String publicLessonId = custom.getString("public_lesson_id");
 
-                    realmLessons.add(new Lesson(lesson_number, lesson_title, isFinished, isLocked, parentId, lessonApiId, publicLessonId));
+                    Lesson existingLesson = realm.where(Lesson.class).equalTo("lessonApiId", lessonApiId).findFirst();
+                    if (existingLesson != null) {
+                        realm.beginTransaction();
+                        existingLesson.setLessonNumber(lesson_number);
+                        existingLesson.setLessonTitle(lesson_title);
+                        existingLesson.setFinished(isFinished);
+                        existingLesson.setLocked(isLocked);
+                        existingLesson.setParentId(parentId);
+                        existingLesson.setLessonApiId(lessonApiId);
+                        existingLesson.setPublicLessonId(publicLessonId);
+                        realm.commitTransaction();
+                    } else {
+                        realmLessons.add(new Lesson(lesson_number, lesson_title, isFinished, isLocked, parentId, lessonApiId, publicLessonId));
+                    }
                 }
 
                 copyListToRealm(realmLessons);
@@ -182,9 +195,11 @@ public class LessonsActivity extends AppCompatActivity {
     }
 
     private void copyListToRealm(ArrayList<Lesson> lessons) {
-        realm.beginTransaction();
-        realm.copyToRealmOrUpdate(lessons);
-        realm.commitTransaction();
+        if (lessons.size() > 0) {
+            realm.beginTransaction();
+            realm.copyToRealmOrUpdate(lessons);
+            realm.commitTransaction();
+        }
     }
 
     private void getUserLessonClass(ProgressDialog progressDialog) {
@@ -235,8 +250,22 @@ public class LessonsActivity extends AppCompatActivity {
             String lessonApiId = custom.getCustomObjectId();
             String publicLessonId = custom.getString("public_lesson_id");
 
-            realmLessons.add(new Lesson(lesson_number, lesson_title, isFinished, isLocked, parentId, lessonApiId, publicLessonId));
+            Lesson existingLesson = realm.where(Lesson.class).equalTo("lessonApiId", lessonApiId).findFirst();
+            if (existingLesson != null) {
+                realm.beginTransaction();
+                existingLesson.setLessonNumber(lesson_number);
+                existingLesson.setLessonTitle(lesson_title);
+                existingLesson.setFinished(isFinished);
+                existingLesson.setLocked(isLocked);
+                existingLesson.setParentId(parentId);
+                existingLesson.setLessonApiId(lessonApiId);
+                existingLesson.setPublicLessonId(publicLessonId);
+                realm.commitTransaction();
+            } else {
+                realmLessons.add(new Lesson(lesson_number, lesson_title, isFinished, isLocked, parentId, lessonApiId, publicLessonId));
+            }
         }
+
 
         copyListToRealm(realmLessons);
     }

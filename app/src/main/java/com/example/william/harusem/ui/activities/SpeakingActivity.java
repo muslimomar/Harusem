@@ -173,12 +173,28 @@ public class SpeakingActivity extends AppCompatActivity implements WordListener 
                     String dialogText = object.getString("dialog_text");
                     int index = object.getInteger("index");
                     String parentId = object.getParentId();
-                    speakingDialogs.add(new SpeakingDialog(view_type, index, dialogText, parentId));
+                    String apiId = object.getCustomObjectId();
+
+                    SpeakingDialog existingDialog = realm.where(SpeakingDialog.class).equalTo("apiId", apiId).findFirst();
+                    if (existingDialog != null) {
+                        realm.beginTransaction();
+                        existingDialog.setDialogType(view_type);
+                        existingDialog.setDialogText(dialogText);
+                        existingDialog.setIndex(index);
+                        existingDialog.setParentId(parentId);
+                        existingDialog.setApiId(apiId);
+                        realm.commitTransaction();
+                    } else {
+                        speakingDialogs.add(new SpeakingDialog(view_type, index, dialogText, parentId, apiId));
+                    }
+
                 }
 
-                realm.beginTransaction();
-                realm.copyToRealmOrUpdate(speakingDialogs);
-                realm.commitTransaction();
+                if (speakingDialogs.size() > 0) {
+                    realm.beginTransaction();
+                    realm.copyToRealmOrUpdate(speakingDialogs);
+                    realm.commitTransaction();
+                }
 
                 RealmResults<SpeakingDialog> speakingDialogRealmResults = realm.where(SpeakingDialog.class).equalTo(PARENT_ID, lessonApiId).equalTo(INDEX, SpeakingActivity.this.index).findAll();
                 refreshAdapter(speakingDialogRealmResults);
