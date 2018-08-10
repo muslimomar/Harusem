@@ -68,7 +68,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 import static android.app.Activity.RESULT_OK;
-import static com.example.william.harusem.common.Common.BOT_ID;
 
 
 public class DialogsFragment extends Fragment implements DialogsManager.ManagingDialogsCallbacks {
@@ -230,35 +229,6 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
         return view;
     }
 
-    private void createBotDialog() {
-        ProgressDialog progressDialog = Utils.buildProgressDialog(getActivity(), getString(R.string.loading), getString(R.string.init_bot), false);
-        progressDialog.show();
-
-        ChatHelper.getInstance().createBotDialog(BOT_ID, new QBEntityCallback<QBChatDialog>() {
-            @Override
-            public void onSuccess(QBChatDialog qbChatDialog, Bundle bundle) {
-                progressDialog.dismiss();
-                QBChatDialogHolder.getInstance().putDialog(qbChatDialog);
-                updateDialogsAdapter();
-                SharedPrefsHelper.getInstance().save("is_there_bot", true);
-            }
-
-            @Override
-            public void onError(QBResponseException e) {
-                progressDialog.dismiss();
-                swipeRefreshLayout.setRefreshing(false);
-                showErrorSnackbar(R.string.dlg_retry, e, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        createBotDialog();
-                    }
-                });
-            }
-        });
-
-
-    }
-
     private void getUpdatedDialogFromChat() {
         Bundle arguments = getArguments();
         if (arguments != null) {
@@ -310,11 +280,6 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
             viewContactItem.setVisible(false);
         } else {
             viewContactItem.setVisible(true);
-        }
-
-        if (dialog.getOccupants().contains(BOT_ID)) {
-            viewContactItem.setVisible(false);
-            deleteItem.setVisible(false);
         }
 
 
@@ -602,11 +567,6 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
                         QBChatDialogHolder.getInstance().clear();
                     }
 
-                    Boolean isThereBot = SharedPrefsHelper.getInstance().get("is_there_bot", false);
-                    if (!isThereBot) {
-                        checkBot(dialogs);
-                    }
-
                     QBChatDialogHolder.getInstance().putDialogs(dialogs);
                     updateDialogsAdapter();
                 }
@@ -621,21 +581,6 @@ public class DialogsFragment extends Fragment implements DialogsManager.Managing
         });
     }
 
-    private void checkBot(ArrayList<QBChatDialog> dialogs) {
-        if (dialogs.size() > 0) {
-            ArrayList<Integer> dialogRecipients = new ArrayList<>();
-            for (QBChatDialog dialog : dialogs) {
-                dialogRecipients.add(dialog.getRecipientId());
-            }
-
-            if (!dialogRecipients.contains(BOT_ID)) {
-                createBotDialog();
-            }
-        } else {
-            createBotDialog();
-        }
-
-    }
 
     private void updateDialogsAdapter() {
         dialogsAdapter.updateList(new ArrayList<>(QBChatDialogHolder.getInstance().getDialogs().values()));

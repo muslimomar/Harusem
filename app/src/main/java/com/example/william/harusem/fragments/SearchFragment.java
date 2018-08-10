@@ -39,7 +39,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static com.example.william.harusem.common.Common.BOT_ID;
 
 
 public class SearchFragment extends Fragment {
@@ -112,7 +111,7 @@ public class SearchFragment extends Fragment {
                             ArrayList<QBUser> qbUserWithoutCurrent = new ArrayList<>();
                             for (QBUser user : qbUsers) {
 
-                                if (!user.getLogin().equals(QBChatService.getInstance().getUser().getLogin()) && !user.getId().equals(BOT_ID)) {
+                                if (!user.getLogin().equals(QBChatService.getInstance().getUser().getLogin())) {
 
                                     qbUserWithoutCurrent.add(user);
                                 }
@@ -154,7 +153,7 @@ public class SearchFragment extends Fragment {
                             ArrayList<QBUser> qbUserWithoutCurrent = new ArrayList<>();
                             for (QBUser user : qbUsers) {
 
-                                if (!user.getLogin().equals(QBChatService.getInstance().getUser().getLogin()) && !user.getId().equals(BOT_ID)) {
+                                if (!user.getLogin().equals(QBChatService.getInstance().getUser().getLogin())) {
 
                                     qbUserWithoutCurrent.add(user);
                                 }
@@ -230,7 +229,7 @@ public class SearchFragment extends Fragment {
                 for (QBUser user : qbUsers) {
 
 
-                    if (!user.getLogin().equals(QBChatService.getInstance().getUser().getLogin()) && !user.getId().equals(BOT_ID)) {
+                    if (!user.getLogin().equals(QBChatService.getInstance().getUser().getLogin())) {
 
                         qbUserWithoutCurrent.add(user);
                     }

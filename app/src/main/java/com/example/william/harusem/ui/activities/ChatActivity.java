@@ -127,7 +127,6 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.fabric.sdk.android.Fabric;
 
-import static com.example.william.harusem.common.Common.BOT_ID;
 import static com.example.william.harusem.ui.activities.SelectUsersActivity.EXTRA_QB_USERS;
 
 ////////For call
@@ -220,7 +219,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     private String fullName;
     private SystemPermissionHelper systemPermissionHelper;
     private Vibrator vibrator;
-    private boolean isRecipientBot = false;
     private boolean isUserBlocked = false;
 
     @Override
@@ -304,7 +302,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
     }
 
     public void setupChat() {
-        hideForBot();
         initChatConnectionListener();
         initMessagesRecyclerView();
         initDialogForChat();
@@ -328,23 +325,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
     }
 
-    private void hideForBot() {
-        if (qbChatDialog.getOccupants().contains(BOT_ID)) {
-            isRecipientBot = true;
-            recordAudioBtn.setVisibility(View.GONE);
-            attachIv.setVisibility(View.GONE);
-            sendTxtBtn.setVisibility(View.VISIBLE);
-            videoCallBtn.setVisibility(View.GONE);
-            audioCallBtn.setVisibility(View.GONE);
-            statusSignIv.setVisibility(View.GONE);
-            moreIv.setVisibility(View.GONE);
-
-            int dimension = (int) getResources().getDimension(R.dimen.chat_layout_padding);
-            bottomBar.setPadding(0, dimension, 0, dimension);
-
-
-        }
-    }
 
     private void EdtTxtListener() {
         messageInputEt.addTextChangedListener(new TextWatcher() {
@@ -596,7 +576,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
 
     private void setButtonsVisibility(String s) {
-        if (!isRecipientBot) {
             if (s.isEmpty() && attachmentPreviewAdapter.getUploadedAttachments().size() == 0) {
                 sendTxtBtn.setVisibility(View.GONE);
                 recordAudioBtn.setVisibility(View.VISIBLE);
@@ -604,8 +583,6 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
                 sendTxtBtn.setVisibility(View.VISIBLE);
                 recordAudioBtn.setVisibility(View.GONE);
             }
-        }
-
     }
 
     private void initIsTypingListener() {
@@ -790,9 +767,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
         }
 
         popup.setOnMenuItemClickListener(this);
-        if (!isRecipientBot) {
             popup.show();
-        }
     }
 
     private void sendDialogId() {
@@ -846,9 +821,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             case REQUEST_CODE_ATTACHMENT:
                 sendTxtBtn.setVisibility(View.VISIBLE);
 
-                if (!isRecipientBot) {
                     recordAudioBtn.setVisibility(View.GONE);
-                }
                 attachmentPreviewAdapter.add(file);
                 break;
         }
@@ -978,10 +951,8 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
             Toaster.shortToast(R.string.cant_send_msg);
         }
 
-        if (!isRecipientBot) {
             sendTxtBtn.setVisibility(View.GONE);
             recordAudioBtn.setVisibility(View.VISIBLE);
-        }
     }
 
     private void loadUserFullName() {
@@ -1007,9 +978,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
                 joinGroupChat();
                 break;
             case PRIVATE:
-                if (!isRecipientBot) {
                     statusSignIv.setVisibility(View.VISIBLE);
-                }
                 loadDialogUsers();
                 break;
             default:
@@ -1664,7 +1633,7 @@ public class ChatActivity extends AppCompatActivity implements OnImagePickedList
 
     @OnClick(R.id.dialog_avatar)
     public void setDialogAvatar(View view) {
-        if (qbChatDialog != null && qbChatDialog.getType() == QBDialogType.PRIVATE && qbChatDialog.getRecipientId() != BOT_ID) {
+        if (qbChatDialog != null && qbChatDialog.getType() == QBDialogType.PRIVATE) {
             Intent intent = new Intent(this, ProfileActivity.class);
             intent.putExtra("user_id", qbChatDialog.getRecipientId().toString());
             intent.putExtra("name", qbChatDialog.getName());
