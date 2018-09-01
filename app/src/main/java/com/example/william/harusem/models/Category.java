@@ -10,9 +10,7 @@ import io.realm.annotations.PrimaryKey;
  * on 05-08-2018.
  */
 
-public class Category extends RealmObject {
-    @PrimaryKey
-    String id;
+public class Category  {
     int imageId;
     String categoryDisplayName;
     int lessonsCount;
@@ -40,7 +38,6 @@ public class Category extends RealmObject {
         this.apiId = apiId;
         this.progress = progress;
         this.publicCategoryId = publicCategoryId;
-        this.id = UUID.randomUUID().toString();
     }
 
     public String getApiId() {

@@ -29,9 +29,12 @@ import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.example.william.harusem.BlockingActivity;
 import com.example.william.harusem.R;
 import com.example.william.harusem.helper.QBFriendListHelper;
+import com.example.william.harusem.holder.LessonsHolder;
 import com.example.william.harusem.holder.QBChatDialogHolder;
 import com.example.william.harusem.holder.QBFriendRequestsHolder;
 import com.example.william.harusem.holder.QBUsersHolder;
+import com.example.william.harusem.holder.SpeakingCategoriesHolder;
+import com.example.william.harusem.holder.SpeakingDialogsHolder;
 import com.example.william.harusem.models.UserData;
 import com.example.william.harusem.ui.activities.AccountActivity;
 import com.example.william.harusem.ui.activities.FriendRequestsActivity;
@@ -352,7 +355,7 @@ public class ProfileFragment extends Fragment {
         try {
             ChatPingAlarmManager.onDestroy();
         } catch (Exception e) {
-            Log.e(TAG, "destroyRtcClientAndChat: ",e );
+            Log.e(TAG, "destroyRtcClientAndChat: ", e);
         }
 
         if (chatService != null) {
@@ -395,7 +398,10 @@ public class ProfileFragment extends Fragment {
                         SharedPrefsHelper.getInstance().removeQbUser();
                         ChatHelper.getInstance().destroy();
                         QBChatDialogHolder.getInstance().clear();
-
+//                        Realm.getDefaultInstance().deleteAll();
+                        SpeakingCategoriesHolder.getInstance().clear();
+                        LessonsHolder.getInstance().clear();
+                        SpeakingDialogsHolder.getInstance().clear();
 
                         Log.d(TAG, "onSuccess: logout success!");
                         redirectToLogin();
@@ -582,7 +588,8 @@ public class ProfileFragment extends Fragment {
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
-    @OnClick(R.id.blocking_tv) public void setBlockingTv(View view) {
+    @OnClick(R.id.blocking_tv)
+    public void setBlockingTv(View view) {
         startActivity(new Intent(getActivity(), BlockingActivity.class));
     }
 }

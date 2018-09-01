@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.example.william.harusem.R;
+import com.example.william.harusem.holder.SpeakingDialogsHolder;
 import com.example.william.harusem.interfaces.WordListener;
 import com.example.william.harusem.models.SpeakingDialog;
 import com.example.william.harusem.ui.adapters.LessonsAdapter;
@@ -46,14 +47,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
-import io.realm.RealmResults;
 
-import static com.example.william.harusem.common.Common.INDEX;
-import static com.example.william.harusem.common.Common.PARENT_ID;
 import static com.example.william.harusem.ui.adapters.LessonsAdapter.EXTRAS_PRIVATE_LESSON_API_ID;
 import static com.example.william.harusem.ui.adapters.LessonsAdapter.EXTRAS_PRIVATE_NEXT_LESSON_API_ID;
 import static com.example.william.harusem.ui.adapters.LessonsAdapter.EXTRAS_PUBLIC_LESSON_API_ID;
-import static com.example.william.harusem.ui.adapters.LessonsAdapter.EXTRAS_PUBLIC_NEXT_LESSON_API_ID;
 
 public class SpeakingActivity extends AppCompatActivity implements WordListener {
 
@@ -74,9 +71,9 @@ public class SpeakingActivity extends AppCompatActivity implements WordListener 
     SpeakingDialogsAdapter mAdapter;
     int position;
     String lessonApiId;
-    Realm realm;
     @BindView(R.id.root_layout)
     RelativeLayout rootLayout;
+    SpeakingDialogsHolder dialogsHolder;
     private String nextLessonApiId;
     private String privateLessonApi;
     private String privateNextLessonApi;
@@ -87,10 +84,11 @@ public class SpeakingActivity extends AppCompatActivity implements WordListener 
         setContentView(R.layout.activity_speaking);
         ButterKnife.bind(this);
 
+        dialogsHolder = SpeakingDialogsHolder.getInstance();
         configureActionBar();
         configureProgressBar();
 
-        realm = Realm.getDefaultInstance();
+//        realm = Realm.getDefaultInstance();
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -114,40 +112,52 @@ public class SpeakingActivity extends AppCompatActivity implements WordListener 
 
     private void fillData(ProgressDialog progressDialog) {
         // download data for the first time
-        RealmResults<SpeakingDialog> speakingDialogsList = realm.where(SpeakingDialog.class).findAll();
+//        RealmResults<SpeakingDialog> speakingDialogsList = realm.where(SpeakingDialog.class).findAll();
+        ArrayList<SpeakingDialog> speakingDialogsList = dialogsHolder.getAllDialogs();
         if (speakingDialogsList.size() > 0) {
-            RealmResults<SpeakingDialog> speakingDialogs = getSelectedLesson();
+            ArrayList<SpeakingDialog> speakingDialogs = getSelectedLesson();
             refreshAdapter(speakingDialogs);
             setDialogsNumber(this.index, getTotalIndexes());
             dismissDialog(progressDialog);
-            if (speakingDialogs.size() == 0) {
-                Utils.buildAlertDialogButton("Error", "No data at this lesson", false, this, "OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        finish();
-                    }
-                });
-            }
+
         } else {
             getCustomData(progressDialog);
         }
 
     }
 
-    private RealmResults<SpeakingDialog> getSelectedLesson() {
-        return realm.where(SpeakingDialog.class)
-                .equalTo(PARENT_ID, lessonApiId)
-                .equalTo(INDEX, this.index)
-                .findAll();
+//    private RealmResults<SpeakingDialog> getSelectedLesson() {
+//        return realm.where(SpeakingDialog.class)
+//                .equalTo(PARENT_ID, lessonApiId)
+//                .equalTo(INDEX, this.index)
+//                .findAll();
+//    }
+
+    private ArrayList<SpeakingDialog> getSelectedLesson() {
+        return dialogsHolder.getDialogsByParentIdAndIndex(lessonApiId, index);
     }
+
+//    private int getTotalIndexes() {
+//        return realm.where(SpeakingDialog.class)
+//                .equalTo(PARENT_ID, lessonApiId)
+//                .distinct("index").findAll().size();
+//    }
 
     private int getTotalIndexes() {
-        return realm.where(SpeakingDialog.class)
-                .equalTo(PARENT_ID, lessonApiId)
-                .distinct("index").findAll().size();
+        ArrayList<SpeakingDialog> dialogs = dialogsHolder.getDialogsByParentId(lessonApiId);
+
+        ArrayList<Integer> uniqueIndexList = new ArrayList<>();
+        int uniqueIndex = -1;
+        for (SpeakingDialog dialog : dialogs) {
+            if (dialog.getIndex() != uniqueIndex) {
+                uniqueIndexList.add(dialog.getIndex());
+            }
+            uniqueIndex = dialog.getIndex();
+        }
+        return uniqueIndexList.size();
     }
 
-    private void refreshAdapter(RealmResults<SpeakingDialog> speakingDialogs) {
+    private void refreshAdapter(ArrayList<SpeakingDialog> speakingDialogs) {
         mAdapter = new SpeakingDialogsAdapter(SpeakingActivity.this, speakingDialogs, SpeakingActivity.this);
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
@@ -161,7 +171,7 @@ public class SpeakingActivity extends AppCompatActivity implements WordListener 
     private void getCustomData(ProgressDialog progressDialog) {
         QBRequestGetBuilder requestBuilder = new QBRequestGetBuilder();
         requestBuilder.sortAsc("Created at");
-        requestBuilder.setLimit(200);
+        requestBuilder.setLimit(0);
 
         Performer<ArrayList<QBCustomObject>> object = QBCustomObjects.getObjects("Category_Lessons_Dialogs", requestBuilder);
         object.performAsync(new QBEntityCallback<ArrayList<QBCustomObject>>() {
@@ -174,29 +184,36 @@ public class SpeakingActivity extends AppCompatActivity implements WordListener 
                     int index = object.getInteger("index");
                     String parentId = object.getParentId();
                     String apiId = object.getCustomObjectId();
+                    long createdAt = object.getCreatedAt().getTime();
 
-                    SpeakingDialog existingDialog = realm.where(SpeakingDialog.class).equalTo("apiId", apiId).findFirst();
+//                    SpeakingDialog existingDialog = realm.where(SpeakingDialog.class).equalTo("apiId", apiId).findFirst();
+                    SpeakingDialog existingDialog = dialogsHolder.getDialogById(apiId);
+
                     if (existingDialog != null) {
-                        realm.beginTransaction();
                         existingDialog.setDialogType(view_type);
                         existingDialog.setDialogText(dialogText);
                         existingDialog.setIndex(index);
                         existingDialog.setParentId(parentId);
                         existingDialog.setApiId(apiId);
-                        realm.commitTransaction();
+                        existingDialog.setCreatedAt(createdAt);
+                        dialogsHolder.updateDialog(existingDialog);
                     } else {
-                        speakingDialogs.add(new SpeakingDialog(view_type, index, dialogText, parentId, apiId));
+                        speakingDialogs.add(new SpeakingDialog(view_type, index, dialogText, parentId, apiId, createdAt));
                     }
 
                 }
 
                 if (speakingDialogs.size() > 0) {
-                    realm.beginTransaction();
-                    realm.copyToRealmOrUpdate(speakingDialogs);
-                    realm.commitTransaction();
+                    dialogsHolder.updateDialogs(speakingDialogs);
                 }
 
-                RealmResults<SpeakingDialog> speakingDialogRealmResults = realm.where(SpeakingDialog.class).equalTo(PARENT_ID, lessonApiId).equalTo(INDEX, SpeakingActivity.this.index).findAll();
+//                RealmResults<SpeakingDialog> speakingDialogRealmResults = realm.where(SpeakingDialog.class)
+//                        .equalTo(PARENT_ID, lessonApiId)
+//                        .equalTo(INDEX, SpeakingActivity.this.index)
+//                        .findAll();
+
+                ArrayList<SpeakingDialog> speakingDialogRealmResults = dialogsHolder.getDialogsByParentIdAndIndex(lessonApiId, index);
+
                 refreshAdapter(speakingDialogRealmResults);
                 setDialogsNumber(SpeakingActivity.this.index, getTotalIndexes());
 
@@ -313,11 +330,10 @@ public class SpeakingActivity extends AppCompatActivity implements WordListener 
 
             int progress = getProgressFromTotal(matchedWords.size(), clearWordsArray.length);
             SpeakingDialog dialogWithProgress = mAdapter.getItem(position);
-
-            realm.beginTransaction();
+//            realm.beginTransaction();
             dialogWithProgress.setSpeakProgressLevel(progress);
-            realm.copyToRealmOrUpdate(dialogWithProgress);
-            realm.commitTransaction();
+//            realm.copyToRealmOrUpdate(dialogWithProgress);
+//            realm.commitTransaction();
             mAdapter.updateItem(position);
 
         }

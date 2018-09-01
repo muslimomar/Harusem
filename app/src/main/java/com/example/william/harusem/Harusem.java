@@ -53,12 +53,12 @@ public class Harusem extends Application {
         initQbConfigs();
         initCredentials();
         ActivityLifecycle.init(this);
-        Realm.init(this);
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder()
-                .name("harusem.realm")
-                .schemaVersion(0)
-                .build();
-        Realm.setDefaultConfiguration(realmConfig);
+//        Realm.init(this);
+//        RealmConfiguration realmConfig = new RealmConfiguration.Builder()
+//                .name("harusem.realm")
+//                .schemaVersion(0)
+//                .build();
+//        Realm.setDefaultConfiguration(realmConfig);
 
         QBPushManager.getInstance().addListener(new QBPushManager.QBSubscribeListener() {
             @Override

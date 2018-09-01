@@ -16,6 +16,7 @@ import com.example.william.harusem.models.Lesson;
 import com.example.william.harusem.ui.activities.SpeakingActivity;
 import com.example.william.harusem.util.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.RealmResults;
@@ -27,10 +28,10 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.MyViewHo
     public static final String EXTRAS_PRIVATE_NEXT_LESSON_API_ID = "extras_private_next_lesson_api_id";
     public static String EXTRAS_PUBLIC_LESSON_API_ID = "extras_lesson_api_id";
     public static String EXTRAS_PRIVATE_LESSON_API_ID = "extras_private_lesson_api_id";
-    private RealmResults<Lesson> lessonsList;
+    private ArrayList<Lesson> lessonsList;
     private Context context;
 
-    public LessonsAdapter(RealmResults<Lesson> lessonsList, Context context) {
+    public LessonsAdapter(ArrayList<Lesson> lessonsList, Context context) {
         this.lessonsList = lessonsList;
         this.context = context;
     }

@@ -2,18 +2,12 @@ package com.example.william.harusem.models;
 
 import java.util.UUID;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-
 /**
  * Created by william
  * on 07-08-2018.
  */
 
-public class Lesson extends RealmObject {
-
-    @PrimaryKey
-    String id;
+public class Lesson  {
     int lessonNumber;
     String lessonTitle;
     boolean isFinished;
@@ -33,7 +27,6 @@ public class Lesson extends RealmObject {
         this.parentId = parentId;
         this.lessonApiId = lessonApiId;
         this.publicLessonId = publicLessonId;
-        this.id = UUID.randomUUID().toString();
     }
 
     public String getPublicLessonId() {
@@ -42,14 +35,6 @@ public class Lesson extends RealmObject {
 
     public void setPublicLessonId(String publicLessonId) {
         this.publicLessonId = publicLessonId;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public int getLessonNumber() {

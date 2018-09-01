@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,26 +15,26 @@ import android.widget.LinearLayout;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.common.Common;
+import com.example.william.harusem.holder.LessonsHolder;
+import com.example.william.harusem.holder.SpeakingCategoriesHolder;
 import com.example.william.harusem.models.Category;
 import com.example.william.harusem.models.Lesson;
-import com.example.william.harusem.ui.adapters.CategoryAdapter;
 import com.example.william.harusem.ui.adapters.LessonsAdapter;
 import com.example.william.harusem.util.ErrorUtils;
 import com.example.william.harusem.util.Utils;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.request.QBRequestGetBuilder;
 import com.quickblox.customobjects.QBCustomObjects;
 import com.quickblox.customobjects.model.QBCustomObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Realm;
 import io.realm.RealmResults;
 
 import static com.example.william.harusem.common.Common.NOT_FOUND_HTTP_CODE;
@@ -46,8 +45,6 @@ import static com.example.william.harusem.ui.adapters.CategoryAdapter.EXTRAS_CAT
 import static com.example.william.harusem.ui.adapters.CategoryAdapter.EXTRAS_PUBLIC_CATEGORY_API_ID;
 import static com.example.william.harusem.ui.adapters.LessonsAdapter.EXTRAS_PRIVATE_LESSON_API_ID;
 import static com.example.william.harusem.ui.adapters.LessonsAdapter.EXTRAS_PRIVATE_NEXT_LESSON_API_ID;
-import static com.example.william.harusem.ui.adapters.LessonsAdapter.EXTRAS_PUBLIC_LESSON_API_ID;
-import static com.example.william.harusem.ui.adapters.LessonsAdapter.EXTRAS_PUBLIC_NEXT_LESSON_API_ID;
 import static com.example.william.harusem.ui.adapters.LessonsAdapter.UPDATE_LESSONS_REQUEST_CODE;
 
 public class LessonsActivity extends AppCompatActivity {
@@ -59,7 +56,8 @@ public class LessonsActivity extends AppCompatActivity {
     String categoryApiId;
     @BindView(R.id.root_layout)
     LinearLayout rootLayout;
-    Realm realm;
+    LessonsHolder lessonsHolder;
+    SpeakingCategoriesHolder speakingCategoriesHolder;
     private String categoryPrivateApiId;
 
     @Override
@@ -68,10 +66,10 @@ public class LessonsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lessons);
         ButterKnife.bind(this);
         hideActionBar();
-        realm = Realm.getDefaultInstance();
+        lessonsHolder = LessonsHolder.getInstance();
+        speakingCategoriesHolder = SpeakingCategoriesHolder.getInstance();
         configRecyclerView();
         getCategoryApiId();
-
         getLessons();
 
     }
@@ -80,10 +78,11 @@ public class LessonsActivity extends AppCompatActivity {
         ProgressDialog progressDialog = Utils.buildProgressDialog(this, "", "Loading...", false);
         progressDialog.show();
 
-        RealmResults<Lesson> realmLessons = getSelectedCategoryLessons();
-        if (realmLessons.size() > 0) {
+        ArrayList<Lesson> allLessons = getSelectedCategoryLessons();
+//        RealmResults<Lesson> realmLessons = getSelectedCategoryLessons();
+        if (allLessons.size() > 0) {
             // if data already in database get them
-            refreshAdapter(realmLessons);
+            refreshAdapter(allLessons);
             progressDialog.dismiss();
         } else {
             // if data are not in database request them
@@ -153,26 +152,29 @@ public class LessonsActivity extends AppCompatActivity {
                     String lessonApiId = custom.getCustomObjectId();
                     String publicLessonId = custom.getString("public_lesson_id");
 
-                    Lesson existingLesson = realm.where(Lesson.class).equalTo("lessonApiId", lessonApiId).findFirst();
-                    if (existingLesson != null) {
-                        realm.beginTransaction();
-                        existingLesson.setLessonNumber(lesson_number);
-                        existingLesson.setLessonTitle(lesson_title);
-                        existingLesson.setFinished(isFinished);
-                        existingLesson.setLocked(isLocked);
-                        existingLesson.setParentId(parentId);
-                        existingLesson.setLessonApiId(lessonApiId);
-                        existingLesson.setPublicLessonId(publicLessonId);
-                        realm.commitTransaction();
+                    Lesson newLesson = lessonsHolder.getLessonById(lessonApiId);
+                    if (newLesson != null) {
+//                        realm.beginTransaction();
+                        newLesson.setLessonNumber(lesson_number);
+                        newLesson.setLessonTitle(lesson_title);
+                        newLesson.setFinished(isFinished);
+                        newLesson.setLocked(isLocked);
+                        newLesson.setParentId(parentId);
+                        newLesson.setLessonApiId(lessonApiId);
+                        newLesson.setPublicLessonId(publicLessonId);
+                        lessonsHolder.updateLesson(newLesson);
+//                        realm.commitTransaction();
                     } else {
                         realmLessons.add(new Lesson(lesson_number, lesson_title, isFinished, isLocked, parentId, lessonApiId, publicLessonId));
                     }
                 }
 
-                copyListToRealm(realmLessons);
+                if (realmLessons.size() > 0) {
+                    lessonsHolder.updateLessons(realmLessons);
+                }
 
-                RealmResults<Lesson> realmResults = getSelectedCategoryLessons();
-                refreshAdapter(realmResults);
+                ArrayList<Lesson> cacheLessons = getSelectedCategoryLessons();
+                refreshAdapter(cacheLessons);
                 progressDialog.dismiss();
             }
 
@@ -190,30 +192,32 @@ public class LessonsActivity extends AppCompatActivity {
 
     }
 
-    private RealmResults<Lesson> getSelectedCategoryLessons() {
-        return realm.where(Lesson.class).equalTo(PARENT_ID, categoryApiId).findAll();
+//    private RealmResults<Lesson> getSelectedCategoryLessons() {
+//        return realm.where(Lesson.class).equalTo(PARENT_ID, categoryApiId).findAll();
+//    }
+
+    private ArrayList<Lesson> getSelectedCategoryLessons() {
+        return lessonsHolder.getAllLessonsByParentId(categoryApiId);
     }
 
-    private void copyListToRealm(ArrayList<Lesson> lessons) {
-        if (lessons.size() > 0) {
-            realm.beginTransaction();
-            realm.copyToRealmOrUpdate(lessons);
-            realm.commitTransaction();
-        }
-    }
 
     private void getUserLessonClass(ProgressDialog progressDialog) {
         // get custom user lesson data, if the latter doesn't have any data, get them
         // from public lessons class.
-        QBCustomObjects.getObjects(USERS_LESSONS_DATA).performAsync(new QBEntityCallback<ArrayList<QBCustomObject>>() {
+        QBRequestGetBuilder requestBuilder = new QBRequestGetBuilder();
+        requestBuilder.setLimit(0);
+        requestBuilder.eq("user_id", QBChatService.getInstance().getUser().getId());
+
+        QBCustomObjects.getObjects(USERS_LESSONS_DATA,requestBuilder).performAsync(new QBEntityCallback<ArrayList<QBCustomObject>>() {
             @Override
             public void onSuccess(ArrayList<QBCustomObject> qbCustomObjects, Bundle bundle) {
                 if (qbCustomObjects.size() > 0) {
                     // data exists in custom user lesson class
                     // add them to realm and populate.
                     storeSdkCustomData(qbCustomObjects);
-                    RealmResults<Lesson> realmResults = getSelectedCategoryLessons();
-                    refreshAdapter(realmResults);
+//                    RealmResults<Lesson> realmResults = getSelectedCategoryLessons();
+                    ArrayList<Lesson> allLessons = getSelectedCategoryLessons();
+                    refreshAdapter(allLessons);
                     progressDialog.dismiss();
                 } else {
                     // get data from public lessons class
@@ -250,9 +254,10 @@ public class LessonsActivity extends AppCompatActivity {
             String lessonApiId = custom.getCustomObjectId();
             String publicLessonId = custom.getString("public_lesson_id");
 
-            Lesson existingLesson = realm.where(Lesson.class).equalTo("lessonApiId", lessonApiId).findFirst();
+//            Lesson existingLesson = realm.where(Lesson.class).equalTo("lessonApiId", lessonApiId).findFirst();
+            Lesson existingLesson = lessonsHolder.getLessonById(lessonApiId);
             if (existingLesson != null) {
-                realm.beginTransaction();
+//                realm.beginTransaction();
                 existingLesson.setLessonNumber(lesson_number);
                 existingLesson.setLessonTitle(lesson_title);
                 existingLesson.setFinished(isFinished);
@@ -260,17 +265,21 @@ public class LessonsActivity extends AppCompatActivity {
                 existingLesson.setParentId(parentId);
                 existingLesson.setLessonApiId(lessonApiId);
                 existingLesson.setPublicLessonId(publicLessonId);
-                realm.commitTransaction();
+                lessonsHolder.updateLesson(existingLesson);
+//                realm.commitTransaction();
             } else {
                 realmLessons.add(new Lesson(lesson_number, lesson_title, isFinished, isLocked, parentId, lessonApiId, publicLessonId));
             }
         }
 
+//        copyListToRealm(realmLessons);
+        if (realmLessons.size() > 0) {
+            lessonsHolder.updateLessons(realmLessons);
+        }
 
-        copyListToRealm(realmLessons);
     }
 
-    private void refreshAdapter(RealmResults<Lesson> lessons) {
+    private void refreshAdapter(ArrayList<Lesson> lessons) {
         mAdapter = new LessonsAdapter(lessons, LessonsActivity.this);
         recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
@@ -327,9 +336,9 @@ public class LessonsActivity extends AppCompatActivity {
         finishedLesson.put("isFinished", true);
         finishedLesson.setCustomObjectId(finishedLessonApiId);
 
-        List<QBCustomObject> updatedCustomObjects = new LinkedList<>();
+        List<QBCustomObject> updatedCustomObjects = new ArrayList<>();
 
-        realm.beginTransaction();
+//        realm.beginTransaction();
         if (nextLessonApiId != null && !nextLessonApiId.isEmpty()) {
             QBCustomObject nextLesson = new QBCustomObject();
             nextLesson.setClassName(USERS_LESSONS_DATA);
@@ -337,21 +346,20 @@ public class LessonsActivity extends AppCompatActivity {
             nextLesson.setCustomObjectId(nextLessonApiId);
             updatedCustomObjects.add(nextLesson);
 
-            Lesson nextLessonRealm = realm.where(Lesson.class).equalTo("lessonApiId", nextLessonApiId).findFirst();
+            Lesson nextLessonRealm = lessonsHolder.getLessonById(nextLessonApiId);
             if (nextLessonRealm != null) {
                 nextLessonRealm.setLocked(false);
-                realm.copyToRealmOrUpdate(nextLessonRealm);
+                lessonsHolder.updateLesson(nextLessonRealm);
             }
         }
 
         updatedCustomObjects.add(finishedLesson);
 
-        Lesson finishedLessonRealm = realm.where(Lesson.class).equalTo("lessonApiId", finishedLessonApiId).findFirst();
+        Lesson finishedLessonRealm = lessonsHolder.getLessonById(finishedLessonApiId);
         if (finishedLessonRealm != null) {
             finishedLessonRealm.setFinished(true);
-            realm.copyToRealmOrUpdate(finishedLessonRealm);
+            lessonsHolder.updateLesson(finishedLessonRealm);
         }
-        realm.commitTransaction();
         QBCustomObjects.updateObjects(updatedCustomObjects).performAsync(new QBEntityCallback<ArrayList<QBCustomObject>>() {
             @Override
             public void onSuccess(ArrayList<QBCustomObject> qbCustomObjects, Bundle bundle) {
@@ -362,13 +370,14 @@ public class LessonsActivity extends AppCompatActivity {
                 QBCustomObjects.updateObject(record).performAsync(new QBEntityCallback<QBCustomObject>() {
                     @Override
                     public void onSuccess(QBCustomObject customObject, Bundle bundle) {
-                        Category updatedCategory = realm.where(Category.class).equalTo("apiId", customObject.getCustomObjectId()).findFirst();
+//                        Category updatedCategory = realm.where(Category.class).equalTo("apiId", customObject.getCustomObjectId()).findFirst();
+                        Category updatedCategory = speakingCategoriesHolder.getCategoryById(customObject.getCustomObjectId());
+
                         if (updatedCategory != null) {
-                            realm.beginTransaction();
                             updatedCategory.setProgress(customObject.getInteger("progress"));
-                            realm.commitTransaction();
+                            speakingCategoriesHolder.updateCategory(updatedCategory);
                         }
-                        RealmResults<Lesson> selectedCategoryLessons = getSelectedCategoryLessons();
+                        ArrayList<Lesson> selectedCategoryLessons = getSelectedCategoryLessons();
                         refreshAdapter(selectedCategoryLessons);
 
                         progressDialog.dismiss();
@@ -403,8 +412,12 @@ public class LessonsActivity extends AppCompatActivity {
     }
 
     private int getProgress() {
-        int finishedLessons = realm.where(Lesson.class).equalTo(PARENT_ID, categoryApiId).and().equalTo("isFinished", true).findAll().size();
-        int totalLessons = realm.where(Lesson.class).equalTo(PARENT_ID, categoryApiId).findAll().size();
+
+//        int finishedLessons = realm.where(Lesson.class).equalTo(PARENT_ID, categoryApiId).and().equalTo("isFinished", true).findAll().size();
+        int finishedLessons = lessonsHolder.getFinishedLessonsByParentId(categoryApiId).size();
+//        int totalLessons = realm.where(Lesson.class).equalTo(PARENT_ID, categoryApiId).findAll().size();
+        int totalLessons = lessonsHolder.getAllLessonsByParentId(categoryApiId).size();
+
         return (int) (((double) finishedLessons / totalLessons) * 100);
     }
 
@@ -412,7 +425,7 @@ public class LessonsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

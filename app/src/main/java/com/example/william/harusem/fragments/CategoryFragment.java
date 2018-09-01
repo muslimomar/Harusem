@@ -15,14 +15,16 @@ import android.widget.LinearLayout;
 
 import com.example.william.harusem.R;
 import com.example.william.harusem.common.Common;
+import com.example.william.harusem.holder.SpeakingCategoriesHolder;
 import com.example.william.harusem.models.Category;
-import com.example.william.harusem.models.Lesson;
 import com.example.william.harusem.ui.adapters.CategoryAdapter;
 import com.example.william.harusem.util.ErrorUtils;
 import com.example.william.harusem.util.Utils;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
+import com.quickblox.core.request.QBRequestBuilder;
+import com.quickblox.core.request.QBRequestGetBuilder;
 import com.quickblox.customobjects.QBCustomObjects;
 import com.quickblox.customobjects.model.QBCustomObject;
 
@@ -46,15 +48,15 @@ public class CategoryFragment extends Fragment {
     CategoryAdapter adapter;
     @BindView(R.id.root_layout)
     LinearLayout rootLayout;
-    Realm realm;
+    SpeakingCategoriesHolder categoriesHolder;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_category, container, false);
         unbinder = ButterKnife.bind(this, view);
+        categoriesHolder = SpeakingCategoriesHolder.getInstance();
 
-        realm = Realm.getDefaultInstance();
         configRecyclerView();
 
         getDataFromSDK();
@@ -63,9 +65,10 @@ public class CategoryFragment extends Fragment {
     }
 
     private void getDataFromSDK() {
-        RealmResults<Category> realmResults = realm.where(Category.class).findAll();
-        if (realmResults.size() > 0) {
-            refreshAdapter(realmResults);
+
+        ArrayList<Category> allCategories = categoriesHolder.getAllCategories();
+        if (allCategories.size() > 0) {
+            refreshAdapter(allCategories);
         } else {
             ProgressDialog progressDialog = Utils.buildProgressDialog(getContext(), "", "Loading...", false);
             progressDialog.show();
@@ -74,15 +77,18 @@ public class CategoryFragment extends Fragment {
     }
 
     private void getUserCategoryClass(ProgressDialog progressDialog) {
-        QBCustomObjects.getObjects(USERS_CATEGORY_DATA).performAsync(new QBEntityCallback<ArrayList<QBCustomObject>>() {
+        QBRequestGetBuilder requestBuilder = new QBRequestGetBuilder();
+        requestBuilder.setLimit(0);
+        requestBuilder.eq("user_id", QBChatService.getInstance().getUser().getId());
+
+        QBCustomObjects.getObjects(USERS_CATEGORY_DATA,requestBuilder).performAsync(new QBEntityCallback<ArrayList<QBCustomObject>>() {
             @Override
             public void onSuccess(ArrayList<QBCustomObject> qbCustomObjects, Bundle bundle) {
                 if (getActivity() != null && isAdded()) {
                     if (qbCustomObjects.size() > 0) {
-
                         storeSdkCustomData(qbCustomObjects);
-                        RealmResults<Category> realmResults = realm.where(Category.class).findAll();
-                        refreshAdapter(realmResults);
+                        ArrayList<Category> allCategories = categoriesHolder.getAllCategories();
+                        refreshAdapter(allCategories);
                         progressDialog.dismiss();
                     } else {
                         getPublicCategories(progressDialog);
@@ -117,7 +123,7 @@ public class CategoryFragment extends Fragment {
             public void onSuccess(ArrayList<QBCustomObject> qbCustomObjects, Bundle bundle) {
                 List<QBCustomObject> categoriesCustomObjects = new ArrayList<>();
                 // add data to list, to store them in realm later
-                addUserCatgoriesData(categoriesCustomObjects, qbCustomObjects);
+                addUserCategoriesData(categoriesCustomObjects, qbCustomObjects);
                 createUserCategoryClass(categoriesCustomObjects, progressDialog);
 
             }
@@ -142,9 +148,9 @@ public class CategoryFragment extends Fragment {
             @Override
             public void onSuccess(ArrayList<QBCustomObject> customObjects, Bundle bundle) {
                 if (getActivity() != null && isAdded()) {
-                    ArrayList<Category> realmCategories = new ArrayList<>();
+                    ArrayList<Category> newCategoriesList = new ArrayList<>();
 
-                    realm.beginTransaction();
+//                    realm.beginTransaction();
                     for (QBCustomObject custom : customObjects) {
                         Integer category_lessons_count = custom.getInteger("category_lessons_count");
                         String category_name = custom.getString("category_name");
@@ -157,30 +163,31 @@ public class CategoryFragment extends Fragment {
                         int resId = getResources().getIdentifier(icon,
                                 "drawable", getActivity().getPackageName());
 
+//                        Category category = realm.where(Category.class).equalTo("apiId", apiId).findFirst();
+                        Category newCategory = categoriesHolder.getCategoryById(apiId);
 
-                        Category category = realm.where(Category.class).equalTo("apiId", apiId).findFirst();
-                        if (category != null) {
-                            category.setLessonsCount(category_lessons_count);
-                            category.setCategoryDisplayName(category_name);
-                            category.setBgColor(Color.parseColor(category_color));
-                            category.setImageId(resId);
-                            category.setPublicCategoryId(public_category_id);
-                            category.setProgress(progress);
-                            category.setApiId(apiId);
+                        if (newCategory != null) {
+                            newCategory.setLessonsCount(category_lessons_count);
+                            newCategory.setCategoryDisplayName(category_name);
+                            newCategory.setBgColor(Color.parseColor(category_color));
+                            newCategory.setImageId(resId);
+                            newCategory.setPublicCategoryId(public_category_id);
+                            newCategory.setProgress(progress);
+                            newCategory.setApiId(apiId);
+                            categoriesHolder.updateCategory(newCategory);
                         } else {
-                            realmCategories.add(new Category(resId, category_name, category_lessons_count, Color.parseColor(category_color), apiId, progress, public_category_id));
+                            newCategoriesList.add(new Category(resId, category_name, category_lessons_count, Color.parseColor(category_color), apiId, progress, public_category_id));
                         }
 
                     }
 
-                    if (realmCategories.size() > 0) {
-                        realm.copyToRealmOrUpdate(realmCategories);
+                    if (newCategoriesList.size() > 0) {
+                        categoriesHolder.updateCategories(newCategoriesList);
                     }
-                    realm.commitTransaction();
 
-                    RealmResults<Category> realmResults = realm.where(Category.class).findAll();
+                    ArrayList<Category> allCategories = categoriesHolder.getAllCategories();
 
-                    refreshAdapter(realmResults);
+                    refreshAdapter(allCategories);
                     progressDialog.dismiss();
                 }
             }
@@ -199,7 +206,7 @@ public class CategoryFragment extends Fragment {
 
     }
 
-    private void addUserCatgoriesData(List<QBCustomObject> categoriesCustomObjects, ArrayList<QBCustomObject> qbCustomObjects) {
+    private void addUserCategoriesData(List<QBCustomObject> categoriesCustomObjects, ArrayList<QBCustomObject> qbCustomObjects) {
         for (QBCustomObject custom : qbCustomObjects) {
             QBCustomObject userLessonData = new QBCustomObject();
             userLessonData.setClassName(USERS_CATEGORY_DATA);
@@ -218,8 +225,8 @@ public class CategoryFragment extends Fragment {
     }
 
     private void storeSdkCustomData(ArrayList<QBCustomObject> qbCustomObjects) {
-        ArrayList<Category> realmCategories = new ArrayList<>();
-        realm.beginTransaction();
+        ArrayList<Category> newCategoriesList = new ArrayList<>();
+//        realm.beginTransaction();
         for (QBCustomObject custom : qbCustomObjects) {
             Integer category_lessons_count = custom.getInteger("category_lessons_count");
             String categoryName = custom.getString("category_name");
@@ -229,31 +236,33 @@ public class CategoryFragment extends Fragment {
             int progress = custom.getInteger("progress");
             String publicCategoryApi = custom.getString("public_category_id");
 
-            int resID = getResources().getIdentifier(icon,
-                    "drawable", getActivity().getPackageName());
+            int resID = getResources().getIdentifier(icon, "drawable", getActivity().getPackageName());
 
-            Category category = realm.where(Category.class).equalTo("apiId", apiId).findFirst();
-            if (category != null) {
-                category.setLessonsCount(category_lessons_count);
-                category.setCategoryDisplayName(categoryName);
-                category.setBgColor(Color.parseColor(category_color));
-                category.setImageId(resID);
-                category.setPublicCategoryId(publicCategoryApi);
-                category.setProgress(progress);
-                category.setApiId(apiId);
+//            Category category = realm.where(Category.class).equalTo("apiId", apiId).findFirst();
+            Category newCategory = categoriesHolder.getCategoryById(apiId);
+
+            if (newCategory != null) {
+                newCategory.setLessonsCount(category_lessons_count);
+                newCategory.setCategoryDisplayName(categoryName);
+                newCategory.setBgColor(Color.parseColor(category_color));
+                newCategory.setImageId(resID);
+                newCategory.setPublicCategoryId(publicCategoryApi);
+                newCategory.setProgress(progress);
+                newCategory.setApiId(apiId);
+                categoriesHolder.updateCategory(newCategory);
             } else {
-                realmCategories.add(new Category(resID, categoryName, category_lessons_count, Color.parseColor(category_color), apiId, progress, publicCategoryApi));
+                newCategoriesList.add(new Category(resID, categoryName, category_lessons_count, Color.parseColor(category_color), apiId, progress, publicCategoryApi));
             }
         }
 
-        if (realmCategories.size() > 0) {
-            realm.copyToRealmOrUpdate(realmCategories);
+        if (newCategoriesList.size() > 0) {
+//            realm.copyToRealmOrUpdate(newCategoriesList);
+            categoriesHolder.updateCategories(newCategoriesList);
         }
-        realm.commitTransaction();
     }
 
 
-    private void refreshAdapter(RealmResults<Category> categories) {
+    private void refreshAdapter(ArrayList<Category> categories) {
         adapter = new CategoryAdapter(categories, getActivity());
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -282,9 +291,8 @@ public class CategoryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Realm realm = Realm.getDefaultInstance();
-        RealmResults<Category> all = realm.where(Category.class).findAll();
-        CategoryAdapter adapter = new CategoryAdapter(all, getActivity());
+        ArrayList<Category> allCategories = categoriesHolder.getAllCategories();
+        CategoryAdapter adapter = new CategoryAdapter(allCategories, getActivity());
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }

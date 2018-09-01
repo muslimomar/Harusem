@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.example.william.harusem.R;
+import com.example.william.harusem.common.Common;
 import com.example.william.harusem.helper.QBFriendListHelper;
 import com.example.william.harusem.holder.QBUsersHolder;
 import com.example.william.harusem.util.SharedPrefsHelper;
@@ -179,7 +180,11 @@ public class LoginActivity extends AppCompatActivity {
                 //dismissDialog(loadingPb);
                 //avPb.hide();
                 progressDialog.hideProgress();
-                buildAlertDialog(getString(R.string.login_failed), e.getMessage(), true, LoginActivity.this);
+                if (e.getHttpStatusCode() == Common.BASE_BAD_TIMESTAMP_HTTP_CODE) {
+                    buildAlertDialog(getString(R.string.login_failed), "Your device's date/time is invalid", true, LoginActivity.this);
+                } else {
+                    buildAlertDialog(getString(R.string.login_failed), e.getMessage(), true, LoginActivity.this);
+                }
             }
 
         });

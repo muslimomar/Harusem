@@ -11,15 +11,34 @@ import io.realm.annotations.PrimaryKey;
  * on 7/31/2018.
  */
 
-public class SpeakingDialog extends RealmObject {
-    @PrimaryKey
-    String id;
+public class SpeakingDialog {
     int dialogType;
     String dialogText;
     int speakProgressLevel;
     int index;
     String parentId;
     String apiId;
+    long createdAt;
+
+    public SpeakingDialog() {
+    }
+
+    public SpeakingDialog(int dialogType, int index, String dialogText, String parentId, String apiId, long createdAt) {
+        this.dialogType = dialogType;
+        this.dialogText = dialogText;
+        this.index = index;
+        this.parentId = parentId;
+        this.apiId = apiId;
+        this.createdAt = createdAt;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
 
     public String getApiId() {
         return apiId;
@@ -27,9 +46,6 @@ public class SpeakingDialog extends RealmObject {
 
     public void setApiId(String apiId) {
         this.apiId = apiId;
-    }
-
-    public SpeakingDialog() {
     }
 
     public String getParentId() {
@@ -46,24 +62,6 @@ public class SpeakingDialog extends RealmObject {
 
     public void setIndex(int index) {
         this.index = index;
-    }
-
-    public SpeakingDialog(int dialogType, int index, String dialogText, String parentId,String apiId) {
-        this.dialogType = dialogType;
-        this.dialogText = dialogText;
-        this.index = index;
-        this.parentId = parentId;
-        this.apiId = apiId;
-        this.id = UUID.randomUUID().toString();
-    }
-
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public int getSpeakProgressLevel() {

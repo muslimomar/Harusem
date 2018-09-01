@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.bottom_navigation)
     AHBottomNavigation bottomNavigation;
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_DIALOG && resultCode == RESULT_OK) {
@@ -51,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         bottomNavigation.setBehaviorTranslationEnabled(false);
+
         setupBottomNavigation();
         switchFromNotification();
     }
@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
                 Fragment selectedFragment = null;
+
                 switch (position) {
                     case 0:
                         selectedFragment = new DialogsFragment();
